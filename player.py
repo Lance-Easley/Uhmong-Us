@@ -10,7 +10,7 @@ class Player:
         self.y = y
         self.width = width
         self.height = height
-        self.color = color
+        self.color =  blue green red pink
         self.username = username
         self.rect = (self.x, self.y, self.width, self.height)
         self.vel = 3
