@@ -11,8 +11,8 @@ pygame.display.set_caption("Skeld")
 
 class Map(object):
     def __init__(self):
-        self.x = -3140
-        self.y = -2880
+        self.x = -4730
+        self.y = -3555
         self.width = map_image.get_rect().width
         self.height = map_image.get_rect().height
         self.x_vel = 5
@@ -48,6 +48,7 @@ class Map(object):
             pygame.Rect(self.x + 2700, self.y + 1835, 225, 181), # Security: Monitor
             pygame.Rect(self.x + 2740, self.y + 2010, 80, 80), # Security: Monitor chair
             pygame.Rect(self.x + 2840, self.y + 2323, 200, 255), # Security: Desk
+            pygame.Rect(self.x + 2491, self.y + 2795, 820, 730), # Security: Bottom wall
 
             pygame.Rect(self.x + 1710, self.y + 1760, 290, 620), # Reactor: Top right wall
             pygame.Rect(self.x + 1425, self.y + 1600, 234, 505), # Reactor: Top middle wall
@@ -57,8 +58,18 @@ class Map(object):
             pygame.Rect(self.x + 1200, self.y + 3100, 234, 100), # Reactor: Bottom wall
             pygame.Rect(self.x + 1710, self.y + 2570, 290, 650), # Reactor: Bottom right wall
 
-            pygame.Rect(self.x + 4232, self.y + 2279, 681, 848), # Cafeteria: Bottom right wall
-            pygame.Rect(self.x + 2491, self.y + 2795, 820, 730), # Cafeteria: Bottom right wall
+            pygame.Rect(self.x + 4232, self.y + 2279, 681, 848), # Cafeteria: Bottom left wall
+            pygame.Rect(self.x + 5175, self.y + 2279, 1580, 420), # Cafeteria: Bottom right wall
+            pygame.Rect(self.x + 6057, self.y + 1402, 710, 630), # Cafeteria: Right bottom wall
+            pygame.Rect(self.x + 6057, self.y + 820, 530, 400), # Cafeteria: Right top wall
+            pygame.Rect(self.x + 4400, self.y + 315, 1150, 100), # Cafeteria: Top wall
+
+            pygame.Rect(self.x + 5175, self.y + 2870, 365, 260), # Admin: Left wall
+            pygame.Rect(self.x + 5338, self.y + 3150, 202, 180), # Admin: Bottom left wall
+            pygame.Rect(self.x + 5338, self.y + 3340, 1300, 285), # Admin: Bottom wall
+            pygame.Rect(self.x + 6424, self.y + 2720, 331, 780), # Admin: Right wall
+
+            pygame.Rect(self.x + 5338, self.y + 3800, 630, 330), # Communications: Bottom wall
 
             pygame.Rect(self.x + 3950, self.y + 2825, 300, 100), # Electrical: Top right box
             pygame.Rect(self.x + 3128, self.y + 2812, 204, 1220), # Electrical: Left wall
