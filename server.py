@@ -1,8 +1,10 @@
 import socket
 from _thread import *
 import sys
-from player import Player
 import pickle
+
+from player import Player
+from main import skeld
 
 server = "192.168.1.59"
 port = 5555
@@ -18,9 +20,9 @@ s.listen(9)
 print("[GAME] Waiting for a connection, Server Started")
 
 player_list = [
-    Player(920, 480, 80, 120, (255, 0, 0)), Player(920, 480, 80, 120, (0, 0, 255)), Player(920, 480, 80, 120, (0, 255, 0)), 
-    Player(920, 480, 80, 120, (255, 128, 0)), Player(920, 480, 80, 120, (128, 0, 255)), Player(920, 480, 80, 120, (0, 128, 0)), 
-    Player(920, 480, 80, 120, (255, 255, 0)), Player(920, 480, 80, 120, (255, 0, 255)), Player(920, 480, 80, 120, (0, 255, 255)), 
+    Player(920, 480, (255, 0, 0), skeld), Player(920, 480, (0, 0, 255), skeld), Player(920, 480, (0, 255, 0), skeld), 
+    Player(920, 480, (255, 128, 0), skeld), Player(920, 480, (128, 0, 255), skeld), Player(920, 480, (0, 128, 0), skeld), 
+    Player(920, 480, (255, 255, 0), skeld), Player(920, 480, (255, 0, 255), skeld), Player(920, 480, (0, 255, 255), skeld)
     ]
 
 player = 0

@@ -1,18 +1,18 @@
 import pygame
 
 class Player(object):
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, color, map_obj):
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
+        self.width = 80
+        self.height = 120
         self.color = color
         self.hitbox = pygame.Rect(self.x, self.y + (self.height // 3) * 2, self.width, self.height // 3)
+        self.x_coord = map_obj.x
+        self.y_coord = map_obj.y
 
-    def get_pos(self, map_obj):
-        x_coord = self.x
-        y_coord = self.y
-        return x_coord, y_coord
-
-    def draw(self, window, map_obj):
-        pygame.draw.rect(window, self.color, (self.get_pos(map_obj)[0], self.get_pos(map_obj)[1], self.width, self.height))
+    def draw(self, window):
+        pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+    
+    def convert_to_data(self):
+        return self.x_coord, self.y_coord, self.color
