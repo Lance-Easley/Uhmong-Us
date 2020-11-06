@@ -1,10 +1,12 @@
 import pygame, sys
+from network import Network
+from player import Player
 pygame.init()
 
 screen_x = 1920
 screen_y = 1080
 
-display = pygame.display.set_mode((screen_x, screen_y), pygame.FULLSCREEN)
+display = pygame.display.set_mode((screen_x, screen_y))
 map_image = pygame.image.load('Skeld_map.jpg')
 
 pygame.display.set_caption("Skeld")
@@ -84,17 +86,6 @@ class Map(object):
             pygame.draw.rect(window, (0,255,0), wall, 1)
 
 
-class Player(object):
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.hitbox = pygame.Rect(self.x, self.y + (self.height // 3) * 2, self.width, self.height // 3)
-
-    def draw(self, window):
-        pygame.draw.rect(window, (255, 0, 0), (self.x, self.y, self.width, self.height))
-
 def collide_check(rect, colls):
     collisions = []
     for wall in colls:
@@ -102,27 +93,31 @@ def collide_check(rect, colls):
             collisions.append(skeld.wall_objs().index(wall))
     return collisions
 
-def redrawGameWindow():
+def redrawGameWindow(players):
     skeld.draw(display)
     skeld.draw_collision(display)
-    p1.draw(display)
+    p1.draw(display, skeld)
+    for p in players:
+        pygame.draw.rect(display, p.color, (p.get_pos(skeld)[0], p.get_pos(skeld)[1], 80, 120))
     pygame.display.update()
 
 #mainloop
 skeld = Map()
-p1 = Player(screen_x // 2, screen_y // 2, 80, 120)
 collision_tolerance = max(skeld.x_vel, skeld.y_vel) * 2 + 1
 ghost = False
+n = Network()
+p1 = n.getP()
 run = True
 while run:
     pygame.time.delay(12)
+    players = n.send(p1)
 
     w_coll = True
     a_coll = True
     s_coll = True
     d_coll = True
 
-    redrawGameWindow()
+    redrawGameWindow(players)
     skeld.wall_objs()
 
     for event in pygame.event.get():
