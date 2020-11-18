@@ -4,7 +4,7 @@ class Player(object):
     def __init__(self, x, y, color, map_obj):
         self.x = x
         self.y = y
-        self.width = 55
+        self.width = 52
         self.height = 80
         self.color = color
         self.hitbox = pygame.Rect(self.x, self.y + (self.height // 3) * 2, self.width, self.height // 3)

@@ -13,8 +13,8 @@ pygame.display.set_caption("Skeld")
 
 class Map(object):
     def __init__(self):
-        self.x = -4730
-        self.y = -3555
+        self.x = -6004
+        self.y = -4
         self.width = map_image.get_rect().width
         self.height = map_image.get_rect().height
         self.x_vel = 5
@@ -25,60 +25,14 @@ class Map(object):
 
     def wall_objs(self):
         return [
-            # pygame.Rect(self.x + 2494, self.y + 752, 1562, 472), # Medbay: Top hallway
-            # pygame.Rect(self.x + 3655, self.y + 1402, 401, 272), # Medbay: Bottom right hallway
-            # pygame.Rect(self.x + 2494, self.y + 1402, 904, 475), # Medbay: Bottom left hallway
-            # pygame.Rect(self.x + 3710, self.y + 1935, 225, 181), # Medbay: bottom left bed
-            # pygame.Rect(self.x + 3710, self.y + 1666, 225, 211), # Medbay: Top right bed
-            # pygame.Rect(self.x + 3171, self.y + 1935, 225, 181), # Medbay: Bottom right bed
-            # pygame.Rect(self.x + 3917, self.y + 1408, 139, 738), # Medbay: Top left wall
-            # pygame.Rect(self.x + 3200, self.y + 2524, 1050, 370), # Medbay: Bottom wall
-
-            # pygame.Rect(self.x + 1635, self.y + 1150, 700, 400), # Upper Engine: Engine
-            # pygame.Rect(self.x + 1660, self.y + 1540, 234, 100), # Upper Engine: Shute
-            # pygame.Rect(self.x + 1850, self.y + 885, 600, 100), # Upper Engine: Top wall
-            # pygame.Rect(self.x + 1650, self.y + 1000, 100, 150), # Upper Engine: Top left wall
-
-            # pygame.Rect(self.x + 1640, self.y + 3375, 700, 370), # Lower Engine: Engine
-            # pygame.Rect(self.x + 1665, self.y + 3740, 234, 100), # Lower Engine: Shute
-            # pygame.Rect(self.x + 2490, self.y + 3705, 370, 550), # Lower Engine: Bottom right wall
-            # pygame.Rect(self.x + 1850, self.y + 3990, 600, 100), # Lower Engine: Bottom wall
-
-            # pygame.Rect(self.x + 3026, self.y + 1880, 145, 920), # Security: Right wall
-            # pygame.Rect(self.x + 2258, self.y + 2570, 310, 650), # Security: Bottom left wall
-            # pygame.Rect(self.x + 2258, self.y + 1760, 310, 620), # Security: Top left wall
-            # pygame.Rect(self.x + 2700, self.y + 1835, 225, 181), # Security: Monitor
-            # pygame.Rect(self.x + 2740, self.y + 2010, 80, 80), # Security: Monitor chair
-            # pygame.Rect(self.x + 2840, self.y + 2323, 200, 255), # Security: Desk
-            # pygame.Rect(self.x + 2491, self.y + 2795, 820, 730), # Security: Bottom wall
-
-            # pygame.Rect(self.x + 1710, self.y + 1760, 290, 620), # Reactor: Top right wall
-            # pygame.Rect(self.x + 1425, self.y + 1600, 234, 505), # Reactor: Top middle wall
-            # pygame.Rect(self.x + 1200, self.y + 1700, 234, 100), # Reactor: Top wall
-            # pygame.Rect(self.x + 900, self.y + 1880, 145, 1100), # Reactor: Left wall
-            # pygame.Rect(self.x + 1425, self.y + 2800, 234, 600), # Reactor: Bottom middle wall
-            # pygame.Rect(self.x + 1200, self.y + 3100, 234, 100), # Reactor: Bottom wall
-            # pygame.Rect(self.x + 1710, self.y + 2570, 290, 650), # Reactor: Bottom right wall
-
-            # pygame.Rect(self.x + 4232, self.y + 2279, 681, 848), # Cafeteria: Bottom left wall
-            # pygame.Rect(self.x + 5175, self.y + 2279, 1580, 420), # Cafeteria: Bottom right wall
-            # pygame.Rect(self.x + 6057, self.y + 1402, 710, 630), # Cafeteria: Right bottom wall
-            # pygame.Rect(self.x + 6057, self.y + 820, 530, 400), # Cafeteria: Right top wall
-            # pygame.Rect(self.x + 4400, self.y + 315, 1150, 100), # Cafeteria: Top wall
-
-            # pygame.Rect(self.x + 5175, self.y + 2870, 365, 260), # Admin: Left wall
-            # pygame.Rect(self.x + 5338, self.y + 3150, 202, 180), # Admin: Bottom left wall
-            # pygame.Rect(self.x + 5338, self.y + 3340, 1300, 285), # Admin: Bottom wall
-            # pygame.Rect(self.x + 6424, self.y + 2720, 331, 780), # Admin: Right wall
-
-            # pygame.Rect(self.x + 5338, self.y + 3800, 630, 330), # Communications: Bottom wall
-
-            # pygame.Rect(self.x + 3950, self.y + 2825, 300, 100), # Electrical: Top right box
-            # pygame.Rect(self.x + 3128, self.y + 2812, 204, 1220), # Electrical: Left wall
-            # pygame.Rect(self.x + 3350, self.y + 3170, 440, 200), # Electrical: Middle left box
-            # pygame.Rect(self.x + 4010, self.y + 3170, 250, 600), # Electrical: Right Wall
-            # pygame.Rect(self.x + 3580, self.y + 3718, 680, 315), # Electrical: Top hallway wall
-            # pygame.Rect(self.x + 2900, self.y + 4212, 1358, 100), # Electrical: Bottom hallway wall
+            pygame.Rect(self.x + 50, self.y + 300, 4700, 50), # Outside: classrooms top wall
+            pygame.Rect(self.x + 50, self.y + 350, 50, 3600), # Outside: classrooms left wall
+            pygame.Rect(self.x + 4950, self.y + 50, 1450, 50), # Outside: offices top wall
+            pygame.Rect(self.x + 4950, self.y + 100, 50, 300), # Outside: offices left wall
+            pygame.Rect(self.x + 4900, self.y + 300, 150, 50), # Outside: main door right wall
+            pygame.Rect(self.x + 6350, self.y + 100, 50, 700), # Outside: offices right wall
+            pygame.Rect(self.x + 6400, self.y + 400, 1750, 50), # Outside: kitchen top wall
+            pygame.Rect(self.x + 8100, self.y + 450, 50, 3500), # Outside: student door wall
         ]
     
     def draw_collision(self, window):
@@ -106,7 +60,7 @@ p1 = Player(screen_x // 2, screen_y // 2, (255,0,0), skeld)
 ghost = False
 run = True
 while run:
-    pygame.time.Clock().tick(90)
+    pygame.time.Clock().tick(120)
 
     display.fill((255,255,255))
 
