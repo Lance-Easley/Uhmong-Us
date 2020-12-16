@@ -13,8 +13,8 @@ pygame.display.set_caption("Skeld")
 
 class Map(object):
     def __init__(self):
-        self.x = -6004
-        self.y = -4
+        self.x = -4104
+        self.y = -104
         self.width = map_image.get_rect().width
         self.height = map_image.get_rect().height
         self.x_vel = 5
@@ -25,14 +25,39 @@ class Map(object):
 
     def wall_objs(self):
         return [
-            pygame.Rect(self.x + 50, self.y + 300, 4700, 50), # Outside: classrooms top wall
-            pygame.Rect(self.x + 50, self.y + 350, 50, 3600), # Outside: classrooms left wall
+            pygame.Rect(self.x + 50, self.y + 300, 5250, 50), # Outside: classrooms top wall
+            pygame.Rect(self.x + 50, self.y + 350, 50, 1750), # Outside: classrooms left wall
+            pygame.Rect(self.x + 50, self.y + 2100, 8100, 50), # Outside: classrooms bottom wall
             pygame.Rect(self.x + 4950, self.y + 50, 1450, 50), # Outside: offices top wall
             pygame.Rect(self.x + 4950, self.y + 100, 50, 300), # Outside: offices left wall
-            pygame.Rect(self.x + 4900, self.y + 300, 150, 50), # Outside: main door right wall
             pygame.Rect(self.x + 6350, self.y + 100, 50, 700), # Outside: offices right wall
             pygame.Rect(self.x + 6400, self.y + 400, 1750, 50), # Outside: kitchen top wall
-            pygame.Rect(self.x + 8100, self.y + 450, 50, 3500), # Outside: student door wall
+            pygame.Rect(self.x + 8100, self.y + 450, 50, 1650), # Outside: student door wall
+            
+            
+
+            pygame.Rect(self.x + 7100, self.y + 450, 50, 350), # BCCA: kitchen right wall
+            pygame.Rect(self.x + 5700, self.y + 800, 1400, 50), # BCCA: kitchen bottom left wall
+            pygame.Rect(self.x + 7000, self.y + 800, 250, 50), # BCCA: kitchen bottom right wall
+            
+            pygame.Rect(self.x + 7350, self.y + 800, 750, 50), # BCCA: meeting room bottom wall
+
+            pygame.Rect(self.x + 6950, self.y + 1100, 700, 50), # BCCA: incubator top left wall
+            pygame.Rect(self.x + 7850, self.y + 1100, 250, 1000), # BCCA: incubator top right wall
+            pygame.Rect(self.x + 6950, self.y + 1150, 50, 400), # BCCA: incubator left top wall
+            pygame.Rect(self.x + 6950, self.y + 1650, 50, 450), # BCCA: incubator left bottom wall
+            pygame.Rect(self.x + 7650, self.y + 1200, 50, 50), # BCCA: incubator top entrance left wall
+            pygame.Rect(self.x + 7800, self.y + 1200, 50, 50), # BCCA: incubator top entrance right wall
+            pygame.Rect(self.x + 7000, self.y + 1450, 100, 50), # BCCA: incubator top room bottom left wall
+            pygame.Rect(self.x + 7200, self.y + 1450, 100, 50), # BCCA: incubator top room bottom right wall
+            pygame.Rect(self.x + 7250, self.y + 1400, 50, 50), # BCCA: incubator top room middle wall
+            pygame.Rect(self.x + 7250, self.y + 1350, 200, 50), # BCCA: incubator top room middle top wall
+            pygame.Rect(self.x + 7550, self.y + 1350, 50, 50), # BCCA: incubator top room bottom right wall
+            pygame.Rect(self.x + 7600, self.y + 1150, 50, 250), # BCCA: incubator top room right wall
+            pygame.Rect(self.x + 7000, self.y + 1700, 100, 50), # BCCA: incubator bottom room top left wall
+            pygame.Rect(self.x + 7200, self.y + 1700, 100, 50), # BCCA: incubator bottom room top right wall
+            pygame.Rect(self.x + 7250, self.y + 1750, 50, 50), # BCCA: incubator bottom room middle wall
+            pygame.Rect(self.x + 7250, self.y + 1800, 600, 50), # BCCA: incubator bottom room top right wall
         ]
     
     def draw_collision(self, window):
@@ -55,12 +80,13 @@ def redrawGameWindow():
 
 #mainloop
 skeld = Map()
+clock = pygame.time.Clock()
 collision_tolerance = max(skeld.x_vel, skeld.y_vel) * 2 + 1
 p1 = Player(screen_x // 2, screen_y // 2, (255,0,0), skeld)
 ghost = False
 run = True
 while run:
-    pygame.time.Clock().tick(120)
+    clock.tick(60)
 
     display.fill((255,255,255))
 
