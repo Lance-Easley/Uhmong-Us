@@ -95,11 +95,14 @@ class Map(object):
             pygame.Rect(self.x + 2500, self.y + 1550, 400, 400), # BCCA: classroom2 block
             pygame.Rect(self.x + 3300, self.y + 1400, 50, 700), # BCCA: classroom2 right wall
 
-            pygame.Rect(self.x + 3550, self.y + 1400, 50, 50), # BCCA: left_bathroom top door stud
-            pygame.Rect(self.x + 3550, self.y + 1550, 50, 50), # BCCA: left_bathroom bottom door stud
-
-            pygame.Rect(self.x + 3850, self.y + 1400, 50, 50), # BCCA: right_bathroom top door stud
-            pygame.Rect(self.x + 3850, self.y + 1550, 50, 50), # BCCA: right_bathroom bottom door stud
+            pygame.Rect(self.x + 3550, self.y + 1400, 50, 50), # BCCA: bathroom top left door stud
+            pygame.Rect(self.x + 3550, self.y + 1550, 50, 50), # BCCA: bathroom bottom left door stud
+            pygame.Rect(self.x + 3850, self.y + 1400, 50, 50), # BCCA: bathroom top right door stud
+            pygame.Rect(self.x + 3850, self.y + 1550, 50, 50), # BCCA: bathroom bottom right door stud
+            pygame.Rect(self.x + 3550, self.y + 1600, 350, 50), # BCCA: bathroom top middle wall
+            pygame.Rect(self.x + 3700, self.y + 1650, 50, 450), # BCCA: bathroom middle wall
+            pygame.Rect(self.x + 3850, self.y + 1350, 300, 50), # BCCA: bathroom top right wall
+            pygame.Rect(self.x + 4100, self.y + 1400, 50, 700), # BCCA: bathroom right wall
 
             pygame.Rect(self.x + 7100, self.y + 450, 50, 350), # BCCA: kitchen right wall
             pygame.Rect(self.x + 5700, self.y + 800, 1200, 50), # BCCA: kitchen bottom left wall
