@@ -13,8 +13,8 @@ pygame.display.set_caption("Skeld")
 
 class Map(object):
     def __init__(self):
-        self.x = -54
-        self.y = -1054
+        self.x = -2994
+        self.y = -1074
         self.width = map_image.get_rect().width
         self.height = map_image.get_rect().height
         self.x_vel = 5
@@ -82,6 +82,24 @@ class Map(object):
             pygame.Rect(self.x + 550, self.y + 1650, 50, 250), # BCCA: classroom4 center left wall
             pygame.Rect(self.x + 550, self.y + 1900, 500, 50), # BCCA: classroom4 center bottom wall
             pygame.Rect(self.x + 1050, self.y + 1800, 50, 150), # BCCA: classroom4 center right wall
+
+            pygame.Rect(self.x + 1500, self.y + 1350, 250, 50), # BCCA: breakoutroom2 top left wall
+            pygame.Rect(self.x + 1900, self.y + 1350, 250, 50), # BCCA: breakoutroom2 top right wall
+            pygame.Rect(self.x + 1550, self.y + 1400, 50, 500), # BCCA: breakoutroom2 left top wall
+            pygame.Rect(self.x + 1550, self.y + 2000, 50, 100), # BCCA: breakoutroom2 left bottom wall
+            pygame.Rect(self.x + 1750, self.y + 1500, 150, 450), # BCCA: breakoutroom2 table
+            pygame.Rect(self.x + 2050, self.y + 1400, 50, 500), # BCCA: breakoutroom2 right top wall
+            pygame.Rect(self.x + 2050, self.y + 2000, 50, 100), # BCCA: breakoutroom2 right bottom wall
+
+            pygame.Rect(self.x + 2250, self.y + 1350, 1350, 50), # BCCA: classroom2 top right wall
+            pygame.Rect(self.x + 2500, self.y + 1550, 400, 400), # BCCA: classroom2 block
+            pygame.Rect(self.x + 3300, self.y + 1400, 50, 700), # BCCA: classroom2 right wall
+
+            pygame.Rect(self.x + 3550, self.y + 1400, 50, 50), # BCCA: left_bathroom top door stud
+            pygame.Rect(self.x + 3550, self.y + 1550, 50, 50), # BCCA: left_bathroom bottom door stud
+
+            pygame.Rect(self.x + 3850, self.y + 1400, 50, 50), # BCCA: right_bathroom top door stud
+            pygame.Rect(self.x + 3850, self.y + 1550, 50, 50), # BCCA: right_bathroom bottom door stud
 
             pygame.Rect(self.x + 7100, self.y + 450, 50, 350), # BCCA: kitchen right wall
             pygame.Rect(self.x + 5700, self.y + 800, 1200, 50), # BCCA: kitchen bottom left wall
