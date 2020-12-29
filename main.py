@@ -13,8 +13,8 @@ pygame.display.set_caption("Skeld")
 
 class Map(object):
     def __init__(self):
-        self.x = -4104
-        self.y = -104
+        self.x = -2764
+        self.y = -254
         self.width = map_image.get_rect().width
         self.height = map_image.get_rect().height
         self.x_vel = 5
@@ -34,10 +34,25 @@ class Map(object):
             pygame.Rect(self.x + 6400, self.y + 400, 1750, 50), # Outside: kitchen top wall
             pygame.Rect(self.x + 8100, self.y + 450, 50, 1650), # Outside: student door wall
             
-            
+            pygame.Rect(self.x + 5400, self.y + 300, 500, 50), # BCCA: top office middle wall
+            pygame.Rect(self.x + 6000, self.y + 300, 350, 50), # BCCA: top office right wall
+            pygame.Rect(self.x + 4950, self.y + 500, 50, 300), # BCCA: left office left wall
+            pygame.Rect(self.x + 4900, self.y + 800, 700, 50), # BCCA: left office bottom wall
+            pygame.Rect(self.x + 5000, self.y + 550, 600, 50), # BCCA: left office top wall
+            pygame.Rect(self.x + 5500, self.y + 600, 50, 200), # BCCA: left office right wall
+            pygame.Rect(self.x + 5700, self.y + 550, 650, 50), # BCCA: right office top wall
+            pygame.Rect(self.x + 5750, self.y + 600, 50, 200), # BCCA: right office right wall
+
+            pygame.Rect(self.x + 4650, self.y + 350, 50, 450), # BCCA: breakroom right wall
+            pygame.Rect(self.x + 4300, self.y + 800, 450, 50), # BCCA: breakroom bottom right wall
+            pygame.Rect(self.x + 4150, self.y + 800, 50, 50), # BCCA: breakroom bottom left wall
+            pygame.Rect(self.x + 4100, self.y + 350, 50, 750), # BCCA: breakroom left wall
+
+            pygame.Rect(self.x + 3800, self.y + 1050, 300, 50), # BCCA: supply bottom right wall
+            pygame.Rect(self.x + 3800, self.y + 1050, 300, 50), # BCCA: supply middle wall
 
             pygame.Rect(self.x + 7100, self.y + 450, 50, 350), # BCCA: kitchen right wall
-            pygame.Rect(self.x + 5700, self.y + 800, 1400, 50), # BCCA: kitchen bottom left wall
+            pygame.Rect(self.x + 5700, self.y + 800, 1200, 50), # BCCA: kitchen bottom left wall
             pygame.Rect(self.x + 7000, self.y + 800, 250, 50), # BCCA: kitchen bottom right wall
             
             pygame.Rect(self.x + 7350, self.y + 800, 750, 50), # BCCA: meeting room bottom wall
