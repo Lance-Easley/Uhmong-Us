@@ -13,8 +13,8 @@ pygame.display.set_caption("Skeld")
 
 class Map(object):
     def __init__(self):
-        self.x = -2994
-        self.y = -1074
+        self.x = -4564
+        self.y = -914
         self.width = map_image.get_rect().width
         self.height = map_image.get_rect().height
         self.x_vel = 5
@@ -47,6 +47,19 @@ class Map(object):
             pygame.Rect(self.x + 4300, self.y + 800, 450, 50), # BCCA: breakroom bottom right wall
             pygame.Rect(self.x + 4150, self.y + 800, 50, 50), # BCCA: breakroom bottom left wall
             pygame.Rect(self.x + 4100, self.y + 350, 50, 750), # BCCA: breakroom left wall
+
+            pygame.Rect(self.x + 4350, self.y + 1100, 200, 200), # BCCA: lobby top left block
+            pygame.Rect(self.x + 4350, self.y + 1750, 200, 200), # BCCA: lobby bottom left block
+            pygame.Rect(self.x + 6550, self.y + 1100, 200, 200), # BCCA: lobby top right block
+            pygame.Rect(self.x + 6550, self.y + 1800, 200, 200), # BCCA: lobby bottom right block
+            pygame.Rect(self.x + 5650, self.y + 1200, 700, 50), # BCCA: lobby top right wall
+            pygame.Rect(self.x + 4750, self.y + 1200, 700, 50), # BCCA: lobby top left wall
+            pygame.Rect(self.x + 4750, self.y + 1250, 50, 150), # BCCA: lobby left top wall
+            pygame.Rect(self.x + 4750, self.y + 1600, 50, 150), # BCCA: lobby left bottom wall
+            pygame.Rect(self.x + 4750, self.y + 1750, 700, 50), # BCCA: lobby bottom left wall
+            pygame.Rect(self.x + 5650, self.y + 1750, 700, 50), # BCCA: lobby bottom right wall
+            pygame.Rect(self.x + 6300, self.y + 1250, 50, 150), # BCCA: lobby right top wall
+            pygame.Rect(self.x + 6300, self.y + 1600, 50, 150), # BCCA: lobby right bottom wall
 
             pygame.Rect(self.x + 3800, self.y + 1050, 300, 50), # BCCA: supply bottom right wall
             pygame.Rect(self.x + 3600, self.y + 600, 50, 450), # BCCA: supply middle wall
@@ -109,6 +122,7 @@ class Map(object):
             pygame.Rect(self.x + 7000, self.y + 800, 250, 50), # BCCA: kitchen bottom right wall
             
             pygame.Rect(self.x + 7350, self.y + 800, 750, 50), # BCCA: meeting room bottom wall
+            pygame.Rect(self.x + 7450, self.y + 650, 50, 150), # BCCA: meeting room middle wall
 
             pygame.Rect(self.x + 6950, self.y + 1100, 700, 50), # BCCA: incubator top left wall
             pygame.Rect(self.x + 7850, self.y + 1100, 250, 1000), # BCCA: incubator top right wall
@@ -138,12 +152,19 @@ def collide_check(rect, colls):
     for wall in colls:
         if rect.colliderect(wall):
             collisions.append(skeld.wall_objs().index(wall))
+        if rect.colliderect(wall):
+            collisions.append(skeld.wall_objs().index(wall))
+        if rect.colliderect(wall):
+            collisions.append(skeld.wall_objs().index(wall))
+        if rect.colliderect(wall):
+            collisions.append(skeld.wall_objs().index(wall))
     return collisions
 
 def redrawGameWindow():
     skeld.draw(display)
     skeld.draw_collision(display)
     p1.draw(display)
+    p1.draw_hitboxes(display)
     pygame.display.update()
 
 #mainloop
@@ -172,17 +193,26 @@ while run:
 
     keys = pygame.key.get_pressed()
     
-    coll_index = collide_check(p1.hitbox, skeld.wall_objs())
-    if coll_index != []:
-        for i in coll_index:
-            if abs(skeld.wall_objs()[i].bottom - p1.hitbox.top) < collision_tolerance:
-                w_coll = False
-            if abs(skeld.wall_objs()[i].right - p1.hitbox.left) < collision_tolerance:
-                a_coll = False
-            if abs(skeld.wall_objs()[i].top - p1.hitbox.bottom) < collision_tolerance:
-                s_coll = False
-            if abs(skeld.wall_objs()[i].left - p1.hitbox.right) < collision_tolerance:
-                d_coll = False
+    # coll_index = collide_check(p1.hitboxes, skeld.wall_objs())
+    # if coll_index != []:
+    #     for i in coll_index:
+    #         if abs(skeld.wall_objs()[i].bottom - p1.w_hitbox.top) < collision_tolerance:
+    #             w_coll = False
+    #         if abs(skeld.wall_objs()[i].right - p1.a_hitbox.left) < collision_tolerance:
+    #             a_coll = False
+    #         if abs(skeld.wall_objs()[i].top - p1.s_hitbox.bottom) < collision_tolerance:
+    #             s_coll = False
+    #         if abs(skeld.wall_objs()[i].left - p1.d_hitbox.right) < collision_tolerance:
+    #             d_coll = False
+
+    if collide_check(p1.w_hitbox, skeld.wall_objs()):
+        w_coll = False
+    if collide_check(p1.a_hitbox, skeld.wall_objs()):
+        a_coll = False
+    if collide_check(p1.s_hitbox, skeld.wall_objs()):
+        s_coll = False
+    if collide_check(p1.d_hitbox, skeld.wall_objs()):
+        d_coll = False
 
     if keys[pygame.K_x]:
         ghost = not ghost
