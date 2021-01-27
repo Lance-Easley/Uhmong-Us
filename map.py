@@ -2,8 +2,8 @@ import pygame
 
 class Map(object):
     def __init__(self, image):
-        self.x = -104
-        self.y = -104
+        self.x = -1204
+        self.y = -634
         self.image = image
         self.width = self.image.get_rect().width
         self.height = self.image.get_rect().height
@@ -134,7 +134,40 @@ class Map(object):
 
     def task_objs(self):
         return [
-            pygame.Rect(self.x + 100, self.y + 350, 50, 50), # Outside: classrooms top wall
+            [pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"], # Check Inbox
+
+            [pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "Refil Hand-Sanitizer"], # Refil Hand-Sanitizer: left
+            [pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "Refil Hand-Sanitizer"], # Refil Hand-Sanitizer: right
+
+            [pygame.Rect(self.x + 7000, self.y + 1050, 50, 50), "Check Temperature"], # Check Temperature
+
+            [pygame.Rect(self.x + 6150, self.y + 100, 100, 50), "Reset Wifi"], # Reset Wifi
+
+            [pygame.Rect(self.x + 2100, self.y + 650, 50, 100), "Plug-In Laptops"], # Plug-In Laptops: top
+            [pygame.Rect(self.x + 2100, self.y + 1700, 50, 100), "Plug-In Laptops"], # Plug-In Laptops: bottom
+
+            [pygame.Rect(self.x + 4300, self.y + 1050, 300, 300), "Wipe down Tables"], # Wipe down tables: top left
+            [pygame.Rect(self.x + 4300, self.y + 1700, 300, 300), "Wipe down Tables"], # Wipe down tables: bottom left
+            [pygame.Rect(self.x + 6500, self.y + 1050, 300, 300), "Wipe down Tables"], # Wipe down tables: top right
+            [pygame.Rect(self.x + 6500, self.y + 1750, 300, 300), "Wipe down Tables"], # Wipe down tables: bottom right
+            
+            [pygame.Rect(self.x + 400, self.y + 1100, 400, 50), "Clean Windows"], # Clean Windows: left top left
+            [pygame.Rect(self.x + 900, self.y + 1100, 400, 50), "Clean Windows"], # Clean Windows: left top right
+            [pygame.Rect(self.x + 400, self.y + 1300, 400, 50), "Clean Windows"], # Clean Windows: left bottom left
+            [pygame.Rect(self.x + 900, self.y + 1300, 400, 50), "Clean Windows"], # Clean Windows: left bottom right
+            [pygame.Rect(self.x + 2350, self.y + 1100, 300, 50), "Clean Windows"], # Clean Windows: right top left
+            [pygame.Rect(self.x + 2750, self.y + 1100, 300, 50), "Clean Windows"], # Clean Windows: right top right
+            [pygame.Rect(self.x + 2350, self.y + 1300, 300, 50), "Clean Windows"], # Clean Windows: right bottom left
+            [pygame.Rect(self.x + 2750, self.y + 1300, 300, 50), "Clean Windows"], # Clean Windows: right bottom right
+
+            [pygame.Rect(self.x + 6700, self.y + 850, 150, 50), "Nominate For Awards"], # Nominate for Awards
+
+            [pygame.Rect(self.x + 2300, self.y + 1000, 50, 50), "Collect Trash"], # Collect Trash: classroom1
+            [pygame.Rect(self.x + 2300, self.y + 1400, 50, 50), "Collect Trash"], # Collect Trash: classroom2
+            [pygame.Rect(self.x + 3700, self.y + 1550, 50, 50), "Collect Trash"], # Collect Trash: bathroom
+            [[pygame.Rect(self.x + 3850, self.y + 1500, 50, 50), "Collect Trash"], # Collect Trash: bathroom, "Collect Trash"], # Collect Trash: breakroom
+
+            [pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "Do Flashcards"], # Do Flashcards
         ]
     
     def draw_collision(self, window):
@@ -143,7 +176,7 @@ class Map(object):
 
     def draw_tasks(self, window):
         for task in self.task_objs():
-            pygame.draw.rect(window, (242,242,0), task, 3)
+            pygame.draw.rect(window, (242,242,0), task[0], 3)
 
 if __name__ == "__main__":
     import main
