@@ -1,7 +1,7 @@
 import pygame
 
 class Player(object):
-    def __init__(self, x, y, color, map_obj):
+    def __init__(self, x, y, color, map_obj, traitor):
         self.x = x
         self.y = y
         self.width = 52
@@ -15,6 +15,7 @@ class Player(object):
         self.x_coord = map_obj.x
         self.y_coord = map_obj.y
         self.hitboxes = [self.w_hitbox, self.a_hitbox, self.s_hitbox, self.d_hitbox]
+        self.is_traitor = traitor
 
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
