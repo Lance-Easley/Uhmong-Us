@@ -144,3 +144,6 @@ class Map(object):
     def draw_tasks(self, window):
         for task in self.task_objs():
             pygame.draw.rect(window, (242,242,0), task, 3)
+
+if __name__ == "__main__":
+    import main
