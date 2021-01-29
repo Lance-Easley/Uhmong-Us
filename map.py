@@ -2,8 +2,8 @@ import pygame
 
 class Map(object):
     def __init__(self, image):
-        self.x = -1204
-        self.y = -634
+        self.x = -2134
+        self.y = -1344
         self.image = image
         self.width = self.image.get_rect().width
         self.height = self.image.get_rect().height
@@ -165,9 +165,35 @@ class Map(object):
             [pygame.Rect(self.x + 2300, self.y + 1000, 50, 50), "Collect Trash"], # Collect Trash: classroom1
             [pygame.Rect(self.x + 2300, self.y + 1400, 50, 50), "Collect Trash"], # Collect Trash: classroom2
             [pygame.Rect(self.x + 3700, self.y + 1550, 50, 50), "Collect Trash"], # Collect Trash: bathroom
-            [[pygame.Rect(self.x + 3850, self.y + 1500, 50, 50), "Collect Trash"], # Collect Trash: bathroom, "Collect Trash"], # Collect Trash: breakroom
+            [pygame.Rect(self.x + 4350, self.y + 750, 50, 50), "Collect Trash"], # Collect Trash: breakroom
+            [pygame.Rect(self.x + 4150, self.y + 2000, 50, 50), "Collect Trash"], # Collect Trash: left lobby
+            [pygame.Rect(self.x + 6900, self.y + 2000, 50, 50), "Collect Trash"], # Collect Trash: right lobby
+            [pygame.Rect(self.x + 7100, self.y + 850, 50, 50), "Collect Trash"], # Collect Trash: outside kitchen
+            [pygame.Rect(self.x + 6650, self.y + 750, 50, 50), "Collect Trash"], # Collect Trash: outside kitchen
 
             [pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "Do Flashcards"], # Do Flashcards
+
+            # Sabotages
+
+            [pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Left A/C top"], # Left A/C: top
+            [pygame.Rect(self.x + 900, self.y + 1850, 100, 50), "Left A/C bottom"], # Left A/C: bottom
+            [pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C top"], # Right A/C: top
+            [pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C bottom"], # Right A/C: bottom
+
+            [pygame.Rect(self.x + 3400, self.y + 700, 150, 50), "Lights"], # Lights
+
+            [pygame.Rect(self.x + 5000, self.y + 150, 50, 100), "Relaunch Zoom"], # Relaunch Zoom
+
+            [pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "Remove Spoiled Food"], # Remove Spoiled Food
+            [pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "Remove Spoiled Food"], # Remove Spoiled Food
+        ]
+
+    def vent_objs(self):
+        return [
+            [pygame.Rect(self.x + 170, self.y + 1200, 60, 50), "Left.1"], # Left system: 1
+            [pygame.Rect(self.x + 1795, self.y + 875, 60, 50), "Left.2"], # Left system: 2
+            [pygame.Rect(self.x + 3095, self.y + 1750, 60, 50), "Left.3"], # Left system: 3
+            [pygame.Rect(self.x + 3995, self.y + 425, 60, 50), "Left.4"], # Left system: 4
         ]
     
     def draw_collision(self, window):
@@ -177,6 +203,16 @@ class Map(object):
     def draw_tasks(self, window):
         for task in self.task_objs():
             pygame.draw.rect(window, (242,242,0), task[0], 3)
+    
+    def draw_vents(self, window):
+        for vent in self.vent_objs():
+            pygame.draw.rect(window, (0,242,242), vent[0], 3)
+
+    def draw_coords(self, window, font):
+        pos_text = font.render(f"X: {round(self.x, 2)}Y: {round(self.y, 3)}", True, (255,0,0))
+        pos_textRect = pos_text.get_rect()
+        pos_textRect.center = (200, 50)
+        window.blit(pos_text, pos_textRect)
 
 if __name__ == "__main__":
     import main
