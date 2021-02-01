@@ -2,8 +2,8 @@ import pygame
 
 class Map(object):
     def __init__(self, image):
-        self.x = -2134
-        self.y = -1344
+        self.x = -6734
+        self.y = -944
         self.image = image
         self.width = self.image.get_rect().width
         self.height = self.image.get_rect().height
@@ -194,6 +194,11 @@ class Map(object):
             [pygame.Rect(self.x + 1795, self.y + 875, 60, 50), "Left.2"], # Left system: 2
             [pygame.Rect(self.x + 3095, self.y + 1750, 60, 50), "Left.3"], # Left system: 3
             [pygame.Rect(self.x + 3995, self.y + 425, 60, 50), "Left.4"], # Left system: 4
+
+            [pygame.Rect(self.x + 5520, self.y + 1950, 60, 50), "Right.1"], # Right system: 1
+            [pygame.Rect(self.x + 6220, self.y + 450, 60, 50), "Right.2"], # Right system: 2
+            [pygame.Rect(self.x + 7195, self.y + 525, 60, 50), "Right.3"], # Right system: 3
+            [pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"], # Right system: 4
         ]
     
     def draw_collision(self, window):

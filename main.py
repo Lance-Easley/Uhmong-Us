@@ -48,6 +48,18 @@ def transport_vents(player):
     elif player.in_vent == 4:
         bcca.x = -3039
         bcca.y = 151
+    elif player.in_vent == 5:
+        bcca.x = -4564
+        bcca.y = -1374
+    elif player.in_vent == 6:
+        bcca.x = -5264
+        bcca.y = 126
+    elif player.in_vent == 7:
+        bcca.x = -6239
+        bcca.y = 51
+    elif player.in_vent == 8:
+        bcca.x = -6789
+        bcca.y = -1149
     
 
 def redrawGameWindow():
@@ -100,8 +112,34 @@ while run:
                     elif bcca.x < -2939 and bcca.x > -3139:
                         if bcca.y < 251 and bcca.y > 51:
                             p1.in_vent = 4
+
+                    elif bcca.x < -4464 and bcca.x > -4764:
+                        if bcca.y < -1274 and bcca.y > -1474:
+                            p1.in_vent = 5
+                    elif bcca.x < -5164 and bcca.x > -5364:
+                        if bcca.y < 226 and bcca.y > 26:
+                            p1.in_vent = 6
+                    elif bcca.x < -6139 and bcca.x > -6339:
+                        if bcca.y < 151 and bcca.y > -51:
+                            p1.in_vent = 7
+                    elif bcca.x < -6689 and bcca.x > -6889:
+                        if bcca.y < -1049 and bcca.y > -1249:
+                            p1.in_vent = 8
                 else:
                     p1.in_vent = 0
+
+            elif event.key == pygame.K_w:
+                if p1.in_vent == 5:
+                    p1.in_vent = 6
+                elif p1.in_vent == 8:
+                    p1.in_vent = 7
+
+            elif event.key == pygame.K_s:
+                if p1.in_vent == 6:
+                    p1.in_vent = 5
+                elif p1.in_vent == 7:
+                    p1.in_vent = 8
+
             elif event.key == pygame.K_a:
                 if p1.in_vent == 2:
                     p1.in_vent = 1
@@ -109,6 +147,11 @@ while run:
                     p1.in_vent = 2
                 elif p1.in_vent == 4:
                     p1.in_vent = 3
+                elif p1.in_vent == 8:
+                    p1.in_vent = 5
+                elif p1.in_vent == 7:
+                    p1.in_vent = 6
+
             elif event.key == pygame.K_d:
                 if p1.in_vent == 1:
                     p1.in_vent = 2
@@ -116,8 +159,22 @@ while run:
                     p1.in_vent = 3
                 elif p1.in_vent == 3:
                     p1.in_vent = 4
+                elif p1.in_vent == 5:
+                    p1.in_vent = 8
+                elif p1.in_vent == 6:
+                    p1.in_vent = 7
+
             elif event.key == pygame.K_x:
                 ghost = not ghost
+            elif event.key == pygame.K_LEFT:
+                bcca.x += 1
+            elif event.key == pygame.K_RIGHT:
+                bcca.x -= 1
+            elif event.key == pygame.K_UP:
+                bcca.y += 1
+            elif event.key == pygame.K_DOWN:
+                bcca.y -= 1
+
 
     keys = pygame.key.get_pressed()
 
