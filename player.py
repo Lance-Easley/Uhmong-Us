@@ -7,7 +7,7 @@ class Player(object):
         self.width = 52
         self.height = 82
         self.color = color
-        self.hl = 2
+        self.hl = 1
         self.a_hitbox = pygame.Rect(self.x, self.y + self.hl, self.hl, self.height - self.hl * 2)
         self.d_hitbox = pygame.Rect(self.x + self.width - self.hl, self.y + self.hl, self.hl, self.height - self.hl * 2)
         self.w_hitbox = pygame.Rect(self.x + self.hl, self.y, self.width - self.hl * 2, self.hl)

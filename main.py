@@ -80,9 +80,9 @@ p1 = Player(screen_x // 2, screen_y // 2, (255,0,0), bcca, False, 0)
 ghost = False
 run = True
 while run:
-    dt = time.time() - last_time
-    dt *= 60
-    last_time = time.time()
+    # dt = time.time() - last_time
+    # dt *= 60
+    # last_time = time.time()
 
     display.fill((255,255,255))
 
@@ -92,7 +92,6 @@ while run:
     d_coll = True
 
     redrawGameWindow()
-    # bcca.wall_objs()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -175,17 +174,10 @@ while run:
             elif event.key == pygame.K_DOWN:
                 bcca.y -= 1
 
+            if p1.in_vent != 0:
+                transport_vents(p1)
 
     keys = pygame.key.get_pressed()
-
-    if collide_check(p1.w_hitbox, bcca.wall_objs()):
-        w_coll = False
-    if collide_check(p1.a_hitbox, bcca.wall_objs()):
-        a_coll = False
-    if collide_check(p1.s_hitbox, bcca.wall_objs()):
-        s_coll = False
-    if collide_check(p1.d_hitbox, bcca.wall_objs()):
-        d_coll = False
 
     if ghost:
         w_coll = True
@@ -194,31 +186,45 @@ while run:
         d_coll = True
     if keys[pygame.K_w]:
         if w_coll and p1.in_vent == 0:
-            bcca.y += floor(bcca.y_vel * dt)
+            for pixel in range(bcca.y_vel):
+                if collide_check(p1.w_hitbox, bcca.wall_objs()):
+                    w_coll = False
+                    break
+                else:
+                    bcca.y += 1
     if keys[pygame.K_a]:
         if a_coll and p1.in_vent == 0:
-            bcca.x += floor(bcca.x_vel * dt)
+            for pixel in range(bcca.x_vel):
+                if collide_check(p1.a_hitbox, bcca.wall_objs()):
+                    a_coll = False
+                else:
+                    bcca.x += 1
     if keys[pygame.K_s]:
         if s_coll and p1.in_vent == 0:
-            bcca.y -= floor(bcca.y_vel * dt)
+            for pixel in range(bcca.y_vel):
+                if collide_check(p1.s_hitbox, bcca.wall_objs()):
+                    s_coll = False
+                else:
+                    bcca.y -= 1
     if keys[pygame.K_d]:
         if d_coll and p1.in_vent == 0:
-            bcca.x -= floor(bcca.x_vel * dt)
+            for pixel in range(bcca.x_vel):
+                if collide_check(p1.d_hitbox, bcca.wall_objs()):
+                    d_coll = False
+                else:
+                    bcca.x -= 1
     if keys[pygame.K_c]:
         pos_text = font.render(f"X: {bcca.x}\nY: {bcca.y}", True, (255,0,0))
         pos_textRect = pos_text.get_rect()
         pos_textRect.center = (0, 0)
         display.blit(pos_text, pos_textRect)
         print(bcca.x, bcca.y)
-    
-    transport_vents(p1)
-    
 
     if keys[pygame.K_ESCAPE]:
         display = pygame.display.set_mode((screen_x, screen_y))
         pygame.quit()
         sys.exit()
 
-    clock.tick(120)
+    clock.tick(60)
 pygame.quit()
 sys.exit()
