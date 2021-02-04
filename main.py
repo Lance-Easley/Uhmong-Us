@@ -2,7 +2,7 @@ import pygame, sys, time
 from network import Network
 from player import Player
 from map import Map
-from math import floor
+from math import ceil
 pygame.init()
 
 screen_x = 1920
@@ -26,6 +26,51 @@ pygame.font.init()
 font = pygame.font.Font("freesansbold.ttf", 32)
 
 
+def smooth_scroll(game_map, x, y, level):
+    last_x = game_map.x
+    last_y = game_map.y
+    if game_map.x < x:
+        if game_map.y < y:
+            while game_map.x < x or game_map.y < y:
+                game_map.x -= round(game_map.x - x, 2) / level
+                game_map.y -= round(game_map.y - y, 2) / level
+                if game_map.x == last_x and game_map.y == last_y:
+                    break
+                last_x = game_map.x
+                last_y = game_map.y
+                redrawGameWindow()
+        else:
+            while game_map.x < x or game_map.y > y:
+                game_map.x -= round(game_map.x - x, 2) / level
+                game_map.y -= round(game_map.y - y, 2) / level
+                if game_map.x == last_x and game_map.y == last_y:
+                    break
+                last_x = game_map.x
+                last_y = game_map.y
+                redrawGameWindow()
+    else:
+        if game_map.y < y:
+            while game_map.x > x or game_map.y < y:
+                game_map.x -= round(game_map.x - x, 2) / level
+                game_map.y -= round(game_map.y - y, 2) / level
+                if game_map.x == last_x and game_map.y == last_y:
+                    break
+                last_x = game_map.x
+                last_y = game_map.y
+                redrawGameWindow()
+        else:
+            while game_map.x > x or game_map.y > y:
+                game_map.x -= round(game_map.x - x, 2) / level
+                game_map.y -= round(game_map.y - y, 2) / level
+                if game_map.x == last_x and game_map.y == last_y:
+                    break
+                last_x = game_map.x
+                last_y = game_map.y
+                redrawGameWindow()
+    game_map.x = x
+    game_map.y = y
+        
+
 def collide_check(rect, colls):
     collisions = []
     for wall in colls:
@@ -43,29 +88,37 @@ def transport_vents(player):
     if player.in_vent == 0:
         pass
     elif player.in_vent == 1:
-        bcca.x = 786
-        bcca.y = -624
+        # bcca.x = 786
+        # bcca.y = -624
+        smooth_scroll(bcca, 786, -624, 7)
     elif player.in_vent == 2:
-        bcca.x = -839
-        bcca.y = -299
+        # bcca.x = -839
+        # bcca.y = -299
+        smooth_scroll(bcca, -839, -299, 7)
     elif player.in_vent == 3:
-        bcca.x = -2139
-        bcca.y = -1174
+        # bcca.x = -2139
+        # bcca.y = -1174
+        smooth_scroll(bcca, -2139, -1174, 7)
     elif player.in_vent == 4:
-        bcca.x = -3039
-        bcca.y = 151
+        # bcca.x = -3039
+        # bcca.y = 151
+        smooth_scroll(bcca, -3039, 151, 7)
     elif player.in_vent == 5:
-        bcca.x = -4564
-        bcca.y = -1374
+        # bcca.x = -4564
+        # bcca.y = -1374
+        smooth_scroll(bcca, -4564, -1374, 7)
     elif player.in_vent == 6:
-        bcca.x = -5264
-        bcca.y = 126
+        # bcca.x = -5264
+        # bcca.y = 126
+        smooth_scroll(bcca, -5264, 126, 7)
     elif player.in_vent == 7:
-        bcca.x = -6239
-        bcca.y = 51
+        # bcca.x = -6239
+        # bcca.y = 51
+        smooth_scroll(bcca, -6239, 51, 7)
     elif player.in_vent == 8:
-        bcca.x = -6789
-        bcca.y = -1149
+        # bcca.x = -6789
+        # bcca.y = -1149
+        smooth_scroll(bcca, -6789, -1149, 7)
 
 def draw_vent_arrows(player, image):
     global left_arrow
@@ -97,6 +150,7 @@ def draw_vent_arrows(player, image):
         right_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870, 570))
 
 def redrawGameWindow():
+    display.fill((255,255,255))
     bcca.draw(display)
     bcca.draw_collision(display)
     bcca.draw_tasks(display)
@@ -121,8 +175,6 @@ while run:
     # dt = time.time() - last_time
     # dt *= 60
     # last_time = time.time()
-
-    display.fill((255,255,255))
 
     w_coll = True
     a_coll = True
@@ -216,6 +268,7 @@ while run:
 
             if p1.in_vent != 0:
                 transport_vents(p1)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 if p1.in_vent == 1:
@@ -311,7 +364,6 @@ while run:
         print(bcca.x, bcca.y)
 
     if keys[pygame.K_ESCAPE]:
-        display = pygame.display.set_mode((screen_x, screen_y))
         pygame.quit()
         sys.exit()
 
