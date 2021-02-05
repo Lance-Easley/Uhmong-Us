@@ -90,35 +90,35 @@ def transport_vents(player):
     elif player.in_vent == 1:
         # bcca.x = 786
         # bcca.y = -624
-        smooth_scroll(bcca, 786, -624, 7)
+        smooth_scroll(bcca, 786, -624, 6)
     elif player.in_vent == 2:
         # bcca.x = -839
         # bcca.y = -299
-        smooth_scroll(bcca, -839, -299, 7)
+        smooth_scroll(bcca, -839, -299, 6)
     elif player.in_vent == 3:
         # bcca.x = -2139
         # bcca.y = -1174
-        smooth_scroll(bcca, -2139, -1174, 7)
+        smooth_scroll(bcca, -2139, -1174, 6)
     elif player.in_vent == 4:
         # bcca.x = -3039
         # bcca.y = 151
-        smooth_scroll(bcca, -3039, 151, 7)
+        smooth_scroll(bcca, -3039, 151, 6)
     elif player.in_vent == 5:
         # bcca.x = -4564
         # bcca.y = -1374
-        smooth_scroll(bcca, -4564, -1374, 7)
+        smooth_scroll(bcca, -4564, -1374, 6)
     elif player.in_vent == 6:
         # bcca.x = -5264
         # bcca.y = 126
-        smooth_scroll(bcca, -5264, 126, 7)
+        smooth_scroll(bcca, -5264, 126, 6)
     elif player.in_vent == 7:
         # bcca.x = -6239
         # bcca.y = 51
-        smooth_scroll(bcca, -6239, 51, 7)
+        smooth_scroll(bcca, -6239, 51, 6)
     elif player.in_vent == 8:
         # bcca.x = -6789
         # bcca.y = -1149
-        smooth_scroll(bcca, -6789, -1149, 7)
+        smooth_scroll(bcca, -6789, -1149, 6)
 
 def draw_vent_arrows(player, image):
     global left_arrow
@@ -166,7 +166,7 @@ def redrawGameWindow():
 bcca = Map(map_image)
 clock = pygame.time.Clock()
 collision_tolerance = max(bcca.x_vel, bcca.y_vel) * 2 + 1
-p1 = Player(screen_hx, screen_hy, (255,0,0), bcca, False, 0)
+p1 = Player(screen_hx, screen_hy, (255,0,0), bcca, True, 0)
 ghost = False
 run = True
 left_arrow = None
@@ -190,7 +190,7 @@ while run:
             run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_v:
-                if p1.in_vent == 0:
+                if p1.in_vent == 0 and p1.is_traitor:
                     if bcca.x < 886 and bcca.x > 686:
                         if bcca.y < -524 and bcca.y > -724:
                             p1.in_vent = 1
