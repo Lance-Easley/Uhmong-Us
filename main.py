@@ -27,6 +27,8 @@ font = pygame.font.Font("freesansbold.ttf", 32)
 
 
 def smooth_scroll(game_map, x, y, level):
+    x -= p1.hw
+    y -= p1.hh
     last_x = game_map.x
     last_y = game_map.y
     if game_map.x < x:

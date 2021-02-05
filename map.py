@@ -2,13 +2,13 @@ import pygame
 
 class Map(object):
     def __init__(self, image):
-        self.x = -6734
-        self.y = -944
+        self.x = -839
+        self.y = -299
         self.image = image
         self.width = self.image.get_rect().width
         self.height = self.image.get_rect().height
-        self.x_vel = 5
-        self.y_vel = 5
+        self.x_vel = 8
+        self.y_vel = 8
 
     def draw(self, window):
         window.blit(self.image, (self.x, self.y))

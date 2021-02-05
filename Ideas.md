@@ -11,7 +11,7 @@
 - Remove Spoiled Food
 
 ## Gameplay
-- Only crewmates have keycard to go through main door, but imposters can open doors as well as close them from .
+- Only crewmates have keycard to go through main door, but imposters can open doors as well as close them from Sabotage menu.
 - Imposters can move bodies, but walk speed is halved while moving
 - Imposters can self kill
 

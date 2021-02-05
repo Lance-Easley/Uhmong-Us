@@ -2,10 +2,12 @@ import pygame
 
 class Player(object):
     def __init__(self, x, y, color, map_obj, traitor, in_vent):
-        self.x = x
-        self.y = y
         self.width = 52
         self.height = 82
+        self.hw = self.width // 2
+        self.hh = self.height // 2
+        self.x = x - self.hw
+        self.y = y - self.hh
         self.color = color
         self.hl = 1
         self.a_hitbox = pygame.Rect(self.x, self.y + self.hl, self.hl, self.height - self.hl * 2)
