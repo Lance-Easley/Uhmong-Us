@@ -127,29 +127,29 @@ def draw_vent_arrows(player, image):
     global right_arrow
     if player.in_vent == 1:
         left_arrow = None
-        right_arrow = display.blit(pygame.transform.rotate(image, 10.0), (1050, 540))
+        right_arrow = display.blit(pygame.transform.rotate(image, 10.0), (1050 - p1.hw, 540 - p1.hh))
     elif player.in_vent == 2:
-        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870, 570))
-        right_arrow = display.blit(pygame.transform.rotate(image, -30.0), (1030, 605))
+        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870 - p1.hw, 570 - p1.hh))
+        right_arrow = display.blit(pygame.transform.rotate(image, -30.0), (1030 - p1.hw, 605 - p1.hh))
     elif player.in_vent == 3:
-        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -30.0), (870, 510))
-        right_arrow = display.blit(pygame.transform.rotate(image, 45.0), (1020, 490))
+        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -30.0), (870 - p1.hw, 510 - p1.hh))
+        right_arrow = display.blit(pygame.transform.rotate(image, 45.0), (1020 - p1.hw, 490 - p1.hh))
     elif player.in_vent == 4:
-        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 45.0), (870, 605))
+        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 45.0), (870 - p1.hw, 605 - p1.hh))
         right_arrow = None
     
     if player.in_vent == 5:
-        left_arrow = display.blit(pygame.transform.rotate(image, 80.0), (970, 450))
-        right_arrow = display.blit(pygame.transform.rotate(image, 10.0), (1050, 540))
+        left_arrow = display.blit(pygame.transform.rotate(image, 80.0), (970 - p1.hw, 450 - p1.hh))
+        right_arrow = display.blit(pygame.transform.rotate(image, 10.0), (1050 - p1.hw, 540 - p1.hh))
     elif player.in_vent == 6:
-        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 80.0), (935, 645))
-        right_arrow = display.blit(pygame.transform.rotate(image, -8.0), (1045, 570))
+        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 80.0), (935 - p1.hw, 645 - p1.hh))
+        right_arrow = display.blit(pygame.transform.rotate(image, -8.0), (1045 - p1.hw, 570 - p1.hh))
     elif player.in_vent == 7:
-        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -8.0), (870, 545))
-        right_arrow = display.blit(pygame.transform.rotate(image, -70.0), (985, 640))
+        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -8.0), (870 - p1.hw, 545 - p1.hh))
+        right_arrow = display.blit(pygame.transform.rotate(image, -70.0), (985 - p1.hw, 640 - p1.hh))
     elif player.in_vent == 8:
-        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -70.0), (920, 450))
-        right_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870, 570))
+        left_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -70.0), (920 - p1.hw, 450 - p1.hh))
+        right_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870 - p1.hw, 570 - p1.hh))
 
 def redrawGameWindow():
     display.fill((255,255,255))
