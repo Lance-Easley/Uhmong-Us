@@ -7,6 +7,7 @@ from math import ceil
 ### Pygame Initialization ###
 pygame.init()
 pygame.display.set_caption("Uhmong-Us")
+pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN])
 ###
 
 ### Constant Variables ###
@@ -88,19 +89,11 @@ def check_for_collisions(rect, colls):
     for wall in colls:
         if rect.colliderect(wall):
             collisions.append(game_map.get_wall_rects.index(wall))
-        if rect.colliderect(wall):
-            collisions.append(game_map.get_wall_rects.index(wall))
-        if rect.colliderect(wall):
-            collisions.append(game_map.get_wall_rects.index(wall))
-        if rect.colliderect(wall):
-            collisions.append(game_map.get_wall_rects.index(wall))
     return collisions
 
 def transport_vents(player):
     # vent coordinates are hard coded for now
-    if player.in_vent == 0:
-        pass
-    elif player.in_vent == 1:
+    if player.in_vent == 1:
         smooth_scroll(game_map, 786, -624, 6)
     elif player.in_vent == 2:
         smooth_scroll(game_map, -839, -299, 6)
@@ -147,15 +140,15 @@ def draw_vent_arrows(player, image):
         right_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870 - player_1.half_width, 570 - player_1.half_height))
 
 def redrawGameWindow():
-    display.fill((40,40,40))
-    game_map.draw_map_image(display, shadow_surface)
-    # game_map.draw_collision(display)
-    game_map.draw_tasks(display)
-    game_map.draw_vents(display)
-    draw_vent_arrows(player_1, vent_arrow_image)
+    game_map.draw_map_image(display, shadow_surface, True)
+    game_map.draw_collision(display)
+    # game_map.draw_tasks(display)
+    # game_map.draw_vents(display)
+    if player_1.in_vent:
+        draw_vent_arrows(player_1, vent_arrow_image)
     game_map.draw_coords(display, font)
     player_1.draw_player(display)
-    player_1.draw_hitboxes(display)
+    # player_1.draw_hitboxes(display)
     pygame.display.update()
 
 
@@ -177,8 +170,6 @@ while running_game:
     d_collision = False
 
     mouse_position = pygame.mouse.get_pos()
-
-    redrawGameWindow()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -262,6 +253,8 @@ while running_game:
                 game_map.y += 1
             elif event.key == pygame.K_DOWN:
                 game_map.y -= 1
+            elif event.key == pygame.K_c:
+                print(game_map.x, game_map.y)
 
             if player_1.in_vent != 0:
                 transport_vents(player_1)
@@ -331,7 +324,7 @@ while running_game:
     if keys[pygame.K_w]:
         if not w_collision and player_1.in_vent == 0:
             for pixel in range(game_map.y_velocity):
-                if check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects):
+                if check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects) and not is_ghost:
                     w_collision = True
                     break
                 else:
@@ -339,31 +332,30 @@ while running_game:
     if keys[pygame.K_a]:
         if not a_collision and player_1.in_vent == 0:
             for pixel in range(game_map.x_velocity):
-                if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects):
+                if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost:
                     a_collision = True
                 else:
                     game_map.x += 1
     if keys[pygame.K_s]:
         if not s_collision and player_1.in_vent == 0:
             for pixel in range(game_map.y_velocity):
-                if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects):
+                if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost:
                     s_collision = True
                 else:
                     game_map.y -= 1
     if keys[pygame.K_d]:
         if not d_collision and player_1.in_vent == 0:
             for pixel in range(game_map.x_velocity):
-                if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects):
+                if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
                     d_collision = True
                 else:
                     game_map.x -= 1
-    if keys[pygame.K_c]:
-        # Print current coordinates to the terminal (For debug & testing)
-        print(game_map.x, game_map.y)
 
     if keys[pygame.K_ESCAPE]:
         pygame.quit()
         sys.exit()
+
+    redrawGameWindow()
 
     clock.tick(60)
 pygame.quit()
