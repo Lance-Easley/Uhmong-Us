@@ -16,9 +16,15 @@ SCREEN_HALF_X = SCREEN_X // 2
 SCREEN_HALF_Y = SCREEN_Y // 2
 ###
 
+### Surface Setup ###
+shadow_surface = pygame.Surface((8200, 2200))
+shadow_surface.set_colorkey("#123456")
+###
+
 ### Image Loading & Processing ###
 display = pygame.display.set_mode((SCREEN_X, SCREEN_Y))
-map_image = pygame.image.load('images/BCCA_map.jpg').convert()
+visible_map_image = pygame.image.load('images/BCCA_map/BCCA_map_visible.png').convert()
+shadow_map_image = pygame.image.load('images/BCCA_map/BCCA_map_shadow.png').convert()
 
 vent_arrow_image = pygame.image.load('images/hud/arrow.png').convert()
 vent_arrow_image.set_colorkey((255,255,255))
@@ -141,9 +147,9 @@ def draw_vent_arrows(player, image):
         right_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870 - player_1.half_width, 570 - player_1.half_height))
 
 def redrawGameWindow():
-    display.fill((255,255,255))
-    game_map.draw_map_image(display)
-    game_map.draw_collision(display)
+    display.fill((40,40,40))
+    game_map.draw_map_image(display, shadow_surface)
+    # game_map.draw_collision(display)
     game_map.draw_tasks(display)
     game_map.draw_vents(display)
     draw_vent_arrows(player_1, vent_arrow_image)
@@ -154,7 +160,7 @@ def redrawGameWindow():
 
 
 #mainloop
-game_map = Map(map_image)
+game_map = Map(visible_map_image, shadow_map_image)
 clock = pygame.time.Clock()
 collision_tolerance = max(game_map.x_velocity, game_map.y_velocity) * 2 + 1
 player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255,0,0), game_map, True, 0)

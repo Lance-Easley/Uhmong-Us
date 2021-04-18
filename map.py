@@ -1,12 +1,13 @@
-import pygame
+import pygame, math
 
 class Map(object):
-    def __init__(self, map_image):
-        self.x = -839
-        self.y = -299
-        self.map_image = map_image
-        self.width = self.map_image.get_rect().width
-        self.height = self.map_image.get_rect().height
+    def __init__(self, visible_map_image, shadow_map_image):
+        self.x = 0
+        self.y = 0
+        self.visible_map_image = visible_map_image
+        self.shadow_map_image = shadow_map_image
+        self.width = self.visible_map_image.get_rect().width
+        self.height = self.visible_map_image.get_rect().height
         self.x_velocity = 8
         self.y_velocity = 8
 
@@ -131,6 +132,411 @@ class Map(object):
         ]
 
     @property
+    def get_wall_segments(self):
+        return [
+            {'a': {'x': self.x + 50, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 300}}, 
+            {'a': {'x': self.x + 5300, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 5300, 'y': self.y + 350}, 'b': {'x': self.x + 50, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 50, 'y': self.y + 350}, 'b': {'x': self.x + 50, 'y': self.y + 300}}, 
+            {'a': {'x': self.x + 50, 'y': self.y + 350}, 'b': {'x': self.x + 100, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 350}, 'b': {'x': self.x + 100, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 2100}, 'b': {'x': self.x + 50, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 50, 'y': self.y + 2100}, 'b': {'x': self.x + 50, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 50, 'y': self.y + 2100}, 'b': {'x': self.x + 8150, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 8150, 'y': self.y + 2100}, 'b': {'x': self.x + 8150, 'y': self.y + 2150}}, 
+            {'a': {'x': self.x + 8150, 'y': self.y + 2150}, 'b': {'x': self.x + 50, 'y': self.y + 2150}}, 
+            {'a': {'x': self.x + 50, 'y': self.y + 2150}, 'b': {'x': self.x + 50, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 50}, 'b': {'x': self.x + 6400, 'y': self.y + 50}}, 
+            {'a': {'x': self.x + 6400, 'y': self.y + 50}, 'b': {'x': self.x + 6400, 'y': self.y + 100}}, 
+            {'a': {'x': self.x + 6400, 'y': self.y + 100}, 'b': {'x': self.x + 4950, 'y': self.y + 100}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 100}, 'b': {'x': self.x + 4950, 'y': self.y + 50}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 100}, 'b': {'x': self.x + 5000, 'y': self.y + 100}}, 
+            {'a': {'x': self.x + 5000, 'y': self.y + 100}, 'b': {'x': self.x + 5000, 'y': self.y + 400}}, 
+            {'a': {'x': self.x + 5000, 'y': self.y + 400}, 'b': {'x': self.x + 4950, 'y': self.y + 400}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 400}, 'b': {'x': self.x + 4950, 'y': self.y + 100}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 100}, 'b': {'x': self.x + 6400, 'y': self.y + 100}}, 
+            {'a': {'x': self.x + 6400, 'y': self.y + 100}, 'b': {'x': self.x + 6400, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 6400, 'y': self.y + 800}, 'b': {'x': self.x + 6350, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 800}, 'b': {'x': self.x + 6350, 'y': self.y + 100}}, 
+            {'a': {'x': self.x + 6400, 'y': self.y + 400}, 'b': {'x': self.x + 8150, 'y': self.y + 400}}, 
+            {'a': {'x': self.x + 8150, 'y': self.y + 400}, 'b': {'x': self.x + 8150, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 8150, 'y': self.y + 450}, 'b': {'x': self.x + 6400, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 6400, 'y': self.y + 450}, 'b': {'x': self.x + 6400, 'y': self.y + 400}}, 
+            {'a': {'x': self.x + 8100, 'y': self.y + 450}, 'b': {'x': self.x + 8150, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 8150, 'y': self.y + 450}, 'b': {'x': self.x + 8150, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 8150, 'y': self.y + 2100}, 'b': {'x': self.x + 8100, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 8100, 'y': self.y + 2100}, 'b': {'x': self.x + 8100, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 5400, 'y': self.y + 300}, 'b': {'x': self.x + 5900, 'y': self.y + 300}}, 
+            {'a': {'x': self.x + 5900, 'y': self.y + 300}, 'b': {'x': self.x + 5900, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 5900, 'y': self.y + 350}, 'b': {'x': self.x + 5400, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 5400, 'y': self.y + 350}, 'b': {'x': self.x + 5400, 'y': self.y + 300}}, 
+            {'a': {'x': self.x + 6000, 'y': self.y + 300}, 'b': {'x': self.x + 6350, 'y': self.y + 300}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 300}, 'b': {'x': self.x + 6350, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 350}, 'b': {'x': self.x + 6000, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 6000, 'y': self.y + 350}, 'b': {'x': self.x + 6000, 'y': self.y + 300}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 500}, 'b': {'x': self.x + 5000, 'y': self.y + 500}}, 
+            {'a': {'x': self.x + 5000, 'y': self.y + 500}, 'b': {'x': self.x + 5000, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5000, 'y': self.y + 800}, 'b': {'x': self.x + 4950, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 800}, 'b': {'x': self.x + 4950, 'y': self.y + 500}}, 
+            {'a': {'x': self.x + 4900, 'y': self.y + 800}, 'b': {'x': self.x + 5600, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5600, 'y': self.y + 800}, 'b': {'x': self.x + 5600, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 5600, 'y': self.y + 850}, 'b': {'x': self.x + 4900, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4900, 'y': self.y + 850}, 'b': {'x': self.x + 4900, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5000, 'y': self.y + 550}, 'b': {'x': self.x + 5600, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 5600, 'y': self.y + 550}, 'b': {'x': self.x + 5600, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5600, 'y': self.y + 600}, 'b': {'x': self.x + 5000, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5000, 'y': self.y + 600}, 'b': {'x': self.x + 5000, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 5500, 'y': self.y + 600}, 'b': {'x': self.x + 5550, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5550, 'y': self.y + 600}, 'b': {'x': self.x + 5550, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5550, 'y': self.y + 800}, 'b': {'x': self.x + 5500, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5500, 'y': self.y + 800}, 'b': {'x': self.x + 5500, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5700, 'y': self.y + 550}, 'b': {'x': self.x + 6350, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 550}, 'b': {'x': self.x + 6350, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 600}, 'b': {'x': self.x + 5700, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5700, 'y': self.y + 600}, 'b': {'x': self.x + 5700, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 5750, 'y': self.y + 600}, 'b': {'x': self.x + 5800, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5800, 'y': self.y + 600}, 'b': {'x': self.x + 5800, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5800, 'y': self.y + 800}, 'b': {'x': self.x + 5750, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 5750, 'y': self.y + 800}, 'b': {'x': self.x + 5750, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 4650, 'y': self.y + 350}, 'b': {'x': self.x + 4700, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 4700, 'y': self.y + 350}, 'b': {'x': self.x + 4700, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4700, 'y': self.y + 800}, 'b': {'x': self.x + 4650, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4650, 'y': self.y + 800}, 'b': {'x': self.x + 4650, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 4300, 'y': self.y + 800}, 'b': {'x': self.x + 4750, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 800}, 'b': {'x': self.x + 4750, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 850}, 'b': {'x': self.x + 4300, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4300, 'y': self.y + 850}, 'b': {'x': self.x + 4300, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 800}, 'b': {'x': self.x + 4200, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4200, 'y': self.y + 800}, 'b': {'x': self.x + 4200, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4200, 'y': self.y + 850}, 'b': {'x': self.x + 4150, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 850}, 'b': {'x': self.x + 4150, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 350}, 'b': {'x': self.x + 4150, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 350}, 'b': {'x': self.x + 4150, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 1100}, 'b': {'x': self.x + 4100, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 1100}, 'b': {'x': self.x + 4100, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 4350, 'y': self.y + 1100}, 'b': {'x': self.x + 4550, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 4550, 'y': self.y + 1100}, 'b': {'x': self.x + 4550, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 4550, 'y': self.y + 1300}, 'b': {'x': self.x + 4350, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 4350, 'y': self.y + 1300}, 'b': {'x': self.x + 4350, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 4350, 'y': self.y + 1750}, 'b': {'x': self.x + 4550, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 4550, 'y': self.y + 1750}, 'b': {'x': self.x + 4550, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 4550, 'y': self.y + 1950}, 'b': {'x': self.x + 4350, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 4350, 'y': self.y + 1950}, 'b': {'x': self.x + 4350, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 6550, 'y': self.y + 1100}, 'b': {'x': self.x + 6750, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 6750, 'y': self.y + 1100}, 'b': {'x': self.x + 6750, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 6750, 'y': self.y + 1300}, 'b': {'x': self.x + 6550, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 6550, 'y': self.y + 1300}, 'b': {'x': self.x + 6550, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 6550, 'y': self.y + 1800}, 'b': {'x': self.x + 6750, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 6750, 'y': self.y + 1800}, 'b': {'x': self.x + 6750, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 6750, 'y': self.y + 2000}, 'b': {'x': self.x + 6550, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 6550, 'y': self.y + 2000}, 'b': {'x': self.x + 6550, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 5650, 'y': self.y + 1200}, 'b': {'x': self.x + 6350, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1200}, 'b': {'x': self.x + 6350, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1250}, 'b': {'x': self.x + 5650, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 5650, 'y': self.y + 1250}, 'b': {'x': self.x + 5650, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1200}, 'b': {'x': self.x + 5450, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 5450, 'y': self.y + 1200}, 'b': {'x': self.x + 5450, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 5450, 'y': self.y + 1250}, 'b': {'x': self.x + 4750, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1250}, 'b': {'x': self.x + 4750, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1250}, 'b': {'x': self.x + 4800, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 4800, 'y': self.y + 1250}, 'b': {'x': self.x + 4800, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 4800, 'y': self.y + 1400}, 'b': {'x': self.x + 4750, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1400}, 'b': {'x': self.x + 4750, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1600}, 'b': {'x': self.x + 4800, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 4800, 'y': self.y + 1600}, 'b': {'x': self.x + 4800, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 4800, 'y': self.y + 1750}, 'b': {'x': self.x + 4750, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1750}, 'b': {'x': self.x + 4750, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1750}, 'b': {'x': self.x + 5450, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 5450, 'y': self.y + 1750}, 'b': {'x': self.x + 5450, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 5450, 'y': self.y + 1800}, 'b': {'x': self.x + 4750, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1800}, 'b': {'x': self.x + 4750, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 5650, 'y': self.y + 1750}, 'b': {'x': self.x + 6350, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1750}, 'b': {'x': self.x + 6350, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1800}, 'b': {'x': self.x + 5650, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 5650, 'y': self.y + 1800}, 'b': {'x': self.x + 5650, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 6300, 'y': self.y + 1250}, 'b': {'x': self.x + 6350, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1250}, 'b': {'x': self.x + 6350, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1400}, 'b': {'x': self.x + 6300, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 6300, 'y': self.y + 1400}, 'b': {'x': self.x + 6300, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 6300, 'y': self.y + 1600}, 'b': {'x': self.x + 6350, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1600}, 'b': {'x': self.x + 6350, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 6350, 'y': self.y + 1750}, 'b': {'x': self.x + 6300, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 6300, 'y': self.y + 1750}, 'b': {'x': self.x + 6300, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3800, 'y': self.y + 1050}, 'b': {'x': self.x + 4100, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 1050}, 'b': {'x': self.x + 4100, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 1100}, 'b': {'x': self.x + 3800, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 3800, 'y': self.y + 1100}, 'b': {'x': self.x + 3800, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 600}, 'b': {'x': self.x + 3650, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 3650, 'y': self.y + 600}, 'b': {'x': self.x + 3650, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3650, 'y': self.y + 1050}, 'b': {'x': self.x + 3600, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1050}, 'b': {'x': self.x + 3600, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 3350, 'y': self.y + 750}, 'b': {'x': self.x + 3600, 'y': self.y + 750}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 750}, 'b': {'x': self.x + 3600, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 800}, 'b': {'x': self.x + 3350, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 3350, 'y': self.y + 800}, 'b': {'x': self.x + 3350, 'y': self.y + 750}}, 
+            {'a': {'x': self.x + 3150, 'y': self.y + 1100}, 'b': {'x': self.x + 3200, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 3200, 'y': self.y + 1100}, 'b': {'x': self.x + 3200, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 3200, 'y': self.y + 1150}, 'b': {'x': self.x + 3150, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 3150, 'y': self.y + 1150}, 'b': {'x': self.x + 3150, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 3150, 'y': self.y + 1300}, 'b': {'x': self.x + 3200, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 3200, 'y': self.y + 1300}, 'b': {'x': self.x + 3200, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 3200, 'y': self.y + 1350}, 'b': {'x': self.x + 3150, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 3150, 'y': self.y + 1350}, 'b': {'x': self.x + 3150, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 3300, 'y': self.y + 350}, 'b': {'x': self.x + 3350, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 3350, 'y': self.y + 350}, 'b': {'x': self.x + 3350, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3350, 'y': self.y + 1050}, 'b': {'x': self.x + 3300, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3300, 'y': self.y + 1050}, 'b': {'x': self.x + 3300, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 2250, 'y': self.y + 1050}, 'b': {'x': self.x + 3700, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3700, 'y': self.y + 1050}, 'b': {'x': self.x + 3700, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 3700, 'y': self.y + 1100}, 'b': {'x': self.x + 2250, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 2250, 'y': self.y + 1100}, 'b': {'x': self.x + 2250, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 2500, 'y': self.y + 500}, 'b': {'x': self.x + 2900, 'y': self.y + 500}}, 
+            {'a': {'x': self.x + 2900, 'y': self.y + 500}, 'b': {'x': self.x + 2900, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 2900, 'y': self.y + 900}, 'b': {'x': self.x + 2500, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 2500, 'y': self.y + 900}, 'b': {'x': self.x + 2500, 'y': self.y + 500}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1050}, 'b': {'x': self.x + 2150, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 2150, 'y': self.y + 1050}, 'b': {'x': self.x + 2150, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 2150, 'y': self.y + 1100}, 'b': {'x': self.x + 1900, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1100}, 'b': {'x': self.x + 1900, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 350}, 'b': {'x': self.x + 2100, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 350}, 'b': {'x': self.x + 2100, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 450}, 'b': {'x': self.x + 2050, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 450}, 'b': {'x': self.x + 2050, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 550}, 'b': {'x': self.x + 2100, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 550}, 'b': {'x': self.x + 2100, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 1050}, 'b': {'x': self.x + 2050, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 1050}, 'b': {'x': self.x + 2050, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 1500, 'y': self.y + 1050}, 'b': {'x': self.x + 1750, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1050}, 'b': {'x': self.x + 1750, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1100}, 'b': {'x': self.x + 1500, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 1500, 'y': self.y + 1100}, 'b': {'x': self.x + 1500, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 350}, 'b': {'x': self.x + 1900, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 350}, 'b': {'x': self.x + 1900, 'y': self.y + 750}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 750}, 'b': {'x': self.x + 1750, 'y': self.y + 750}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 750}, 'b': {'x': self.x + 1750, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 350}, 'b': {'x': self.x + 1600, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 350}, 'b': {'x': self.x + 1600, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 450}, 'b': {'x': self.x + 1550, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 450}, 'b': {'x': self.x + 1550, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 550}, 'b': {'x': self.x + 1600, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 550}, 'b': {'x': self.x + 1600, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 1050}, 'b': {'x': self.x + 1550, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 1050}, 'b': {'x': self.x + 1550, 'y': self.y + 550}}, 
+            {'a': {'x': self.x + 1100, 'y': self.y + 600}, 'b': {'x': self.x + 1300, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 1300, 'y': self.y + 600}, 'b': {'x': self.x + 1300, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 1300, 'y': self.y + 800}, 'b': {'x': self.x + 1100, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 1100, 'y': self.y + 800}, 'b': {'x': self.x + 1100, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 600, 'y': self.y + 600}, 'b': {'x': self.x + 800, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 800, 'y': self.y + 600}, 'b': {'x': self.x + 800, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 800, 'y': self.y + 800}, 'b': {'x': self.x + 600, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 600, 'y': self.y + 800}, 'b': {'x': self.x + 600, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 900}, 'b': {'x': self.x + 350, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 900}, 'b': {'x': self.x + 350, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 1050}, 'b': {'x': self.x + 300, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1050}, 'b': {'x': self.x + 300, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1050}, 'b': {'x': self.x + 1400, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 1400, 'y': self.y + 1050}, 'b': {'x': self.x + 1400, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 1400, 'y': self.y + 1100}, 'b': {'x': self.x + 300, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1100}, 'b': {'x': self.x + 300, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 250, 'y': self.y + 850}, 'b': {'x': self.x + 350, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 850}, 'b': {'x': self.x + 350, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 900}, 'b': {'x': self.x + 250, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 250, 'y': self.y + 900}, 'b': {'x': self.x + 250, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 850}, 'b': {'x': self.x + 150, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 150, 'y': self.y + 850}, 'b': {'x': self.x + 150, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 150, 'y': self.y + 900}, 'b': {'x': self.x + 100, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 900}, 'b': {'x': self.x + 100, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1350}, 'b': {'x': self.x + 1400, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 1400, 'y': self.y + 1350}, 'b': {'x': self.x + 1400, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1400, 'y': self.y + 1400}, 'b': {'x': self.x + 300, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1400}, 'b': {'x': self.x + 300, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1400}, 'b': {'x': self.x + 350, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 1400}, 'b': {'x': self.x + 350, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 1550}, 'b': {'x': self.x + 300, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1550}, 'b': {'x': self.x + 300, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 250, 'y': self.y + 1550}, 'b': {'x': self.x + 350, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 1550}, 'b': {'x': self.x + 350, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 1600}, 'b': {'x': self.x + 250, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 250, 'y': self.y + 1600}, 'b': {'x': self.x + 250, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 1550}, 'b': {'x': self.x + 150, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 150, 'y': self.y + 1550}, 'b': {'x': self.x + 150, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 150, 'y': self.y + 1600}, 'b': {'x': self.x + 100, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 1600}, 'b': {'x': self.x + 100, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1600}, 'b': {'x': self.x + 750, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 750, 'y': self.y + 1600}, 'b': {'x': self.x + 750, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 750, 'y': self.y + 1650}, 'b': {'x': self.x + 550, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1650}, 'b': {'x': self.x + 550, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1650}, 'b': {'x': self.x + 600, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 600, 'y': self.y + 1650}, 'b': {'x': self.x + 600, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 600, 'y': self.y + 1900}, 'b': {'x': self.x + 550, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1900}, 'b': {'x': self.x + 550, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1900}, 'b': {'x': self.x + 1050, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 1050, 'y': self.y + 1900}, 'b': {'x': self.x + 1050, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 1050, 'y': self.y + 1950}, 'b': {'x': self.x + 550, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1950}, 'b': {'x': self.x + 550, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 1050, 'y': self.y + 1800}, 'b': {'x': self.x + 1100, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 1100, 'y': self.y + 1800}, 'b': {'x': self.x + 1100, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 1100, 'y': self.y + 1950}, 'b': {'x': self.x + 1050, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 1050, 'y': self.y + 1950}, 'b': {'x': self.x + 1050, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 1500, 'y': self.y + 1350}, 'b': {'x': self.x + 1750, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1350}, 'b': {'x': self.x + 1750, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1400}, 'b': {'x': self.x + 1500, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1500, 'y': self.y + 1400}, 'b': {'x': self.x + 1500, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1350}, 'b': {'x': self.x + 2150, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 2150, 'y': self.y + 1350}, 'b': {'x': self.x + 2150, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 2150, 'y': self.y + 1400}, 'b': {'x': self.x + 1900, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1400}, 'b': {'x': self.x + 1900, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 1400}, 'b': {'x': self.x + 1600, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 1400}, 'b': {'x': self.x + 1600, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 1900}, 'b': {'x': self.x + 1550, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 1900}, 'b': {'x': self.x + 1550, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 2000}, 'b': {'x': self.x + 1600, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 2000}, 'b': {'x': self.x + 1600, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 1600, 'y': self.y + 2100}, 'b': {'x': self.x + 1550, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 2100}, 'b': {'x': self.x + 1550, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1500}, 'b': {'x': self.x + 1900, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1500}, 'b': {'x': self.x + 1900, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1950}, 'b': {'x': self.x + 1750, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1950}, 'b': {'x': self.x + 1750, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 1400}, 'b': {'x': self.x + 2100, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 1400}, 'b': {'x': self.x + 2100, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 1900}, 'b': {'x': self.x + 2050, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 1900}, 'b': {'x': self.x + 2050, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 2000}, 'b': {'x': self.x + 2100, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 2000}, 'b': {'x': self.x + 2100, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 2100, 'y': self.y + 2100}, 'b': {'x': self.x + 2050, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 2100}, 'b': {'x': self.x + 2050, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 2250, 'y': self.y + 1350}, 'b': {'x': self.x + 3600, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1350}, 'b': {'x': self.x + 3600, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1400}, 'b': {'x': self.x + 2250, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 2250, 'y': self.y + 1400}, 'b': {'x': self.x + 2250, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 2500, 'y': self.y + 1550}, 'b': {'x': self.x + 2900, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 2900, 'y': self.y + 1550}, 'b': {'x': self.x + 2900, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 2900, 'y': self.y + 1950}, 'b': {'x': self.x + 2500, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 2500, 'y': self.y + 1950}, 'b': {'x': self.x + 2500, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 3300, 'y': self.y + 1400}, 'b': {'x': self.x + 3350, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3350, 'y': self.y + 1400}, 'b': {'x': self.x + 3350, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 3350, 'y': self.y + 2100}, 'b': {'x': self.x + 3300, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 3300, 'y': self.y + 2100}, 'b': {'x': self.x + 3300, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1400}, 'b': {'x': self.x + 3600, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1400}, 'b': {'x': self.x + 3600, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1450}, 'b': {'x': self.x + 3550, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1450}, 'b': {'x': self.x + 3550, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1550}, 'b': {'x': self.x + 3600, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1550}, 'b': {'x': self.x + 3600, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 1600}, 'b': {'x': self.x + 3550, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1600}, 'b': {'x': self.x + 3550, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1400}, 'b': {'x': self.x + 3900, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1400}, 'b': {'x': self.x + 3900, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1450}, 'b': {'x': self.x + 3850, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1450}, 'b': {'x': self.x + 3850, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1550}, 'b': {'x': self.x + 3900, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1550}, 'b': {'x': self.x + 3900, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1600}, 'b': {'x': self.x + 3850, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1600}, 'b': {'x': self.x + 3850, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1600}, 'b': {'x': self.x + 3900, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1600}, 'b': {'x': self.x + 3900, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1650}, 'b': {'x': self.x + 3550, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1650}, 'b': {'x': self.x + 3550, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3700, 'y': self.y + 1650}, 'b': {'x': self.x + 3750, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 3750, 'y': self.y + 1650}, 'b': {'x': self.x + 3750, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 3750, 'y': self.y + 2100}, 'b': {'x': self.x + 3700, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 3700, 'y': self.y + 2100}, 'b': {'x': self.x + 3700, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1350}, 'b': {'x': self.x + 4150, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 1350}, 'b': {'x': self.x + 4150, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 1400}, 'b': {'x': self.x + 3850, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1400}, 'b': {'x': self.x + 3850, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 1400}, 'b': {'x': self.x + 4150, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 1400}, 'b': {'x': self.x + 4150, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 2100}, 'b': {'x': self.x + 4100, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 2100}, 'b': {'x': self.x + 4100, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7100, 'y': self.y + 450}, 'b': {'x': self.x + 7150, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 7150, 'y': self.y + 450}, 'b': {'x': self.x + 7150, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7150, 'y': self.y + 800}, 'b': {'x': self.x + 7100, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7100, 'y': self.y + 800}, 'b': {'x': self.x + 7100, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 5700, 'y': self.y + 800}, 'b': {'x': self.x + 6900, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 6900, 'y': self.y + 800}, 'b': {'x': self.x + 6900, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 6900, 'y': self.y + 850}, 'b': {'x': self.x + 5700, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 5700, 'y': self.y + 850}, 'b': {'x': self.x + 5700, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 800}, 'b': {'x': self.x + 7250, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 800}, 'b': {'x': self.x + 7250, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 850}, 'b': {'x': self.x + 7000, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 850}, 'b': {'x': self.x + 7000, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7350, 'y': self.y + 800}, 'b': {'x': self.x + 8100, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 8100, 'y': self.y + 800}, 'b': {'x': self.x + 8100, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 8100, 'y': self.y + 850}, 'b': {'x': self.x + 7350, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 7350, 'y': self.y + 850}, 'b': {'x': self.x + 7350, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7450, 'y': self.y + 650}, 'b': {'x': self.x + 7500, 'y': self.y + 650}}, 
+            {'a': {'x': self.x + 7500, 'y': self.y + 650}, 'b': {'x': self.x + 7500, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7500, 'y': self.y + 800}, 'b': {'x': self.x + 7450, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7450, 'y': self.y + 800}, 'b': {'x': self.x + 7450, 'y': self.y + 650}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1100}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1100}, 'b': {'x': self.x + 7650, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1150}, 'b': {'x': self.x + 6950, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1150}, 'b': {'x': self.x + 6950, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 7850, 'y': self.y + 1100}, 'b': {'x': self.x + 8100, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 8100, 'y': self.y + 1100}, 'b': {'x': self.x + 8100, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 8100, 'y': self.y + 2100}, 'b': {'x': self.x + 7850, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 7850, 'y': self.y + 2100}, 'b': {'x': self.x + 7850, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1150}, 'b': {'x': self.x + 7000, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1150}, 'b': {'x': self.x + 7000, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1550}, 'b': {'x': self.x + 6950, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1550}, 'b': {'x': self.x + 6950, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1650}, 'b': {'x': self.x + 7000, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1650}, 'b': {'x': self.x + 7000, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 2100}, 'b': {'x': self.x + 6950, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 2100}, 'b': {'x': self.x + 6950, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1200}, 'b': {'x': self.x + 7700, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 7700, 'y': self.y + 1200}, 'b': {'x': self.x + 7700, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 7700, 'y': self.y + 1250}, 'b': {'x': self.x + 7650, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1250}, 'b': {'x': self.x + 7650, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 7800, 'y': self.y + 1200}, 'b': {'x': self.x + 7850, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 7850, 'y': self.y + 1200}, 'b': {'x': self.x + 7850, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 7850, 'y': self.y + 1250}, 'b': {'x': self.x + 7800, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 7800, 'y': self.y + 1250}, 'b': {'x': self.x + 7800, 'y': self.y + 1200}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1450}, 'b': {'x': self.x + 7100, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 7100, 'y': self.y + 1450}, 'b': {'x': self.x + 7100, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 7100, 'y': self.y + 1500}, 'b': {'x': self.x + 7000, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1500}, 'b': {'x': self.x + 7000, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 7200, 'y': self.y + 1450}, 'b': {'x': self.x + 7300, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1450}, 'b': {'x': self.x + 7300, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1500}, 'b': {'x': self.x + 7200, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 7200, 'y': self.y + 1500}, 'b': {'x': self.x + 7200, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1400}, 'b': {'x': self.x + 7300, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1400}, 'b': {'x': self.x + 7300, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1450}, 'b': {'x': self.x + 7250, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1450}, 'b': {'x': self.x + 7250, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1350}, 'b': {'x': self.x + 7450, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 7450, 'y': self.y + 1350}, 'b': {'x': self.x + 7450, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7450, 'y': self.y + 1400}, 'b': {'x': self.x + 7250, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1400}, 'b': {'x': self.x + 7250, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 7550, 'y': self.y + 1350}, 'b': {'x': self.x + 7600, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 7600, 'y': self.y + 1350}, 'b': {'x': self.x + 7600, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7600, 'y': self.y + 1400}, 'b': {'x': self.x + 7550, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7550, 'y': self.y + 1400}, 'b': {'x': self.x + 7550, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 7600, 'y': self.y + 1150}, 'b': {'x': self.x + 7650, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1150}, 'b': {'x': self.x + 7650, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1400}, 'b': {'x': self.x + 7600, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7600, 'y': self.y + 1400}, 'b': {'x': self.x + 7600, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1700}, 'b': {'x': self.x + 7100, 'y': self.y + 1700}}, 
+            {'a': {'x': self.x + 7100, 'y': self.y + 1700}, 'b': {'x': self.x + 7100, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7100, 'y': self.y + 1750}, 'b': {'x': self.x + 7000, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1750}, 'b': {'x': self.x + 7000, 'y': self.y + 1700}}, 
+            {'a': {'x': self.x + 7200, 'y': self.y + 1700}, 'b': {'x': self.x + 7300, 'y': self.y + 1700}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1700}, 'b': {'x': self.x + 7300, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1750}, 'b': {'x': self.x + 7200, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7200, 'y': self.y + 1750}, 'b': {'x': self.x + 7200, 'y': self.y + 1700}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1750}, 'b': {'x': self.x + 7300, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1750}, 'b': {'x': self.x + 7300, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1800}, 'b': {'x': self.x + 7250, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1800}, 'b': {'x': self.x + 7250, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 7850, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1850}}, 
+            {'a': {'x': self.x + 7850, 'y': self.y + 1850}, 'b': {'x': self.x + 7250, 'y': self.y + 1850}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1850}, 'b': {'x': self.x + 7250, 'y': self.y + 1800}}
+        ]
+
+    @property
     def get_task_rects(self):
         return [
             [pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"], # Check Inbox
@@ -201,8 +607,110 @@ class Map(object):
             [pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"], # Right system: 4
         ]
 
-    def draw_map_image(self, surface):
-        surface.blit(self.map_image, (self.x, self.y))
+    def draw_map_image(self, visible_surface, shadow_surface):
+        uniquePoints = set()
+        for segment in self.get_wall_segments:
+            if tuple(segment["a"].items()) not in uniquePoints:
+                uniquePoints.add(tuple(segment["a"].items()))
+            if tuple(segment["b"].items()) not in uniquePoints:
+                uniquePoints.add(tuple(segment["b"].items()))
+        
+        # Find intersection of RAY & SEGMENT
+        def getIntersection(ray, segment):
+            # RAY in parametric: Point + Delta*T1
+            r_px = ray['a']['x']
+            r_py = ray['a']['y']
+            r_dx = ray['b']['x'] - ray['a']['x']
+            r_dy = ray['b']['y'] - ray['a']['y']
+
+            # SEGMENT in parametric: Point + Delta*T2
+            s_px = segment['a']['x']
+            s_py = segment['a']['y']
+            s_dx = segment['b']['x'] - segment['a']['x']
+            s_dy = segment['b']['y'] - segment['a']['y']
+
+            # Are they parallel? If so, no intersect
+            if r_dx * s_dy == r_dy * s_dx:
+                # Unit vectors are the same.
+                return None
+
+            # SOLVE FOR T1 & T2
+            T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx)
+            if r_dy == 0:
+                T1 = (s_px + s_dx * T2 - r_px) / r_dx
+            else:
+                T1 = (s_py + s_dy * T2 - r_py) / r_dy
+
+            # Must be within parametic whatevers for RAY/SEGMENT
+            if T1 < 0: return None
+            if T2 < 0 or T2 > 1: return None
+
+            # Return the POINT OF INTERSECTION
+            return {
+                'x': r_px + r_dx * T1,
+                'y': r_py + r_dy * T1,
+                'param': T1
+            }
+
+        #######################################################
+
+        # DRAWING
+        def draw(segments):
+            mouse_x, mouse_y = 960, 540
+
+            # Draw segments
+            # color = "#999999"
+            # for seg in segments:
+            # 	pygame.draw.line(win, color, (seg["a"]["x"], seg["a"]["y"]), (seg["b"]["x"], seg["b"]["y"]), 1)
+
+            # Get all angles
+            uniqueAngles = set()
+            for uniquePoint in uniquePoints:
+                points_dict = dict(uniquePoint)
+                angle = math.atan2(points_dict['y'] - mouse_y, points_dict['x'] - mouse_x)
+                points_dict['angle'] = angle
+                uniqueAngles.update([angle-0.00001, angle+0.00001])
+
+            uniqueAngles = sorted(uniqueAngles)
+
+            # RAYS IN ALL DIRECTIONS
+            intersects = []
+            for angle in uniqueAngles:
+
+                # Calculate dx & dy from angle
+                dx = math.cos(angle)
+                dy = math.sin(angle)
+
+                # Ray from center of screen to mouse
+                ray = {
+                    "a":{"x": mouse_x, "y": mouse_y},
+                    "b":{"x": mouse_x + dx, "y": mouse_y + dy}
+                }
+
+                # Find CLOSEST intersection
+                closestIntersect = None
+                for segment in segments:
+                    intersect = getIntersection(ray,segment)
+                    if not intersect: continue
+                    elif not closestIntersect or intersect["param"] < closestIntersect["param"]:
+                        closestIntersect = intersect
+
+                # Intersect angle
+                if not closestIntersect: continue
+                # Add to list of intersects
+                else:
+                    intersects.append(closestIntersect)
+
+            # DRAW ALL RAYS
+            points = [(intersect['x'], intersect['y']) for intersect in intersects]
+
+            # # print("\n", points, "\n")
+            shadow_surface.blit(self.shadow_map_image, (self.x, self.y))
+            pygame.draw.polygon(shadow_surface, "#123456", points)
+        
+        visible_surface.blit(self.visible_map_image, (self.x, self.y))
+        draw(self.get_wall_segments)
+        visible_surface.blit(shadow_surface, (0, 0))
     
     def draw_collision(self, surface):
         for wall in self.get_wall_rects:
