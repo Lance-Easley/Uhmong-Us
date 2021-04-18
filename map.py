@@ -1,19 +1,17 @@
 import pygame
 
 class Map(object):
-    def __init__(self, image):
+    def __init__(self, map_image):
         self.x = -839
         self.y = -299
-        self.image = image
-        self.width = self.image.get_rect().width
-        self.height = self.image.get_rect().height
-        self.x_vel = 8
-        self.y_vel = 8
+        self.map_image = map_image
+        self.width = self.map_image.get_rect().width
+        self.height = self.map_image.get_rect().height
+        self.x_velocity = 8
+        self.y_velocity = 8
 
-    def draw(self, window):
-        window.blit(self.image, (self.x, self.y))
-
-    def wall_objs(self):
+    @property
+    def get_wall_rects(self):
         return [
             pygame.Rect(self.x + 50, self.y + 300, 5250, 50), # Outside: classrooms top wall
             pygame.Rect(self.x + 50, self.y + 350, 50, 1750), # Outside: classrooms left wall
@@ -132,7 +130,8 @@ class Map(object):
             pygame.Rect(self.x + 7250, self.y + 1800, 600, 50), # BCCA: incubator bottom room top right wall
         ]
 
-    def task_objs(self):
+    @property
+    def get_task_rects(self):
         return [
             [pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"], # Check Inbox
 
@@ -188,7 +187,8 @@ class Map(object):
             [pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "Remove Spoiled Food"], # Remove Spoiled Food
         ]
 
-    def vent_objs(self):
+    @property
+    def get_vent_rects(self):
         return [
             [pygame.Rect(self.x + 170, self.y + 1200, 60, 50), "Left.1"], # Left system: 1
             [pygame.Rect(self.x + 1795, self.y + 875, 60, 50), "Left.2"], # Left system: 2
@@ -200,24 +200,27 @@ class Map(object):
             [pygame.Rect(self.x + 7195, self.y + 525, 60, 50), "Right.3"], # Right system: 3
             [pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"], # Right system: 4
         ]
-    
-    def draw_collision(self, window):
-        for wall in self.wall_objs():
-            pygame.draw.rect(window, (0,255,0), wall, 1)
 
-    def draw_tasks(self, window):
-        for task in self.task_objs():
-            pygame.draw.rect(window, (242,242,0), task[0], 3)
+    def draw_map_image(self, surface):
+        surface.blit(self.map_image, (self.x, self.y))
     
-    def draw_vents(self, window):
-        for vent in self.vent_objs():
-            pygame.draw.rect(window, (0,242,242), vent[0], 3)
+    def draw_collision(self, surface):
+        for wall in self.get_wall_rects:
+            pygame.draw.rect(surface, (0,255,0), wall, 1)
 
-    def draw_coords(self, window, font):
+    def draw_tasks(self, surface):
+        for task in self.get_task_rects:
+            pygame.draw.rect(surface, (242,242,0), task[0], 3)
+    
+    def draw_vents(self, surface):
+        for vent in self.get_vent_rects:
+            pygame.draw.rect(surface, (0,242,242), vent[0], 3)
+
+    def draw_coords(self, surface, font):
         pos_text = font.render(f"X: {round(self.x, 2)}Y: {round(self.y, 3)}", True, (255,0,0))
         pos_textRect = pos_text.get_rect()
         pos_textRect.center = (200, 50)
-        window.blit(pos_text, pos_textRect)
+        surface.blit(pos_text, pos_textRect)
 
 if __name__ == "__main__":
     import main
