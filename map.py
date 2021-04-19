@@ -2,8 +2,7 @@ import pygame, math
 
 class Map(object):
     def __init__(self, visible_map_image, shadow_map_image):
-        self.x = -6700
-        self.y = -1000
+        self.x, self.y = -6349, -62
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width
@@ -136,634 +135,307 @@ class Map(object):
         # topleft-topright, topright-bottomright, bottomright-bottomleft, bottomleft-topleft
         return [
             # Outside: classrooms top wall
-            {'a': {'x': self.x + 5000, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 300}}, 
-            {'a': {'x': self.x + 5300, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 350}}, 
-            {'a': {'x': self.x + 5300, 'y': self.y + 350}, 'b': {'x': self.x + 100, 'y': self.y + 350}}, 
-            # del
-
-            # Outside: classrooms left wall
-            # del 
+            {'a': {'x': self.x + 5000, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 350}, 'b': {'x': self.x + 5300, 'y': self.y + 300}}, 
+            # Outside: classrooms left wall 
             {'a': {'x': self.x + 100, 'y': self.y + 350}, 'b': {'x': self.x + 100, 'y': self.y + 2100}}, 
-            # del
-            # del
-
             # Outside: classrooms bottom wall
-            {'a': {'x': self.x + 100, 'y': self.y + 2100}, 'b': {'x': self.x + 7850, 'y': self.y + 2100}}, 
-            # del
-            # del
-            # del 
-
-            # Outside: offices top wall
-            # del
-            # del 
-            {'a': {'x': self.x + 6350, 'y': self.y + 100}, 'b': {'x': self.x + 5000, 'y': self.y + 100}}, 
-            # del 
-
+            {'a': {'x': self.x + 100, 'y': self.y + 2100}, 'b': {'x': self.x + 7850, 'y': self.y + 2100}},  
+            # Outside: offices top wall 
+            {'a': {'x': self.x + 6350, 'y': self.y + 100}, 'b': {'x': self.x + 5000, 'y': self.y + 100}},  
             # Outside: offices left wall
-            # del
-            {'a': {'x': self.x + 5000, 'y': self.y + 100}, 'b': {'x': self.x + 5000, 'y': self.y + 400}}, 
-            {'a': {'x': self.x + 5000, 'y': self.y + 400}, 'b': {'x': self.x + 4950, 'y': self.y + 400}},
-            {'a': {'x': self.x + 4950, 'y': self.y + 400}, 'b': {'x': self.x + 4950, 'y': self.y + 350}},
-
-            # Outside: offices right wall
-            # del 
-            {'a': {'x': self.x + 6400, 'y': self.y + 450}, 'b': {'x': self.x + 6400, 'y': self.y + 800}}, 
-            # del 
-            {'a': {'x': self.x + 6350, 'y': self.y + 550}, 'b': {'x': self.x + 6350, 'y': self.y + 100}}, 
-
+            {'a': {'x': self.x + 4950, 'y': self.y + 350}, 'b': {'x': self.x + 5000, 'y': self.y + 400}}, 
+            {'a': {'x': self.x + 4950, 'y': self.y + 400}, 'b': {'x': self.x + 5000, 'y': self.y + 100}}, 
+            # Outside: offices right wall 
+            {'a': {'x': self.x + 6350, 'y': self.y + 100}, 'b': {'x': self.x + 6400, 'y': self.y + 800}}, 
             # Outside: kitchen top wall
-            # del
-            # del
-            {'a': {'x': self.x + 8100, 'y': self.y + 450}, 'b': {'x': self.x + 6400, 'y': self.y + 450}}, 
-            # del 
-
+            {'a': {'x': self.x + 8100, 'y': self.y + 450}, 'b': {'x': self.x + 6400, 'y': self.y + 450}},  
             # Outside: student door wall
-            # del
-            # del
-            # del
             {'a': {'x': self.x + 8100, 'y': self.y + 1100}, 'b': {'x': self.x + 8100, 'y': self.y + 450}}, 
 
 
-
             # BCCA: top office middle wall
-            {'a': {'x': self.x + 5400, 'y': self.y + 300}, 'b': {'x': self.x + 5900, 'y': self.y + 300}}, 
-            {'a': {'x': self.x + 5900, 'y': self.y + 300}, 'b': {'x': self.x + 5900, 'y': self.y + 350}}, 
-            {'a': {'x': self.x + 5900, 'y': self.y + 350}, 'b': {'x': self.x + 5400, 'y': self.y + 350}}, 
-            {'a': {'x': self.x + 5400, 'y': self.y + 350}, 'b': {'x': self.x + 5400, 'y': self.y + 300}}, 
-
+            {'a': {'x': self.x + 5400, 'y': self.y + 300}, 'b': {'x': self.x + 5900, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 5400, 'y': self.y + 350}, 'b': {'x': self.x + 5900, 'y': self.y + 300}}, 
             # BCCA: top office right wall
-            {'a': {'x': self.x + 6000, 'y': self.y + 300}, 'b': {'x': self.x + 6350, 'y': self.y + 300}}, 
-            # del
-            {'a': {'x': self.x + 6350, 'y': self.y + 350}, 'b': {'x': self.x + 6000, 'y': self.y + 350}}, 
-            {'a': {'x': self.x + 6000, 'y': self.y + 350}, 'b': {'x': self.x + 6000, 'y': self.y + 300}}, 
-
+            {'a': {'x': self.x + 6000, 'y': self.y + 300}, 'b': {'x': self.x + 6350, 'y': self.y + 350}}, 
+            {'a': {'x': self.x + 6000, 'y': self.y + 350}, 'b': {'x': self.x + 6350, 'y': self.y + 300}}, 
             # BCCA: left office left wall
-            {'a': {'x': self.x + 4950, 'y': self.y + 500}, 'b': {'x': self.x + 5000, 'y': self.y + 500}}, 
-            {'a': {'x': self.x + 5000, 'y': self.y + 500}, 'b': {'x': self.x + 5000, 'y': self.y + 550}}, 
-            # del 
-            {'a': {'x': self.x + 4950, 'y': self.y + 800}, 'b': {'x': self.x + 4950, 'y': self.y + 500}}, 
-
+            {'a': {'x': self.x + 4950, 'y': self.y + 500}, 'b': {'x': self.x + 5000, 'y': self.y + 550}},  
+            {'a': {'x': self.x + 4950, 'y': self.y + 800}, 'b': {'x': self.x + 5000, 'y': self.y + 500}}, 
             # BCCA: left office bottom wall
-            {'a': {'x': self.x + 4900, 'y': self.y + 800}, 'b': {'x': self.x + 5600, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 5600, 'y': self.y + 800}, 'b': {'x': self.x + 5600, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 5600, 'y': self.y + 850}, 'b': {'x': self.x + 4900, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 4900, 'y': self.y + 850}, 'b': {'x': self.x + 4900, 'y': self.y + 800}}, 
-
+            {'a': {'x': self.x + 4900, 'y': self.y + 800}, 'b': {'x': self.x + 5600, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4900, 'y': self.y + 850}, 'b': {'x': self.x + 5600, 'y': self.y + 800}}, 
             # BCCA: left office top wall
-            {'a': {'x': self.x + 5000, 'y': self.y + 550}, 'b': {'x': self.x + 5600, 'y': self.y + 550}}, 
-            {'a': {'x': self.x + 5600, 'y': self.y + 550}, 'b': {'x': self.x + 5600, 'y': self.y + 600}}, 
-            {'a': {'x': self.x + 5600, 'y': self.y + 600}, 'b': {'x': self.x + 5550, 'y': self.y + 600}}, 
-            # del
-
-            # BCCA: left office right wall
-            # del
-            {'a': {'x': self.x + 5550, 'y': self.y + 600}, 'b': {'x': self.x + 5550, 'y': self.y + 800}}, 
-            # del
-            # del
-
+            {'a': {'x': self.x + 5000, 'y': self.y + 550}, 'b': {'x': self.x + 5600, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5550, 'y': self.y + 600}, 'b': {'x': self.x + 5600, 'y': self.y + 550}}, 
             # BCCA: right office top wall
-            {'a': {'x': self.x + 5700, 'y': self.y + 550}, 'b': {'x': self.x + 6350, 'y': self.y + 550}}, 
-            # del
-            {'a': {'x': self.x + 5750, 'y': self.y + 600}, 'b': {'x': self.x + 5700, 'y': self.y + 600}}, 
-            {'a': {'x': self.x + 5700, 'y': self.y + 600}, 'b': {'x': self.x + 5700, 'y': self.y + 550}}, 
-
-            # BCCA: right office right wall
-            # del
-            # del
-            # del
-            {'a': {'x': self.x + 5750, 'y': self.y + 800}, 'b': {'x': self.x + 5750, 'y': self.y + 600}}, 
-
+            {'a': {'x': self.x + 5700, 'y': self.y + 550}, 'b': {'x': self.x + 5750, 'y': self.y + 600}}, 
+            {'a': {'x': self.x + 5700, 'y': self.y + 600}, 'b': {'x': self.x + 6350, 'y': self.y + 550}}, 
 
 
             # BCCA: breakroom right wall
-            # del
-            {'a': {'x': self.x + 4700, 'y': self.y + 350}, 'b': {'x': self.x + 4700, 'y': self.y + 800}}, 
-            # del
-            {'a': {'x': self.x + 4650, 'y': self.y + 800}, 'b': {'x': self.x + 4650, 'y': self.y + 350}}, 
-
+            {'a': {'x': self.x + 4675, 'y': self.y + 800}, 'b': {'x': self.x + 4675, 'y': self.y + 350}}, 
             # BCCA: breakroom bottom right wall
-            {'a': {'x': self.x + 4300, 'y': self.y + 800}, 'b': {'x': self.x + 4750, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 4750, 'y': self.y + 800}, 'b': {'x': self.x + 4750, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 4750, 'y': self.y + 850}, 'b': {'x': self.x + 4300, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 4300, 'y': self.y + 850}, 'b': {'x': self.x + 4300, 'y': self.y + 800}}, 
-
+            {'a': {'x': self.x + 4300, 'y': self.y + 800}, 'b': {'x': self.x + 4750, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4300, 'y': self.y + 850}, 'b': {'x': self.x + 4750, 'y': self.y + 800}}, 
             # BCCA: breakroom bottom left wall
-            {'a': {'x': self.x + 4150, 'y': self.y + 800}, 'b': {'x': self.x + 4200, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 4200, 'y': self.y + 800}, 'b': {'x': self.x + 4200, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 4200, 'y': self.y + 850}, 'b': {'x': self.x + 4150, 'y': self.y + 850}},
-            # del
-
+            {'a': {'x': self.x + 4150, 'y': self.y + 800}, 'b': {'x': self.x + 4200, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 4150, 'y': self.y + 850}, 'b': {'x': self.x + 4200, 'y': self.y + 800}},
             # BCCA: breakroom left wall
-            # del
-            {'a': {'x': self.x + 4150, 'y': self.y + 350}, 'b': {'x': self.x + 4150, 'y': self.y + 1100}}, 
-            # del
-            {'a': {'x': self.x + 4100, 'y': self.y + 1050}, 'b': {'x': self.x + 4100, 'y': self.y + 350}}, 
-
+            {'a': {'x': self.x + 4100, 'y': self.y + 350}, 'b': {'x': self.x + 4150, 'y': self.y + 1100}}, 
 
 
             # BCCA: lobby top left block
-            {'a': {'x': self.x + 4350, 'y': self.y + 1100}, 'b': {'x': self.x + 4550, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 4550, 'y': self.y + 1100}, 'b': {'x': self.x + 4550, 'y': self.y + 1300}}, 
-            {'a': {'x': self.x + 4550, 'y': self.y + 1300}, 'b': {'x': self.x + 4350, 'y': self.y + 1300}}, 
-            {'a': {'x': self.x + 4350, 'y': self.y + 1300}, 'b': {'x': self.x + 4350, 'y': self.y + 1100}}, 
-
+            {'a': {'x': self.x + 4350, 'y': self.y + 1100}, 'b': {'x': self.x + 4550, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 4350, 'y': self.y + 1300}, 'b': {'x': self.x + 4550, 'y': self.y + 1100}}, 
             # BCCA: lobby bottom left block
-            {'a': {'x': self.x + 4350, 'y': self.y + 1750}, 'b': {'x': self.x + 4550, 'y': self.y + 1750}}, 
-            {'a': {'x': self.x + 4550, 'y': self.y + 1750}, 'b': {'x': self.x + 4550, 'y': self.y + 1950}}, 
-            {'a': {'x': self.x + 4550, 'y': self.y + 1950}, 'b': {'x': self.x + 4350, 'y': self.y + 1950}}, 
-            {'a': {'x': self.x + 4350, 'y': self.y + 1950}, 'b': {'x': self.x + 4350, 'y': self.y + 1750}}, 
-
+            {'a': {'x': self.x + 4350, 'y': self.y + 1750}, 'b': {'x': self.x + 4550, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 4350, 'y': self.y + 1950}, 'b': {'x': self.x + 4550, 'y': self.y + 1750}}, 
             # BCCA: lobby top right block
-            {'a': {'x': self.x + 6550, 'y': self.y + 1100}, 'b': {'x': self.x + 6750, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 6750, 'y': self.y + 1100}, 'b': {'x': self.x + 6750, 'y': self.y + 1300}}, 
-            {'a': {'x': self.x + 6750, 'y': self.y + 1300}, 'b': {'x': self.x + 6550, 'y': self.y + 1300}}, 
-            {'a': {'x': self.x + 6550, 'y': self.y + 1300}, 'b': {'x': self.x + 6550, 'y': self.y + 1100}}, 
-
+            {'a': {'x': self.x + 6550, 'y': self.y + 1100}, 'b': {'x': self.x + 6750, 'y': self.y + 1300}}, 
+            {'a': {'x': self.x + 6550, 'y': self.y + 1300}, 'b': {'x': self.x + 6750, 'y': self.y + 1100}}, 
             # BCCA: lobby bottom right block
-            {'a': {'x': self.x + 6550, 'y': self.y + 1800}, 'b': {'x': self.x + 6750, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 6750, 'y': self.y + 1800}, 'b': {'x': self.x + 6750, 'y': self.y + 2000}}, 
-            {'a': {'x': self.x + 6750, 'y': self.y + 2000}, 'b': {'x': self.x + 6550, 'y': self.y + 2000}}, 
-            {'a': {'x': self.x + 6550, 'y': self.y + 2000}, 'b': {'x': self.x + 6550, 'y': self.y + 1800}}, 
-
+            {'a': {'x': self.x + 6550, 'y': self.y + 1800}, 'b': {'x': self.x + 6750, 'y': self.y + 2000}}, 
+            {'a': {'x': self.x + 6550, 'y': self.y + 2000}, 'b': {'x': self.x + 6750, 'y': self.y + 1800}}, 
             # BCCA: lobby top right wall
-            {'a': {'x': self.x + 5650, 'y': self.y + 1200}, 'b': {'x': self.x + 6350, 'y': self.y + 1200}}, 
-            {'a': {'x': self.x + 6350, 'y': self.y + 1200}, 'b': {'x': self.x + 6350, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 6300, 'y': self.y + 1250}, 'b': {'x': self.x + 5650, 'y': self.y + 1250}}, 
-            {'a': {'x': self.x + 5650, 'y': self.y + 1250}, 'b': {'x': self.x + 5650, 'y': self.y + 1200}}, 
-
+            {'a': {'x': self.x + 5650, 'y': self.y + 1200}, 'b': {'x': self.x + 6300, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 5650, 'y': self.y + 1250}, 'b': {'x': self.x + 6350, 'y': self.y + 1200}}, 
             # BCCA: lobby top left wall
-            {'a': {'x': self.x + 4750, 'y': self.y + 1200}, 'b': {'x': self.x + 5450, 'y': self.y + 1200}}, 
-            {'a': {'x': self.x + 5450, 'y': self.y + 1200}, 'b': {'x': self.x + 5450, 'y': self.y + 1250}}, 
-            {'a': {'x': self.x + 5450, 'y': self.y + 1250}, 'b': {'x': self.x + 4800, 'y': self.y + 1250}}, 
-            {'a': {'x': self.x + 4750, 'y': self.y + 1400}, 'b': {'x': self.x + 4750, 'y': self.y + 1200}}, 
-
+            {'a': {'x': self.x + 4750, 'y': self.y + 1200}, 'b': {'x': self.x + 5450, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 4800, 'y': self.y + 1250}, 'b': {'x': self.x + 5450, 'y': self.y + 1200}}, 
             # BCCA: lobby left top wall
-            # del
-            {'a': {'x': self.x + 4800, 'y': self.y + 1250}, 'b': {'x': self.x + 4800, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 4800, 'y': self.y + 1400}, 'b': {'x': self.x + 4750, 'y': self.y + 1400}}, 
-            # del
-
+            {'a': {'x': self.x + 4750, 'y': self.y + 1200}, 'b': {'x': self.x + 4800, 'y': self.y + 1400}},
+            {'a': {'x': self.x + 4750, 'y': self.y + 1400}, 'b': {'x': self.x + 4800, 'y': self.y + 1250}},
             # BCCA: lobby left bottom wall
-            {'a': {'x': self.x + 4750, 'y': self.y + 1600}, 'b': {'x': self.x + 4800, 'y': self.y + 1600}}, 
-            {'a': {'x': self.x + 4800, 'y': self.y + 1600}, 'b': {'x': self.x + 4800, 'y': self.y + 1750}}, 
-            # del
-            # del
-
+            {'a': {'x': self.x + 4750, 'y': self.y + 1600}, 'b': {'x': self.x + 4800, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1800}, 'b': {'x': self.x + 4800, 'y': self.y + 1600}}, 
             # BCCA: lobby bottom left wall
-            {'a': {'x': self.x + 4800, 'y': self.y + 1750}, 'b': {'x': self.x + 5450, 'y': self.y + 1750}}, 
-            {'a': {'x': self.x + 5450, 'y': self.y + 1750}, 'b': {'x': self.x + 5450, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 5450, 'y': self.y + 1800}, 'b': {'x': self.x + 4750, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 4750, 'y': self.y + 1800}, 'b': {'x': self.x + 4750, 'y': self.y + 1600}}, 
-
+            {'a': {'x': self.x + 4800, 'y': self.y + 1750}, 'b': {'x': self.x + 5450, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 4750, 'y': self.y + 1800}, 'b': {'x': self.x + 5450, 'y': self.y + 1750}}, 
             # BCCA: lobby bottom right wall
-            {'a': {'x': self.x + 5650, 'y': self.y + 1750}, 'b': {'x': self.x + 6300, 'y': self.y + 1750}}, 
-            {'a': {'x': self.x + 6350, 'y': self.y + 1600}, 'b': {'x': self.x + 6350, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 6350, 'y': self.y + 1800}, 'b': {'x': self.x + 5650, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 5650, 'y': self.y + 1800}, 'b': {'x': self.x + 5650, 'y': self.y + 1750}}, 
-
+            {'a': {'x': self.x + 5650, 'y': self.y + 1750}, 'b': {'x': self.x + 6350, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 5650, 'y': self.y + 1800}, 'b': {'x': self.x + 6300, 'y': self.y + 1750}}, 
             # BCCA: lobby right top wall
-            # del 
-            # del 
-            {'a': {'x': self.x + 6350, 'y': self.y + 1400}, 'b': {'x': self.x + 6300, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 6300, 'y': self.y + 1400}, 'b': {'x': self.x + 6300, 'y': self.y + 1250}}, 
-
+            {'a': {'x': self.x + 6300, 'y': self.y + 1250}, 'b': {'x': self.x + 6350, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 6300, 'y': self.y + 1400}, 'b': {'x': self.x + 6350, 'y': self.y + 1200}}, 
             # BCCA: lobby right bottom wall
-            {'a': {'x': self.x + 6300, 'y': self.y + 1600}, 'b': {'x': self.x + 6350, 'y': self.y + 1600}}, 
-            # del
-            # del
-            {'a': {'x': self.x + 6300, 'y': self.y + 1750}, 'b': {'x': self.x + 6300, 'y': self.y + 1600}}, 
-
+            {'a': {'x': self.x + 6300, 'y': self.y + 1600}, 'b': {'x': self.x + 6350, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 6300, 'y': self.y + 1750}, 'b': {'x': self.x + 6350, 'y': self.y + 1600}}, 
 
 
             # BCCA: supply bottom right wall
-            {'a': {'x': self.x + 3800, 'y': self.y + 1050}, 'b': {'x': self.x + 4100, 'y': self.y + 1050}}, 
-            # del 
-            {'a': {'x': self.x + 4150, 'y': self.y + 1100}, 'b': {'x': self.x + 3800, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 3800, 'y': self.y + 1100}, 'b': {'x': self.x + 3800, 'y': self.y + 1050}}, 
-
+            {'a': {'x': self.x + 3800, 'y': self.y + 1050}, 'b': {'x': self.x + 4150, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 3800, 'y': self.y + 1100}, 'b': {'x': self.x + 4100, 'y': self.y + 1050}}, 
             # BCCA: supply middle wall
-            {'a': {'x': self.x + 3600, 'y': self.y + 600}, 'b': {'x': self.x + 3650, 'y': self.y + 600}}, 
-            {'a': {'x': self.x + 3650, 'y': self.y + 600}, 'b': {'x': self.x + 3650, 'y': self.y + 1050}}, 
-            # del
-            {'a': {'x': self.x + 3600, 'y': self.y + 750}, 'b': {'x': self.x + 3600, 'y': self.y + 600}}, 
-
-            # BCCA: supply middle left wall
-            {'a': {'x': self.x + 3350, 'y': self.y + 750}, 'b': {'x': self.x + 3600, 'y': self.y + 750}}, 
-            # del
-            # del
-            # del
-
+            {'a': {'x': self.x + 3600, 'y': self.y + 600}, 'b': {'x': self.x + 3650, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 3600, 'y': self.y + 750}, 'b': {'x': self.x + 3650, 'y': self.y + 600}}, 
 
 
             # BCCA: hallway top door stud
-            # del
-            {'a': {'x': self.x + 3200, 'y': self.y + 1100}, 'b': {'x': self.x + 3200, 'y': self.y + 1150}}, 
-            {'a': {'x': self.x + 3200, 'y': self.y + 1150}, 'b': {'x': self.x + 3150, 'y': self.y + 1150}}, 
-            {'a': {'x': self.x + 3150, 'y': self.y + 1150}, 'b': {'x': self.x + 3150, 'y': self.y + 1100}}, 
-
+            {'a': {'x': self.x + 3150, 'y': self.y + 1100}, 'b': {'x': self.x + 3200, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 3150, 'y': self.y + 1150}, 'b': {'x': self.x + 3200, 'y': self.y + 1100}}, 
             # BCCA: hallway bottom door stud
-            {'a': {'x': self.x + 3150, 'y': self.y + 1300}, 'b': {'x': self.x + 3200, 'y': self.y + 1300}}, 
-            {'a': {'x': self.x + 3200, 'y': self.y + 1300}, 'b': {'x': self.x + 3200, 'y': self.y + 1350}}, 
-            # del 
-            {'a': {'x': self.x + 3150, 'y': self.y + 1350}, 'b': {'x': self.x + 3150, 'y': self.y + 1300}}, 
-
+            {'a': {'x': self.x + 3150, 'y': self.y + 1300}, 'b': {'x': self.x + 3200, 'y': self.y + 1350}}, 
+            {'a': {'x': self.x + 3150, 'y': self.y + 1350}, 'b': {'x': self.x + 3200, 'y': self.y + 1300}}, 
 
 
             # BCCA: classroom1 right wall
-            # del
-            {'a': {'x': self.x + 3350, 'y': self.y + 350}, 'b': {'x': self.x + 3350, 'y': self.y + 750}}, 
-            # del
-            {'a': {'x': self.x + 3300, 'y': self.y + 1050}, 'b': {'x': self.x + 3300, 'y': self.y + 350}}, 
-
+            {'a': {'x': self.x + 3300, 'y': self.y + 350}, 'b': {'x': self.x + 3350, 'y': self.y + 1050}},
             # BCCA: classroom1 bottom right wall
-            {'a': {'x': self.x + 2250, 'y': self.y + 1050}, 'b': {'x': self.x + 3700, 'y': self.y + 1050}}, 
-            {'a': {'x': self.x + 3700, 'y': self.y + 1050}, 'b': {'x': self.x + 3700, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 3700, 'y': self.y + 1100}, 'b': {'x': self.x + 2250, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 2250, 'y': self.y + 1100}, 'b': {'x': self.x + 2250, 'y': self.y + 1050}}, 
-
+            {'a': {'x': self.x + 2250, 'y': self.y + 1050}, 'b': {'x': self.x + 3700, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 2250, 'y': self.y + 1100}, 'b': {'x': self.x + 3700, 'y': self.y + 1050}}, 
             # BCCA: classroom1 block
-            {'a': {'x': self.x + 2500, 'y': self.y + 500}, 'b': {'x': self.x + 2900, 'y': self.y + 500}}, 
-            {'a': {'x': self.x + 2900, 'y': self.y + 500}, 'b': {'x': self.x + 2900, 'y': self.y + 900}}, 
-            {'a': {'x': self.x + 2900, 'y': self.y + 900}, 'b': {'x': self.x + 2500, 'y': self.y + 900}}, 
-            {'a': {'x': self.x + 2500, 'y': self.y + 900}, 'b': {'x': self.x + 2500, 'y': self.y + 500}}, 
-
+            {'a': {'x': self.x + 2500, 'y': self.y + 500}, 'b': {'x': self.x + 2900, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 2500, 'y': self.y + 900}, 'b': {'x': self.x + 2900, 'y': self.y + 500}}, 
             # BCCA: classroom1 bottom left wall
-            {'a': {'x': self.x + 1900, 'y': self.y + 1050}, 'b': {'x': self.x + 2150, 'y': self.y + 1050}}, 
-            {'a': {'x': self.x + 2150, 'y': self.y + 1050}, 'b': {'x': self.x + 2150, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 2150, 'y': self.y + 1100}, 'b': {'x': self.x + 1900, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 1900, 'y': self.y + 1100}, 'b': {'x': self.x + 1900, 'y': self.y + 1050}}, 
-
+            {'a': {'x': self.x + 1900, 'y': self.y + 1050}, 'b': {'x': self.x + 2150, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1100}, 'b': {'x': self.x + 2150, 'y': self.y + 1050}}, 
             # BCCA: classroom1 left top wall
-            # del
-            {'a': {'x': self.x + 2100, 'y': self.y + 350}, 'b': {'x': self.x + 2100, 'y': self.y + 450}}, 
-            {'a': {'x': self.x + 2100, 'y': self.y + 450}, 'b': {'x': self.x + 2050, 'y': self.y + 450}}, 
-            {'a': {'x': self.x + 2050, 'y': self.y + 450}, 'b': {'x': self.x + 2050, 'y': self.y + 350}}, 
-
+            {'a': {'x': self.x + 2050, 'y': self.y + 350}, 'b': {'x': self.x + 2100, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 450}, 'b': {'x': self.x + 2100, 'y': self.y + 350}}, 
             # BCCA: classroom1 left bottom wall
-            {'a': {'x': self.x + 2050, 'y': self.y + 550}, 'b': {'x': self.x + 2100, 'y': self.y + 550}}, 
-            {'a': {'x': self.x + 2100, 'y': self.y + 550}, 'b': {'x': self.x + 2100, 'y': self.y + 1050}}, 
-            # del
-            {'a': {'x': self.x + 2050, 'y': self.y + 1050}, 'b': {'x': self.x + 2050, 'y': self.y + 550}}, 
-
+            {'a': {'x': self.x + 2050, 'y': self.y + 550}, 'b': {'x': self.x + 2100, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 1050}, 'b': {'x': self.x + 2100, 'y': self.y + 550}}, 
 
 
             # BCCA: breakoutroom1 bottom left wall
-            {'a': {'x': self.x + 1500, 'y': self.y + 1050}, 'b': {'x': self.x + 1750, 'y': self.y + 1050}}, 
-            {'a': {'x': self.x + 1750, 'y': self.y + 1050}, 'b': {'x': self.x + 1750, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 1750, 'y': self.y + 1100}, 'b': {'x': self.x + 1500, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 1500, 'y': self.y + 1100}, 'b': {'x': self.x + 1500, 'y': self.y + 1050}}, 
-
+            {'a': {'x': self.x + 1500, 'y': self.y + 1050}, 'b': {'x': self.x + 1750, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 1500, 'y': self.y + 1100}, 'b': {'x': self.x + 1750, 'y': self.y + 1050}}, 
             # BCCA: breakoutroom1 table
-            # del
-            {'a': {'x': self.x + 1900, 'y': self.y + 350}, 'b': {'x': self.x + 1900, 'y': self.y + 750}}, 
-            {'a': {'x': self.x + 1900, 'y': self.y + 750}, 'b': {'x': self.x + 1750, 'y': self.y + 750}}, 
-            {'a': {'x': self.x + 1750, 'y': self.y + 750}, 'b': {'x': self.x + 1750, 'y': self.y + 350}}, 
-
+            {'a': {'x': self.x + 1750, 'y': self.y + 350}, 'b': {'x': self.x + 1900, 'y': self.y + 750}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 750}, 'b': {'x': self.x + 1900, 'y': self.y + 350}}, 
             # BCCA: breakoutroom1 left top wall
-            # del
-            {'a': {'x': self.x + 1600, 'y': self.y + 350}, 'b': {'x': self.x + 1600, 'y': self.y + 450}}, 
-            {'a': {'x': self.x + 1600, 'y': self.y + 450}, 'b': {'x': self.x + 1550, 'y': self.y + 450}}, 
-            {'a': {'x': self.x + 1550, 'y': self.y + 450}, 'b': {'x': self.x + 1550, 'y': self.y + 350}}, 
-
+            {'a': {'x': self.x + 1550, 'y': self.y + 350}, 'b': {'x': self.x + 1600, 'y': self.y + 450}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 450}, 'b': {'x': self.x + 1600, 'y': self.y + 350}}, 
             # BCCA: breakoutroom1 left bottom wall
-            {'a': {'x': self.x + 1550, 'y': self.y + 550}, 'b': {'x': self.x + 1600, 'y': self.y + 550}}, 
-            {'a': {'x': self.x + 1600, 'y': self.y + 550}, 'b': {'x': self.x + 1600, 'y': self.y + 1050}}, 
-            # del
-            {'a': {'x': self.x + 1550, 'y': self.y + 1050}, 'b': {'x': self.x + 1550, 'y': self.y + 550}}, 
-
+            {'a': {'x': self.x + 1550, 'y': self.y + 550}, 'b': {'x': self.x + 1600, 'y': self.y + 1050}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 1050}, 'b': {'x': self.x + 1600, 'y': self.y + 550}}, 
 
 
             # BCCA: classroom3 right block
-            {'a': {'x': self.x + 1100, 'y': self.y + 600}, 'b': {'x': self.x + 1300, 'y': self.y + 600}}, 
-            {'a': {'x': self.x + 1300, 'y': self.y + 600}, 'b': {'x': self.x + 1300, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 1300, 'y': self.y + 800}, 'b': {'x': self.x + 1100, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 1100, 'y': self.y + 800}, 'b': {'x': self.x + 1100, 'y': self.y + 600}}, 
-
+            {'a': {'x': self.x + 1100, 'y': self.y + 600}, 'b': {'x': self.x + 1300, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 1100, 'y': self.y + 800}, 'b': {'x': self.x + 1300, 'y': self.y + 600}}, 
             # BCCA: classroom3 left block
-            {'a': {'x': self.x + 600, 'y': self.y + 600}, 'b': {'x': self.x + 800, 'y': self.y + 600}}, 
-            {'a': {'x': self.x + 800, 'y': self.y + 600}, 'b': {'x': self.x + 800, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 800, 'y': self.y + 800}, 'b': {'x': self.x + 600, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 600, 'y': self.y + 800}, 'b': {'x': self.x + 600, 'y': self.y + 600}}, 
-
+            {'a': {'x': self.x + 600, 'y': self.y + 600}, 'b': {'x': self.x + 800, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 600, 'y': self.y + 800}, 'b': {'x': self.x + 800, 'y': self.y + 600}}, 
             # BCCA: classroom3 middle wall
-            # del
-            {'a': {'x': self.x + 350, 'y': self.y + 850}, 'b': {'x': self.x + 350, 'y': self.y + 1050}}, 
-            # del
-            # del
-
+            {'a': {'x': self.x + 300, 'y': self.y + 900}, 'b': {'x': self.x + 350, 'y': self.y + 1050}}, 
             # BCCA: classroom3 bottom left wall
-            {'a': {'x': self.x + 350, 'y': self.y + 1050}, 'b': {'x': self.x + 1400, 'y': self.y + 1050}}, 
-            {'a': {'x': self.x + 1400, 'y': self.y + 1050}, 'b': {'x': self.x + 1400, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 1400, 'y': self.y + 1100}, 'b': {'x': self.x + 300, 'y': self.y + 1100}}, 
-            {'a': {'x': self.x + 300, 'y': self.y + 1100}, 'b': {'x': self.x + 300, 'y': self.y + 900}}, 
-
+            {'a': {'x': self.x + 350, 'y': self.y + 1050}, 'b': {'x': self.x + 1400, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 300, 'y': self.y + 1100}, 'b': {'x': self.x + 1400, 'y': self.y + 1050}}, 
             # BCCA: classroom3 middle right wall
-            {'a': {'x': self.x + 250, 'y': self.y + 850}, 'b': {'x': self.x + 350, 'y': self.y + 850}}, 
-            # del
-            {'a': {'x': self.x + 300, 'y': self.y + 900}, 'b': {'x': self.x + 250, 'y': self.y + 900}}, 
-            {'a': {'x': self.x + 250, 'y': self.y + 900}, 'b': {'x': self.x + 250, 'y': self.y + 850}}, 
-
+            {'a': {'x': self.x + 250, 'y': self.y + 850}, 'b': {'x': self.x + 300, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 250, 'y': self.y + 900}, 'b': {'x': self.x + 350, 'y': self.y + 850}}, 
             # BCCA: classroom3 middle left wall
-            {'a': {'x': self.x + 100, 'y': self.y + 850}, 'b': {'x': self.x + 150, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 150, 'y': self.y + 850}, 'b': {'x': self.x + 150, 'y': self.y + 900}}, 
-            {'a': {'x': self.x + 150, 'y': self.y + 900}, 'b': {'x': self.x + 100, 'y': self.y + 900}}, 
-            # del
-
+            {'a': {'x': self.x + 100, 'y': self.y + 850}, 'b': {'x': self.x + 150, 'y': self.y + 900}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 900}, 'b': {'x': self.x + 150, 'y': self.y + 850}}, 
 
 
             # BCCA: classroom4 top left wall
-            {'a': {'x': self.x + 300, 'y': self.y + 1350}, 'b': {'x': self.x + 1400, 'y': self.y + 1350}}, 
-            {'a': {'x': self.x + 1400, 'y': self.y + 1350}, 'b': {'x': self.x + 1400, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 1400, 'y': self.y + 1400}, 'b': {'x': self.x + 300, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 300, 'y': self.y + 1550}, 'b': {'x': self.x + 300, 'y': self.y + 1350}}, 
-
+            {'a': {'x': self.x + 300, 'y': self.y + 1350}, 'b': {'x': self.x + 1400, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 350, 'y': self.y + 1400}, 'b': {'x': self.x + 1400, 'y': self.y + 1350}}, 
             # BCCA: classroom4 middle wall
-            # del
-            {'a': {'x': self.x + 350, 'y': self.y + 1400}, 'b': {'x': self.x + 350, 'y': self.y + 1600}}, 
-            # del 
-            # del
-
+            {'a': {'x': self.x + 300, 'y': self.y + 1550}, 'b': {'x': self.x + 350, 'y': self.y + 1400}},  
             # BCCA: classroom4 middle right wall
-            {'a': {'x': self.x + 250, 'y': self.y + 1550}, 'b': {'x': self.x + 300, 'y': self.y + 1550}}, 
-            # del
-            {'a': {'x': self.x + 350, 'y': self.y + 1600}, 'b': {'x': self.x + 250, 'y': self.y + 1600}}, 
-            {'a': {'x': self.x + 250, 'y': self.y + 1600}, 'b': {'x': self.x + 250, 'y': self.y + 1550}}, 
-
+            {'a': {'x': self.x + 250, 'y': self.y + 1550}, 'b': {'x': self.x + 350, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 250, 'y': self.y + 1600}, 'b': {'x': self.x + 300, 'y': self.y + 1550}}, 
             # BCCA: classroom4 middle left wall
-            {'a': {'x': self.x + 100, 'y': self.y + 1550}, 'b': {'x': self.x + 150, 'y': self.y + 1550}}, 
-            {'a': {'x': self.x + 150, 'y': self.y + 1550}, 'b': {'x': self.x + 150, 'y': self.y + 1600}}, 
-            {'a': {'x': self.x + 150, 'y': self.y + 1600}, 'b': {'x': self.x + 100, 'y': self.y + 1600}}, 
-            # del
-
+            {'a': {'x': self.x + 100, 'y': self.y + 1550}, 'b': {'x': self.x + 150, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 100, 'y': self.y + 1600}, 'b': {'x': self.x + 150, 'y': self.y + 1550}}, 
             # BCCA: classroom4 center top wall
-            {'a': {'x': self.x + 550, 'y': self.y + 1600}, 'b': {'x': self.x + 750, 'y': self.y + 1600}}, 
-            {'a': {'x': self.x + 750, 'y': self.y + 1600}, 'b': {'x': self.x + 750, 'y': self.y + 1650}}, 
-            {'a': {'x': self.x + 750, 'y': self.y + 1650}, 'b': {'x': self.x + 600, 'y': self.y + 1650}}, 
-            # del
-
+            {'a': {'x': self.x + 550, 'y': self.y + 1600}, 'b': {'x': self.x + 750, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 600, 'y': self.y + 1650}, 'b': {'x': self.x + 750, 'y': self.y + 1600}}, 
             # BCCA: classroom4 center left wall
-            # del
-            {'a': {'x': self.x + 600, 'y': self.y + 1650}, 'b': {'x': self.x + 600, 'y': self.y + 1900}}, 
-            # del
-            {'a': {'x': self.x + 550, 'y': self.y + 1950}, 'b': {'x': self.x + 550, 'y': self.y + 1600}}, 
-
-            # BCCA: classroom4 center bottom wall
-            {'a': {'x': self.x + 600, 'y': self.y + 1900}, 'b': {'x': self.x + 1050, 'y': self.y + 1900}}, 
-            # del 
-            {'a': {'x': self.x + 1100, 'y': self.y + 1950}, 'b': {'x': self.x + 550, 'y': self.y + 1950}}, 
-            # del 
-
+            {'a': {'x': self.x + 550, 'y': self.y + 1600}, 'b': {'x': self.x + 600, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1950}, 'b': {'x': self.x + 600, 'y': self.y + 1650}}, 
+            # BCCA: classroom4 center bottom wall 
+            {'a': {'x': self.x + 600, 'y': self.y + 1900}, 'b': {'x': self.x + 1100, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 550, 'y': self.y + 1950}, 'b': {'x': self.x + 1050, 'y': self.y + 1900}}, 
             # BCCA: classroom4 center right wall
-            {'a': {'x': self.x + 1050, 'y': self.y + 1800}, 'b': {'x': self.x + 1100, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 1100, 'y': self.y + 1800}, 'b': {'x': self.x + 1100, 'y': self.y + 1950}}, 
-            # del 
-            {'a': {'x': self.x + 1050, 'y': self.y + 1900}, 'b': {'x': self.x + 1050, 'y': self.y + 1800}},
-
+            {'a': {'x': self.x + 1050, 'y': self.y + 1800}, 'b': {'x': self.x + 1100, 'y': self.y + 1950}},
+            {'a': {'x': self.x + 1050, 'y': self.y + 1900}, 'b': {'x': self.x + 1100, 'y': self.y + 1800}},
 
 
             # BCCA: breakoutroom2 top left wall
-            {'a': {'x': self.x + 1500, 'y': self.y + 1350}, 'b': {'x': self.x + 1750, 'y': self.y + 1350}}, 
-            {'a': {'x': self.x + 1750, 'y': self.y + 1350}, 'b': {'x': self.x + 1750, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 1750, 'y': self.y + 1400}, 'b': {'x': self.x + 1500, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 1500, 'y': self.y + 1400}, 'b': {'x': self.x + 1500, 'y': self.y + 1350}}, 
-
+            {'a': {'x': self.x + 1500, 'y': self.y + 1350}, 'b': {'x': self.x + 1750, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1500, 'y': self.y + 1400}, 'b': {'x': self.x + 1750, 'y': self.y + 1350}}, 
             # BCCA: breakoutroom2 top right wall
-            {'a': {'x': self.x + 1900, 'y': self.y + 1350}, 'b': {'x': self.x + 2150, 'y': self.y + 1350}}, 
-            {'a': {'x': self.x + 2150, 'y': self.y + 1350}, 'b': {'x': self.x + 2150, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 2150, 'y': self.y + 1400}, 'b': {'x': self.x + 1900, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 1900, 'y': self.y + 1400}, 'b': {'x': self.x + 1900, 'y': self.y + 1350}},
-
+            {'a': {'x': self.x + 1900, 'y': self.y + 1350}, 'b': {'x': self.x + 2150, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 1900, 'y': self.y + 1400}, 'b': {'x': self.x + 2150, 'y': self.y + 1350}},
             # BCCA: breakoutroom2 left top wall
-            # del
-            {'a': {'x': self.x + 1600, 'y': self.y + 1400}, 'b': {'x': self.x + 1600, 'y': self.y + 1900}}, 
-            {'a': {'x': self.x + 1600, 'y': self.y + 1900}, 'b': {'x': self.x + 1550, 'y': self.y + 1900}}, 
-            {'a': {'x': self.x + 1550, 'y': self.y + 1900}, 'b': {'x': self.x + 1550, 'y': self.y + 1400}}, 
-
+            {'a': {'x': self.x + 1550, 'y': self.y + 1400}, 'b': {'x': self.x + 1600, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 1900}, 'b': {'x': self.x + 1600, 'y': self.y + 1400}}, 
             # BCCA: breakoutroom2 left bottom wall
-            {'a': {'x': self.x + 1550, 'y': self.y + 2000}, 'b': {'x': self.x + 1600, 'y': self.y + 2000}}, 
-            {'a': {'x': self.x + 1600, 'y': self.y + 2000}, 'b': {'x': self.x + 1600, 'y': self.y + 2100}}, 
-            # del
-            {'a': {'x': self.x + 1550, 'y': self.y + 2100}, 'b': {'x': self.x + 1550, 'y': self.y + 2000}}, 
-
+            {'a': {'x': self.x + 1550, 'y': self.y + 2000}, 'b': {'x': self.x + 1600, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 1550, 'y': self.y + 2100}, 'b': {'x': self.x + 1600, 'y': self.y + 2000}}, 
             # BCCA: breakoutroom2 table
-            {'a': {'x': self.x + 1750, 'y': self.y + 1500}, 'b': {'x': self.x + 1900, 'y': self.y + 1500}}, 
-            {'a': {'x': self.x + 1900, 'y': self.y + 1500}, 'b': {'x': self.x + 1900, 'y': self.y + 1950}}, 
-            {'a': {'x': self.x + 1900, 'y': self.y + 1950}, 'b': {'x': self.x + 1750, 'y': self.y + 1950}}, 
-            {'a': {'x': self.x + 1750, 'y': self.y + 1950}, 'b': {'x': self.x + 1750, 'y': self.y + 1500}}, 
-
+            {'a': {'x': self.x + 1750, 'y': self.y + 1500}, 'b': {'x': self.x + 1900, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 1750, 'y': self.y + 1950}, 'b': {'x': self.x + 1900, 'y': self.y + 1500}}, 
             # BCCA: breakoutroom2 right top wall
-            # del
-            {'a': {'x': self.x + 2100, 'y': self.y + 1400}, 'b': {'x': self.x + 2100, 'y': self.y + 1900}}, 
-            {'a': {'x': self.x + 2100, 'y': self.y + 1900}, 'b': {'x': self.x + 2050, 'y': self.y + 1900}}, 
-            {'a': {'x': self.x + 2050, 'y': self.y + 1900}, 'b': {'x': self.x + 2050, 'y': self.y + 1400}}, 
-
+            {'a': {'x': self.x + 2050, 'y': self.y + 1400}, 'b': {'x': self.x + 2100, 'y': self.y + 1900}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 1900}, 'b': {'x': self.x + 2100, 'y': self.y + 1400}}, 
             # BCCA: breakoutroom2 right bottom wall
-            {'a': {'x': self.x + 2050, 'y': self.y + 2000}, 'b': {'x': self.x + 2100, 'y': self.y + 2000}}, 
-            {'a': {'x': self.x + 2100, 'y': self.y + 2000}, 'b': {'x': self.x + 2100, 'y': self.y + 2100}}, 
-            # del 
-            {'a': {'x': self.x + 2050, 'y': self.y + 2100}, 'b': {'x': self.x + 2050, 'y': self.y + 2000}}, 
-
+            {'a': {'x': self.x + 2050, 'y': self.y + 2000}, 'b': {'x': self.x + 2100, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 2050, 'y': self.y + 2100}, 'b': {'x': self.x + 2100, 'y': self.y + 2000}}, 
 
 
             # BCCA: classroom2 top right wall
-            {'a': {'x': self.x + 2250, 'y': self.y + 1350}, 'b': {'x': self.x + 3600, 'y': self.y + 1350}}, 
-            {'a': {'x': self.x + 3600, 'y': self.y + 1350}, 'b': {'x': self.x + 3600, 'y': self.y + 1450}}, 
-            {'a': {'x': self.x + 3550, 'y': self.y + 1400}, 'b': {'x': self.x + 2250, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 2250, 'y': self.y + 1400}, 'b': {'x': self.x + 2250, 'y': self.y + 1350}}, 
-
+            {'a': {'x': self.x + 2250, 'y': self.y + 1350}, 'b': {'x': self.x + 3550, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 2250, 'y': self.y + 1400}, 'b': {'x': self.x + 3600, 'y': self.y + 1350}}, 
             # BCCA: classroom2 block
-            {'a': {'x': self.x + 2500, 'y': self.y + 1550}, 'b': {'x': self.x + 2900, 'y': self.y + 1550}}, 
-            {'a': {'x': self.x + 2900, 'y': self.y + 1550}, 'b': {'x': self.x + 2900, 'y': self.y + 1950}}, 
-            {'a': {'x': self.x + 2900, 'y': self.y + 1950}, 'b': {'x': self.x + 2500, 'y': self.y + 1950}}, 
-            {'a': {'x': self.x + 2500, 'y': self.y + 1950}, 'b': {'x': self.x + 2500, 'y': self.y + 1550}}, 
-
+            {'a': {'x': self.x + 2500, 'y': self.y + 1550}, 'b': {'x': self.x + 2900, 'y': self.y + 1950}}, 
+            {'a': {'x': self.x + 2500, 'y': self.y + 1950}, 'b': {'x': self.x + 2900, 'y': self.y + 1550}}, 
             # BCCA: classroom2 right wall
-            # del
-            {'a': {'x': self.x + 3350, 'y': self.y + 1400}, 'b': {'x': self.x + 3350, 'y': self.y + 2100}}, 
-            # del
-            {'a': {'x': self.x + 3300, 'y': self.y + 2100}, 'b': {'x': self.x + 3300, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3300, 'y': self.y + 1400}, 'b': {'x': self.x + 3350, 'y': self.y + 2100}}, 
 
 
-
-            # BCCA: bathroom top left door stud
-            # del
-            # del 
-            {'a': {'x': self.x + 3600, 'y': self.y + 1450}, 'b': {'x': self.x + 3550, 'y': self.y + 1450}}, 
-            {'a': {'x': self.x + 3550, 'y': self.y + 1450}, 'b': {'x': self.x + 3550, 'y': self.y + 1400}}, 
-
+            # BCCA: bathroom top left door stud 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1400}, 'b': {'x': self.x + 3600, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1450}, 'b': {'x': self.x + 3600, 'y': self.y + 1350}}, 
             # BCCA: bathroom bottom left door stud
-            {'a': {'x': self.x + 3550, 'y': self.y + 1550}, 'b': {'x': self.x + 3600, 'y': self.y + 1550}}, 
-            {'a': {'x': self.x + 3600, 'y': self.y + 1550}, 'b': {'x': self.x + 3600, 'y': self.y + 1600}}, 
-            # del
-            # del 
-
+            {'a': {'x': self.x + 3550, 'y': self.y + 1550}, 'b': {'x': self.x + 3600, 'y': self.y + 1600}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1650}, 'b': {'x': self.x + 3600, 'y': self.y + 1550}}, 
             # BCCA: bathroom top right door stud
-            # del
-            {'a': {'x': self.x + 3900, 'y': self.y + 1400}, 'b': {'x': self.x + 3900, 'y': self.y + 1450}}, 
-            {'a': {'x': self.x + 3900, 'y': self.y + 1450}, 'b': {'x': self.x + 3850, 'y': self.y + 1450}}, 
-            # del
-
+            {'a': {'x': self.x + 3850, 'y': self.y + 1350}, 'b': {'x': self.x + 3900, 'y': self.y + 1450}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1450}, 'b': {'x': self.x + 3900, 'y': self.y + 1400}}, 
             # BCCA: bathroom bottom right door stud
-            {'a': {'x': self.x + 3850, 'y': self.y + 1550}, 'b': {'x': self.x + 3900, 'y': self.y + 1550}}, 
-            # del
-            # del
-            {'a': {'x': self.x + 3850, 'y': self.y + 1600}, 'b': {'x': self.x + 3850, 'y': self.y + 1550}}, 
-
+            {'a': {'x': self.x + 3850, 'y': self.y + 1550}, 'b': {'x': self.x + 3900, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 3850, 'y': self.y + 1600}, 'b': {'x': self.x + 3900, 'y': self.y + 1550}}, 
             # BCCA: bathroom top middle wall
-            {'a': {'x': self.x + 3600, 'y': self.y + 1600}, 'b': {'x': self.x + 3850, 'y': self.y + 1600}}, 
-            {'a': {'x': self.x + 3900, 'y': self.y + 1550}, 'b': {'x': self.x + 3900, 'y': self.y + 1650}}, 
-            {'a': {'x': self.x + 3900, 'y': self.y + 1650}, 'b': {'x': self.x + 3550, 'y': self.y + 1650}}, 
-            {'a': {'x': self.x + 3550, 'y': self.y + 1650}, 'b': {'x': self.x + 3550, 'y': self.y + 1550}}, 
-
+            {'a': {'x': self.x + 3600, 'y': self.y + 1600}, 'b': {'x': self.x + 3900, 'y': self.y + 1650}}, 
+            {'a': {'x': self.x + 3550, 'y': self.y + 1650}, 'b': {'x': self.x + 3850, 'y': self.y + 1600}}, 
             # BCCA: bathroom middle wall
-            # del
-            {'a': {'x': self.x + 3750, 'y': self.y + 1650}, 'b': {'x': self.x + 3750, 'y': self.y + 2100}}, 
-            # del
-            {'a': {'x': self.x + 3700, 'y': self.y + 2100}, 'b': {'x': self.x + 3700, 'y': self.y + 1650}}, 
-
+            {'a': {'x': self.x + 3700, 'y': self.y + 1650}, 'b': {'x': self.x + 3750, 'y': self.y + 2100}}, 
             # BCCA: bathroom top right wall
-            {'a': {'x': self.x + 3850, 'y': self.y + 1350}, 'b': {'x': self.x + 4150, 'y': self.y + 1350}}, 
-            # del
-            {'a': {'x': self.x + 4100, 'y': self.y + 1400}, 'b': {'x': self.x + 3900, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 3850, 'y': self.y + 1450}, 'b': {'x': self.x + 3850, 'y': self.y + 1350}}, 
-
+            {'a': {'x': self.x + 3850, 'y': self.y + 1350}, 'b': {'x': self.x + 4100, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 3900, 'y': self.y + 1400}, 'b': {'x': self.x + 4150, 'y': self.y + 1350}}, 
             # BCCA: bathroom right wall
-            # del
-            {'a': {'x': self.x + 4150, 'y': self.y + 1350}, 'b': {'x': self.x + 4150, 'y': self.y + 2100}}, 
-            # del
-            {'a': {'x': self.x + 4100, 'y': self.y + 2100}, 'b': {'x': self.x + 4100, 'y': self.y + 1400}}, 
-
+            {'a': {'x': self.x + 4100, 'y': self.y + 1400}, 'b': {'x': self.x + 4150, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 4100, 'y': self.y + 2100}, 'b': {'x': self.x + 4150, 'y': self.y + 1350}}, 
 
 
             # BCCA: kitchen right wall
-            # del
-            {'a': {'x': self.x + 7150, 'y': self.y + 450}, 'b': {'x': self.x + 7150, 'y': self.y + 800}}, 
-            # del
-            {'a': {'x': self.x + 7100, 'y': self.y + 800}, 'b': {'x': self.x + 7100, 'y': self.y + 450}}, 
-
+            {'a': {'x': self.x + 7100, 'y': self.y + 450}, 'b': {'x': self.x + 7150, 'y': self.y + 800}}, 
             # BCCA: kitchen bottom left wall
-            {'a': {'x': self.x + 5700, 'y': self.y + 800}, 'b': {'x': self.x + 6900, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 6900, 'y': self.y + 800}, 'b': {'x': self.x + 6900, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 6900, 'y': self.y + 850}, 'b': {'x': self.x + 5700, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 5700, 'y': self.y + 850}, 'b': {'x': self.x + 5700, 'y': self.y + 800}}, 
-
+            {'a': {'x': self.x + 5700, 'y': self.y + 800}, 'b': {'x': self.x + 6900, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 5700, 'y': self.y + 850}, 'b': {'x': self.x + 6900, 'y': self.y + 800}}, 
             # BCCA: kitchen bottom right wall
-            {'a': {'x': self.x + 7000, 'y': self.y + 800}, 'b': {'x': self.x + 7250, 'y': self.y + 800}}, 
-            {'a': {'x': self.x + 7250, 'y': self.y + 800}, 'b': {'x': self.x + 7250, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 7250, 'y': self.y + 850}, 'b': {'x': self.x + 7000, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 7000, 'y': self.y + 850}, 'b': {'x': self.x + 7000, 'y': self.y + 800}}, 
-
+            {'a': {'x': self.x + 7000, 'y': self.y + 800}, 'b': {'x': self.x + 7250, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 850}, 'b': {'x': self.x + 7250, 'y': self.y + 800}}, 
 
 
             # BCCA: meeting room bottom wall
-            {'a': {'x': self.x + 7350, 'y': self.y + 800}, 'b': {'x': self.x + 8100, 'y': self.y + 800}}, 
-            # del
-            {'a': {'x': self.x + 8100, 'y': self.y + 850}, 'b': {'x': self.x + 7350, 'y': self.y + 850}}, 
-            {'a': {'x': self.x + 7350, 'y': self.y + 850}, 'b': {'x': self.x + 7350, 'y': self.y + 800}}, 
-
+            {'a': {'x': self.x + 7350, 'y': self.y + 800}, 'b': {'x': self.x + 8100, 'y': self.y + 850}}, 
+            {'a': {'x': self.x + 7350, 'y': self.y + 850}, 'b': {'x': self.x + 8100, 'y': self.y + 800}}, 
             # BCCA: meeting room middle wall
-            {'a': {'x': self.x + 7450, 'y': self.y + 650}, 'b': {'x': self.x + 7500, 'y': self.y + 650}}, 
-            {'a': {'x': self.x + 7500, 'y': self.y + 650}, 'b': {'x': self.x + 7500, 'y': self.y + 800}}, 
-            # del
-            {'a': {'x': self.x + 7450, 'y': self.y + 800}, 'b': {'x': self.x + 7450, 'y': self.y + 650}}, 
-
+            {'a': {'x': self.x + 7450, 'y': self.y + 650}, 'b': {'x': self.x + 7500, 'y': self.y + 800}}, 
+            {'a': {'x': self.x + 7450, 'y': self.y + 800}, 'b': {'x': self.x + 7500, 'y': self.y + 650}}, 
 
 
             # BCCA: incubator top left wall
-            {'a': {'x': self.x + 6950, 'y': self.y + 1100}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
-            # del
-            {'a': {'x': self.x + 7600, 'y': self.y + 1150}, 'b': {'x': self.x + 7000, 'y': self.y + 1150}}, 
-            # del
-
-            # BCCA: incubator top right wall
-            {'a': {'x': self.x + 7850, 'y': self.y + 1100}, 'b': {'x': self.x + 8100, 'y': self.y + 1100}}, 
-            # del
-            # del 
-            {'a': {'x': self.x + 7850, 'y': self.y + 2100}, 'b': {'x': self.x + 7850, 'y': self.y + 1100}}, 
-
+            {'a': {'x': self.x + 6950, 'y': self.y + 1100}, 'b': {'x': self.x + 7600, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1150}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
+            # BCCA: incubator top right wall 
+            {'a': {'x': self.x + 7850, 'y': self.y + 1100}, 'b': {'x': self.x + 7900, 'y': self.y + 2150}}, 
             # BCCA: incubator left top wall
-            # del
-            {'a': {'x': self.x + 7000, 'y': self.y + 1150}, 'b': {'x': self.x + 7000, 'y': self.y + 1550}}, 
-            {'a': {'x': self.x + 7000, 'y': self.y + 1550}, 'b': {'x': self.x + 6950, 'y': self.y + 1550}}, 
-            {'a': {'x': self.x + 6950, 'y': self.y + 1550}, 'b': {'x': self.x + 6950, 'y': self.y + 1100}}, 
-
+            {'a': {'x': self.x + 6950, 'y': self.y + 1100}, 'b': {'x': self.x + 7000, 'y': self.y + 1550}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1550}, 'b': {'x': self.x + 7000, 'y': self.y + 1150}}, 
             # BCCA: incubator left bottom wall
-            {'a': {'x': self.x + 6950, 'y': self.y + 1650}, 'b': {'x': self.x + 7000, 'y': self.y + 1650}}, 
-            {'a': {'x': self.x + 7000, 'y': self.y + 1650}, 'b': {'x': self.x + 7000, 'y': self.y + 2100}}, 
-            # del
-            {'a': {'x': self.x + 6950, 'y': self.y + 2100}, 'b': {'x': self.x + 6950, 'y': self.y + 1650}},
-
+            {'a': {'x': self.x + 6950, 'y': self.y + 1650}, 'b': {'x': self.x + 7000, 'y': self.y + 2100}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 2100}, 'b': {'x': self.x + 7000, 'y': self.y + 1650}},
             # BCCA: incubator top entrance left wall
-            {'a': {'x': self.x + 7650, 'y': self.y + 1200}, 'b': {'x': self.x + 7700, 'y': self.y + 1200}}, 
-            {'a': {'x': self.x + 7700, 'y': self.y + 1200}, 'b': {'x': self.x + 7700, 'y': self.y + 1250}}, 
-            {'a': {'x': self.x + 7700, 'y': self.y + 1250}, 'b': {'x': self.x + 7650, 'y': self.y + 1250}}, 
-            # del
-
+            {'a': {'x': self.x + 7650, 'y': self.y + 1200}, 'b': {'x': self.x + 7700, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 7650, 'y': self.y + 1250}, 'b': {'x': self.x + 7700, 'y': self.y + 1200}}, 
             # BCCA: incubator top entrance right wall
-            {'a': {'x': self.x + 7800, 'y': self.y + 1200}, 'b': {'x': self.x + 7850, 'y': self.y + 1200}}, 
-            # del
-            {'a': {'x': self.x + 7850, 'y': self.y + 1250}, 'b': {'x': self.x + 7800, 'y': self.y + 1250}}, 
-            {'a': {'x': self.x + 7800, 'y': self.y + 1250}, 'b': {'x': self.x + 7800, 'y': self.y + 1200}}, 
-
+            {'a': {'x': self.x + 7800, 'y': self.y + 1200}, 'b': {'x': self.x + 7850, 'y': self.y + 1250}}, 
+            {'a': {'x': self.x + 7800, 'y': self.y + 1250}, 'b': {'x': self.x + 7850, 'y': self.y + 1200}}, 
             # BCCA: incubator top room bottom left wall
-            {'a': {'x': self.x + 7000, 'y': self.y + 1450}, 'b': {'x': self.x + 7100, 'y': self.y + 1450}}, 
-            {'a': {'x': self.x + 7100, 'y': self.y + 1450}, 'b': {'x': self.x + 7100, 'y': self.y + 1500}}, 
-            {'a': {'x': self.x + 7100, 'y': self.y + 1500}, 'b': {'x': self.x + 7000, 'y': self.y + 1500}}, 
-            # del
+            {'a': {'x': self.x + 7000, 'y': self.y + 1450}, 'b': {'x': self.x + 7100, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1500}, 'b': {'x': self.x + 7100, 'y': self.y + 1450}}, 
+
 
             # BCCA: incubator top room bottom right wall
-            {'a': {'x': self.x + 7200, 'y': self.y + 1450}, 'b': {'x': self.x + 7250, 'y': self.y + 1450}}, 
-            {'a': {'x': self.x + 7300, 'y': self.y + 1400}, 'b': {'x': self.x + 7300, 'y': self.y + 1500}}, 
-            {'a': {'x': self.x + 7300, 'y': self.y + 1500}, 'b': {'x': self.x + 7200, 'y': self.y + 1500}}, 
-            {'a': {'x': self.x + 7200, 'y': self.y + 1500}, 'b': {'x': self.x + 7200, 'y': self.y + 1450}},
-             
-            # BCCA: incubator top room middle wall
-            # del
-            # del
-            # del
-            # del
-
+            {'a': {'x': self.x + 7200, 'y': self.y + 1450}, 'b': {'x': self.x + 7300, 'y': self.y + 1500}}, 
+            {'a': {'x': self.x + 7200, 'y': self.y + 1500}, 'b': {'x': self.x + 7300, 'y': self.y + 1400}},
             # BCCA: incubator top room middle top wall
-            {'a': {'x': self.x + 7250, 'y': self.y + 1350}, 'b': {'x': self.x + 7450, 'y': self.y + 1350}}, 
-            {'a': {'x': self.x + 7450, 'y': self.y + 1350}, 'b': {'x': self.x + 7450, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 7450, 'y': self.y + 1400}, 'b': {'x': self.x + 7300, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 7250, 'y': self.y + 1450}, 'b': {'x': self.x + 7250, 'y': self.y + 1350}}, 
-
+            {'a': {'x': self.x + 7250, 'y': self.y + 1350}, 'b': {'x': self.x + 7450, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1400}, 'b': {'x': self.x + 7450, 'y': self.y + 1350}}, 
             # BCCA: incubator top room bottom right wall
-            {'a': {'x': self.x + 7550, 'y': self.y + 1350}, 'b': {'x': self.x + 7600, 'y': self.y + 1350}}, 
-            # del
-            # del 
-            {'a': {'x': self.x + 7550, 'y': self.y + 1400}, 'b': {'x': self.x + 7550, 'y': self.y + 1350}}, 
-
+            {'a': {'x': self.x + 7550, 'y': self.y + 1350}, 'b': {'x': self.x + 7650, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7550, 'y': self.y + 1400}, 'b': {'x': self.x + 7600, 'y': self.y + 1350}}, 
             # BCCA: incubator top room right wall
-            # del
-            {'a': {'x': self.x + 7650, 'y': self.y + 1100}, 'b': {'x': self.x + 7650, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 7650, 'y': self.y + 1400}, 'b': {'x': self.x + 7550, 'y': self.y + 1400}}, 
-            {'a': {'x': self.x + 7600, 'y': self.y + 1350}, 'b': {'x': self.x + 7600, 'y': self.y + 1150}}, 
-
+            {'a': {'x': self.x + 7600, 'y': self.y + 1150}, 'b': {'x': self.x + 7650, 'y': self.y + 1400}}, 
+            {'a': {'x': self.x + 7600, 'y': self.y + 1350}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
             # BCCA: incubator bottom room top left wall
-            {'a': {'x': self.x + 7000, 'y': self.y + 1700}, 'b': {'x': self.x + 7100, 'y': self.y + 1700}}, 
-            {'a': {'x': self.x + 7100, 'y': self.y + 1700}, 'b': {'x': self.x + 7100, 'y': self.y + 1750}}, 
-            {'a': {'x': self.x + 7100, 'y': self.y + 1750}, 'b': {'x': self.x + 7000, 'y': self.y + 1750}}, 
-            # del
-
+            {'a': {'x': self.x + 7000, 'y': self.y + 1700}, 'b': {'x': self.x + 7100, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7000, 'y': self.y + 1750}, 'b': {'x': self.x + 7100, 'y': self.y + 1700}}, 
             # BCCA: incubator bottom room top right wall
-            {'a': {'x': self.x + 7200, 'y': self.y + 1700}, 'b': {'x': self.x + 7300, 'y': self.y + 1700}}, 
-            {'a': {'x': self.x + 7300, 'y': self.y + 1700}, 'b': {'x': self.x + 7300, 'y': self.y + 1800}}, 
-            {'a': {'x': self.x + 7250, 'y': self.y + 1750}, 'b': {'x': self.x + 7200, 'y': self.y + 1750}}, 
-            {'a': {'x': self.x + 7200, 'y': self.y + 1750}, 'b': {'x': self.x + 7200, 'y': self.y + 1700}}, 
-
-            # BCCA: incubator bottom room middle wall
-            # del
-            # del
-            # del
-            # del
-
+            {'a': {'x': self.x + 7200, 'y': self.y + 1700}, 'b': {'x': self.x + 7300, 'y': self.y + 1800}}, 
+            {'a': {'x': self.x + 7200, 'y': self.y + 1750}, 'b': {'x': self.x + 7300, 'y': self.y + 1700}}, 
             # BCCA: incubator bottom room top right wall
-            {'a': {'x': self.x + 7300, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1800}}, 
-            # del
-            {'a': {'x': self.x + 7850, 'y': self.y + 1850}, 'b': {'x': self.x + 7250, 'y': self.y + 1850}}, 
-            {'a': {'x': self.x + 7250, 'y': self.y + 1850}, 'b': {'x': self.x + 7250, 'y': self.y + 1750}}, 
+            {'a': {'x': self.x + 7300, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1850}}, 
+            {'a': {'x': self.x + 7250, 'y': self.y + 1850}, 'b': {'x': self.x + 7850, 'y': self.y + 1800}}, 
         ]
 
     @property

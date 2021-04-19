@@ -51,7 +51,7 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map.x
                 last_y = game_map.y
-                redrawGameWindow()
+                redrawGameWindow(do_ray_casting)
         else:
             while game_map.x < current_x or game_map.y > current_y:
                 game_map.x -= round(game_map.x - current_x, 2) / smoothness_level
@@ -60,7 +60,7 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map.x
                 last_y = game_map.y
-                redrawGameWindow()
+                redrawGameWindow(do_ray_casting)
     else:
         if game_map.y < current_y:
             while game_map.x > current_x or game_map.y < current_y:
@@ -70,7 +70,7 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map.x
                 last_y = game_map.y
-                redrawGameWindow()
+                redrawGameWindow(do_ray_casting)
         else:
             while game_map.x > current_x or game_map.y > current_y:
                 game_map.x -= round(game_map.x - current_x, 2) / smoothness_level
@@ -79,7 +79,7 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map.x
                 last_y = game_map.y
-                redrawGameWindow()
+                redrawGameWindow(do_ray_casting)
     game_map.x = current_x
     game_map.y = current_y
         
@@ -139,9 +139,10 @@ def draw_vent_arrows(player, image):
         left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -70.0), (920 - player_1.half_width, 450 - player_1.half_height))
         right_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0), (870 - player_1.half_width, 570 - player_1.half_height))
 
-def redrawGameWindow():
-    game_map.draw_map_image(display, shadow_surface, True)
-    game_map.draw_collision(display)
+def redrawGameWindow(do_ray_casting):
+    game_map.draw_map_image(display, shadow_surface, do_ray_casting)
+    if do_draw_collsion:
+        game_map.draw_collision(display)
     # game_map.draw_tasks(display)
     # game_map.draw_vents(display)
     if player_1.in_vent:
@@ -158,6 +159,8 @@ clock = pygame.time.Clock()
 collision_tolerance = max(game_map.x_velocity, game_map.y_velocity) * 2 + 1
 player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255,0,0), game_map, True, 0)
 is_ghost = False
+do_ray_casting = False
+do_draw_collsion = True
 running_game = True
 left_vent_arrow = None
 right_vent_arrow = None
@@ -168,8 +171,6 @@ while running_game:
     a_collision = False
     s_collision = False
     d_collision = False
-
-    mouse_position = pygame.mouse.get_pos()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -254,12 +255,17 @@ while running_game:
             elif event.key == pygame.K_DOWN:
                 game_map.y -= 1
             elif event.key == pygame.K_c:
-                print(game_map.x, game_map.y)
+                print(f"{game_map.x}, {game_map.y}")
+            elif event.key == pygame.K_r:
+                do_ray_casting = not do_ray_casting
+            elif event.key == pygame.K_l:
+                do_draw_collsion = not do_draw_collsion
 
             if player_1.in_vent != 0:
                 transport_vents(player_1)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_position = pygame.mouse.get_pos()
             if event.button == 1:
                 if player_1.in_vent == 1:
                     if right_vent_arrow:
@@ -355,7 +361,7 @@ while running_game:
         pygame.quit()
         sys.exit()
 
-    redrawGameWindow()
+    redrawGameWindow(do_ray_casting)
 
     clock.tick(60)
 pygame.quit()
