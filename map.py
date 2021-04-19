@@ -1,8 +1,9 @@
 import pygame, math
+from pprint import pprint
 
 class Map(object):
     def __init__(self, visible_map_image, shadow_map_image):
-        self.x, self.y = -6349, -62
+        self.x, self.y = 0, 0
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width
@@ -133,7 +134,16 @@ class Map(object):
     @property
     def get_wall_segments(self):
         # topleft-topright, topright-bottomright, bottomright-bottomleft, bottomleft-topleft
-        return [
+        segments = [
+            # Viewport: top
+            {'a': {'x': 0, 'y': 0}, 'b': {'x': 1919, 'y': 0}}, 
+            # Viewport: right
+            {'a': {'x': 1919, 'y': 0}, 'b': {'x': 1919, 'y': 1079}},  
+            # Viewport: bottom
+            {'a': {'x': 0, 'y': 1079}, 'b': {'x': 1919, 'y': 1079}},  
+            # Viewport: left
+            {'a': {'x': 0, 'y': 1079}, 'b': {'x': 0, 'y': 0}},  
+
             # Outside: classrooms top wall
             {'a': {'x': self.x + 5000, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 350}}, 
             {'a': {'x': self.x + 100, 'y': self.y + 350}, 'b': {'x': self.x + 5300, 'y': self.y + 300}}, 
@@ -437,6 +447,12 @@ class Map(object):
             {'a': {'x': self.x + 7300, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1850}}, 
             {'a': {'x': self.x + 7250, 'y': self.y + 1850}, 'b': {'x': self.x + 7850, 'y': self.y + 1800}}, 
         ]
+        viewport = pygame.Rect(0, 0, 1920, 1080)
+        result = []
+        for segment in segments: 
+            if viewport.collidepoint(tuple(segment['a'].values())) or viewport.collidepoint(tuple(segment['b'].values())):
+                result.append(segment)
+        return result
 
     @property
     def get_task_rects(self):
