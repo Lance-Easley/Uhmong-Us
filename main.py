@@ -45,8 +45,8 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
     if game_map.x < current_x:
         if game_map.y < current_y:
             while game_map.x < current_x or game_map.y < current_y:
-                game_map.x -= round(game_map.x - current_x, 2) / smoothness_level
-                game_map.y -= round(game_map.y - current_y, 2) / smoothness_level
+                game_map.x -= round(game_map.x - current_x, 1) / smoothness_level
+                game_map.y -= round(game_map.y - current_y, 1) / smoothness_level
                 if game_map.x == last_x and game_map.y == last_y:
                     break
                 last_x = game_map.x
@@ -54,8 +54,8 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
                 redrawGameWindow(do_ray_casting)
         else:
             while game_map.x < current_x or game_map.y > current_y:
-                game_map.x -= round(game_map.x - current_x, 2) / smoothness_level
-                game_map.y -= round(game_map.y - current_y, 2) / smoothness_level
+                game_map.x -= round(game_map.x - current_x, 1) / smoothness_level
+                game_map.y -= round(game_map.y - current_y, 1) / smoothness_level
                 if game_map.x == last_x and game_map.y == last_y:
                     break
                 last_x = game_map.x
@@ -64,8 +64,8 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
     else:
         if game_map.y < current_y:
             while game_map.x > current_x or game_map.y < current_y:
-                game_map.x -= round(game_map.x - current_x, 2) / smoothness_level
-                game_map.y -= round(game_map.y - current_y, 2) / smoothness_level
+                game_map.x -= round(game_map.x - current_x, 1) / smoothness_level
+                game_map.y -= round(game_map.y - current_y, 1) / smoothness_level
                 if game_map.x == last_x and game_map.y == last_y:
                     break
                 last_x = game_map.x
@@ -73,8 +73,8 @@ def smooth_scroll(game_map, current_x, current_y, smoothness_level):
                 redrawGameWindow(do_ray_casting)
         else:
             while game_map.x > current_x or game_map.y > current_y:
-                game_map.x -= round(game_map.x - current_x, 2) / smoothness_level
-                game_map.y -= round(game_map.y - current_y, 2) / smoothness_level
+                game_map.x -= round(game_map.x - current_x, 1) / smoothness_level
+                game_map.y -= round(game_map.y - current_y, 1) / smoothness_level
                 if game_map.x == last_x and game_map.y == last_y:
                     break
                 last_x = game_map.x
@@ -94,21 +94,21 @@ def check_for_collisions(rect, colls):
 def transport_vents(player):
     # vent coordinates are hard coded for now
     if player.in_vent == 1:
-        smooth_scroll(game_map, 786, -624, 6)
+        smooth_scroll(game_map, 786, -624, 3)
     elif player.in_vent == 2:
-        smooth_scroll(game_map, -839, -299, 6)
+        smooth_scroll(game_map, -839, -299, 3)
     elif player.in_vent == 3:
-        smooth_scroll(game_map, -2139, -1174, 6)
+        smooth_scroll(game_map, -2139, -1174, 3)
     elif player.in_vent == 4:
-        smooth_scroll(game_map, -3039, 151, 6)
+        smooth_scroll(game_map, -3039, 151, 3)
     elif player.in_vent == 5:
-        smooth_scroll(game_map, -4564, -1374, 6)
+        smooth_scroll(game_map, -4564, -1374, 3)
     elif player.in_vent == 6:
-        smooth_scroll(game_map, -5264, 126, 6)
+        smooth_scroll(game_map, -5264, 126, 3)
     elif player.in_vent == 7:
-        smooth_scroll(game_map, -6239, 51, 6)
+        smooth_scroll(game_map, -6239, 51, 3)
     elif player.in_vent == 8:
-        smooth_scroll(game_map, -6789, -1149, 6)
+        smooth_scroll(game_map, -6789, -1149, 3)
 
 def draw_vent_arrows(player, image):
     global left_vent_arrow

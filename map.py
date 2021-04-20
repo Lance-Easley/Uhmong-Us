@@ -11,124 +11,126 @@ class Map(object):
         self.x_velocity = 8
         self.y_velocity = 8
 
+        self.viewport = pygame.Rect(0, 0, 1920, 1080)
+
     @property
     def get_wall_rects(self):
         return [
-            pygame.Rect(self.x + 50, self.y + 300, 5250, 50), # Outside: classrooms top wall
-            pygame.Rect(self.x + 50, self.y + 350, 50, 1750), # Outside: classrooms left wall
-            pygame.Rect(self.x + 50, self.y + 2100, 8100, 50), # Outside: classrooms bottom wall
+            pygame.Rect(self.x + 50, self.y + 300, 5250, 50), # Outside: classrooms top wall [4:6]
+            pygame.Rect(self.x + 50, self.y + 350, 50, 1750), # Outside: classrooms left wall 
+            pygame.Rect(self.x + 50, self.y + 2100, 8100, 50), # Outside: classrooms bottom wall 
             pygame.Rect(self.x + 4950, self.y + 50, 1450, 50), # Outside: offices top wall
-            pygame.Rect(self.x + 4950, self.y + 100, 50, 300), # Outside: offices left wall
-            pygame.Rect(self.x + 6350, self.y + 100, 50, 700), # Outside: offices right wall
+            pygame.Rect(self.x + 4950, self.y + 100, 50, 300), # Outside: offices left wall [6:8]
+            pygame.Rect(self.x + 6350, self.y + 100, 50, 700), # Outside: offices right wall [8]
             pygame.Rect(self.x + 6400, self.y + 400, 1750, 50), # Outside: kitchen top wall
             pygame.Rect(self.x + 8100, self.y + 450, 50, 1650), # Outside: student door wall
             
-            pygame.Rect(self.x + 5400, self.y + 300, 500, 50), # BCCA: top office middle wall
-            pygame.Rect(self.x + 6000, self.y + 300, 350, 50), # BCCA: top office right wall
-            pygame.Rect(self.x + 4950, self.y + 500, 50, 300), # BCCA: left office left wall
-            pygame.Rect(self.x + 4900, self.y + 800, 700, 50), # BCCA: left office bottom wall
-            pygame.Rect(self.x + 5000, self.y + 550, 600, 50), # BCCA: left office top wall
+            pygame.Rect(self.x + 5400, self.y + 300, 500, 50), # BCCA: top office middle wall [9:11]
+            pygame.Rect(self.x + 6000, self.y + 300, 350, 50), # BCCA: top office right wall [11:13]
+            pygame.Rect(self.x + 4950, self.y + 500, 50, 300), # BCCA: left office left wall [13:15]
+            pygame.Rect(self.x + 4900, self.y + 800, 700, 50), # BCCA: left office bottom wall [15:17]
+            pygame.Rect(self.x + 5000, self.y + 550, 600, 50), # BCCA: left office top wall [17:19]
             pygame.Rect(self.x + 5500, self.y + 600, 50, 200), # BCCA: left office right wall
-            pygame.Rect(self.x + 5700, self.y + 550, 650, 50), # BCCA: right office top wall
+            pygame.Rect(self.x + 5700, self.y + 550, 650, 50), # BCCA: right office top wall [19:21]
             pygame.Rect(self.x + 5750, self.y + 600, 50, 200), # BCCA: right office right wall
 
-            pygame.Rect(self.x + 4650, self.y + 350, 50, 450), # BCCA: breakroom right wall
-            pygame.Rect(self.x + 4300, self.y + 800, 450, 50), # BCCA: breakroom bottom right wall
-            pygame.Rect(self.x + 4150, self.y + 800, 50, 50), # BCCA: breakroom bottom left wall
-            pygame.Rect(self.x + 4100, self.y + 350, 50, 750), # BCCA: breakroom left wall
+            pygame.Rect(self.x + 4650, self.y + 350, 50, 450), # BCCA: breakroom right wall [21]
+            pygame.Rect(self.x + 4300, self.y + 800, 450, 50), # BCCA: breakroom bottom right wall [21:23]
+            pygame.Rect(self.x + 4150, self.y + 800, 50, 50), # BCCA: breakroom bottom left wall [23:25]
+            pygame.Rect(self.x + 4100, self.y + 350, 50, 750), # BCCA: breakroom left wall [25:27]
 
-            pygame.Rect(self.x + 4350, self.y + 1100, 200, 200), # BCCA: lobby top left block
-            pygame.Rect(self.x + 4350, self.y + 1750, 200, 200), # BCCA: lobby bottom left block
-            pygame.Rect(self.x + 6550, self.y + 1100, 200, 200), # BCCA: lobby top right block
-            pygame.Rect(self.x + 6550, self.y + 1800, 200, 200), # BCCA: lobby bottom right block
-            pygame.Rect(self.x + 5650, self.y + 1200, 700, 50), # BCCA: lobby top right wall
-            pygame.Rect(self.x + 4750, self.y + 1200, 700, 50), # BCCA: lobby top left wall
-            pygame.Rect(self.x + 4750, self.y + 1250, 50, 150), # BCCA: lobby left top wall
-            pygame.Rect(self.x + 4750, self.y + 1600, 50, 150), # BCCA: lobby left bottom wall
-            pygame.Rect(self.x + 4750, self.y + 1750, 700, 50), # BCCA: lobby bottom left wall
-            pygame.Rect(self.x + 5650, self.y + 1750, 700, 50), # BCCA: lobby bottom right wall
-            pygame.Rect(self.x + 6300, self.y + 1250, 50, 150), # BCCA: lobby right top wall
-            pygame.Rect(self.x + 6300, self.y + 1600, 50, 150), # BCCA: lobby right bottom wall
+            pygame.Rect(self.x + 4350, self.y + 1100, 200, 200), # BCCA: lobby top left block [27:29]
+            pygame.Rect(self.x + 4350, self.y + 1750, 200, 200), # BCCA: lobby bottom left block [29:31]
+            pygame.Rect(self.x + 6550, self.y + 1100, 200, 200), # BCCA: lobby top right block [31:33]
+            pygame.Rect(self.x + 6550, self.y + 1800, 200, 200), # BCCA: lobby bottom right block [33:35]
+            pygame.Rect(self.x + 5650, self.y + 1200, 700, 50), # BCCA: lobby top right wall [35:37]
+            pygame.Rect(self.x + 4750, self.y + 1200, 700, 50), # BCCA: lobby top left wall [37:39]
+            pygame.Rect(self.x + 4750, self.y + 1250, 50, 150), # BCCA: lobby left top wall [39:41]
+            pygame.Rect(self.x + 4750, self.y + 1600, 50, 150), # BCCA: lobby left bottom wall [41:43]
+            pygame.Rect(self.x + 4750, self.y + 1750, 700, 50), # BCCA: lobby bottom left wall [43:45]
+            pygame.Rect(self.x + 5650, self.y + 1750, 700, 50), # BCCA: lobby bottom right wall [45:47]
+            pygame.Rect(self.x + 6300, self.y + 1250, 50, 150), # BCCA: lobby right top wall [47:49]
+            pygame.Rect(self.x + 6300, self.y + 1600, 50, 150), # BCCA: lobby right bottom wall [49:51]
 
-            pygame.Rect(self.x + 3800, self.y + 1050, 300, 50), # BCCA: supply bottom right wall
-            pygame.Rect(self.x + 3600, self.y + 600, 50, 450), # BCCA: supply middle wall
+            pygame.Rect(self.x + 3800, self.y + 1050, 300, 50), # BCCA: supply bottom right wall [51:53]
+            pygame.Rect(self.x + 3600, self.y + 600, 50, 450), # BCCA: supply middle wall [53:55]
             pygame.Rect(self.x + 3350, self.y + 750, 250, 50), # BCCA: supply middle left wall
 
-            pygame.Rect(self.x + 3150, self.y + 1100, 50, 50), # BCCA: hallway top door stud
-            pygame.Rect(self.x + 3150, self.y + 1300, 50, 50), # BCCA: hallway bottom door stud
+            pygame.Rect(self.x + 3150, self.y + 1100, 50, 50), # BCCA: hallway top door stud [55:57]
+            pygame.Rect(self.x + 3150, self.y + 1300, 50, 50), # BCCA: hallway bottom door stud [57:59]
 
-            pygame.Rect(self.x + 3300, self.y + 350, 50, 700), # BCCA: classroom1 right wall
-            pygame.Rect(self.x + 2250, self.y + 1050, 1450, 50), # BCCA: classroom1 bottom right wall
-            pygame.Rect(self.x + 2500, self.y + 500, 400, 400), # BCCA: classroom1 block
-            pygame.Rect(self.x + 1900, self.y + 1050, 250, 50), # BCCA: classroom1 bottom left wall
-            pygame.Rect(self.x + 2050, self.y + 350, 50, 100), # BCCA: classroom1 left top wall
-            pygame.Rect(self.x + 2050, self.y + 550, 50, 500), # BCCA: classroom1 left bottom wall
+            pygame.Rect(self.x + 3300, self.y + 350, 50, 700), # BCCA: classroom1 right wall [59]
+            pygame.Rect(self.x + 2250, self.y + 1050, 1450, 50), # BCCA: classroom1 bottom right wall [60:62]
+            pygame.Rect(self.x + 2500, self.y + 500, 400, 400), # BCCA: classroom1 block [62:64]
+            pygame.Rect(self.x + 1900, self.y + 1050, 250, 50), # BCCA: classroom1 bottom left wall [64:66]
+            pygame.Rect(self.x + 2050, self.y + 350, 50, 100), # BCCA: classroom1 left top wall [66:68]
+            pygame.Rect(self.x + 2050, self.y + 550, 50, 500), # BCCA: classroom1 left bottom wall [68:70]
 
-            pygame.Rect(self.x + 1500, self.y + 1050, 250, 50), # BCCA: breakoutroom1 bottom left wall
-            pygame.Rect(self.x + 1750, self.y + 350, 150, 400), # BCCA: breakoutroom1 table
-            pygame.Rect(self.x + 1550, self.y + 350, 50, 100), # BCCA: breakoutroom1 left top wall
-            pygame.Rect(self.x + 1550, self.y + 550, 50, 500), # BCCA: breakoutroom1 left bottom wall
+            pygame.Rect(self.x + 1500, self.y + 1050, 250, 50), # BCCA: breakoutroom1 bottom left wall [70:72]
+            pygame.Rect(self.x + 1750, self.y + 350, 150, 400), # BCCA: breakoutroom1 table [72:74]
+            pygame.Rect(self.x + 1550, self.y + 350, 50, 100), # BCCA: breakoutroom1 left top wall [74:76]
+            pygame.Rect(self.x + 1550, self.y + 550, 50, 500), # BCCA: breakoutroom1 left bottom wall [76:78]
 
-            pygame.Rect(self.x + 1100, self.y + 600, 200, 200), # BCCA: classroom3 right block
-            pygame.Rect(self.x + 600, self.y + 600, 200, 200), # BCCA: classroom3 left block
-            pygame.Rect(self.x + 300, self.y + 900, 50, 150), # BCCA: classroom3 middle wall
-            pygame.Rect(self.x + 300, self.y + 1050, 1100, 50), # BCCA: classroom3 bottom left wall
-            pygame.Rect(self.x + 250, self.y + 850, 100, 50), # BCCA: classroom3 middle right wall
-            pygame.Rect(self.x + 100, self.y + 850, 50, 50), # BCCA: classroom3 middle left wall
+            pygame.Rect(self.x + 1100, self.y + 600, 200, 200), # BCCA: classroom3 right block [78:80]
+            pygame.Rect(self.x + 600, self.y + 600, 200, 200), # BCCA: classroom3 left block [80:82]
+            pygame.Rect(self.x + 300, self.y + 900, 50, 150), # BCCA: classroom3 middle wall [82]
+            pygame.Rect(self.x + 300, self.y + 1050, 1100, 50), # BCCA: classroom3 bottom left wall [83:85]
+            pygame.Rect(self.x + 250, self.y + 850, 100, 50), # BCCA: classroom3 middle right wall [85:87]
+            pygame.Rect(self.x + 100, self.y + 850, 50, 50), # BCCA: classroom3 middle left wall [87:89]
 
-            pygame.Rect(self.x + 300, self.y + 1350, 1100, 50), # BCCA: classroom4 top left wall
-            pygame.Rect(self.x + 300, self.y + 1400, 50, 150), # BCCA: classroom4 middle wall
-            pygame.Rect(self.x + 250, self.y + 1550, 100, 50), # BCCA: classroom4 middle right wall
-            pygame.Rect(self.x + 100, self.y + 1550, 50, 50), # BCCA: classroom4 middle left wall
-            pygame.Rect(self.x + 550, self.y + 1600, 200, 50), # BCCA: classroom4 center top wall
-            pygame.Rect(self.x + 550, self.y + 1650, 50, 250), # BCCA: classroom4 center left wall
-            pygame.Rect(self.x + 550, self.y + 1900, 500, 50), # BCCA: classroom4 center bottom wall
-            pygame.Rect(self.x + 1050, self.y + 1800, 50, 150), # BCCA: classroom4 center right wall
+            pygame.Rect(self.x + 300, self.y + 1350, 1100, 50), # BCCA: classroom4 top left wall [89:91]
+            pygame.Rect(self.x + 300, self.y + 1400, 50, 150), # BCCA: classroom4 middle wall [91]
+            pygame.Rect(self.x + 250, self.y + 1550, 100, 50), # BCCA: classroom4 middle right wall [92:94]
+            pygame.Rect(self.x + 100, self.y + 1550, 50, 50), # BCCA: classroom4 middle left wall [94:96]
+            pygame.Rect(self.x + 550, self.y + 1600, 200, 50), # BCCA: classroom4 center top wall [96:98]
+            pygame.Rect(self.x + 550, self.y + 1650, 50, 250), # BCCA: classroom4 center left wall [98]
+            pygame.Rect(self.x + 550, self.y + 1900, 500, 50), # BCCA: classroom4 center bottom wall [99]
+            pygame.Rect(self.x + 1050, self.y + 1800, 50, 150), # BCCA: classroom4 center right wall [100:102]
 
-            pygame.Rect(self.x + 1500, self.y + 1350, 250, 50), # BCCA: breakoutroom2 top left wall
-            pygame.Rect(self.x + 1900, self.y + 1350, 250, 50), # BCCA: breakoutroom2 top right wall
-            pygame.Rect(self.x + 1550, self.y + 1400, 50, 500), # BCCA: breakoutroom2 left top wall
-            pygame.Rect(self.x + 1550, self.y + 2000, 50, 100), # BCCA: breakoutroom2 left bottom wall
-            pygame.Rect(self.x + 1750, self.y + 1500, 150, 450), # BCCA: breakoutroom2 table
-            pygame.Rect(self.x + 2050, self.y + 1400, 50, 500), # BCCA: breakoutroom2 right top wall
-            pygame.Rect(self.x + 2050, self.y + 2000, 50, 100), # BCCA: breakoutroom2 right bottom wall
+            pygame.Rect(self.x + 1500, self.y + 1350, 250, 50), # BCCA: breakoutroom2 top left wall [102:104]
+            pygame.Rect(self.x + 1900, self.y + 1350, 250, 50), # BCCA: breakoutroom2 top right wall [104:106]
+            pygame.Rect(self.x + 1550, self.y + 1400, 50, 500), # BCCA: breakoutroom2 left top wall [106:108]
+            pygame.Rect(self.x + 1550, self.y + 2000, 50, 100), # BCCA: breakoutroom2 left bottom wall [108:110]
+            pygame.Rect(self.x + 1750, self.y + 1500, 150, 450), # BCCA: breakoutroom2 table [110:112]
+            pygame.Rect(self.x + 2050, self.y + 1400, 50, 500), # BCCA: breakoutroom2 right top wall [112:114]
+            pygame.Rect(self.x + 2050, self.y + 2000, 50, 100), # BCCA: breakoutroom2 right bottom wall [114:116]
 
-            pygame.Rect(self.x + 2250, self.y + 1350, 1350, 50), # BCCA: classroom2 top right wall
-            pygame.Rect(self.x + 2500, self.y + 1550, 400, 400), # BCCA: classroom2 block
-            pygame.Rect(self.x + 3300, self.y + 1400, 50, 700), # BCCA: classroom2 right wall
+            pygame.Rect(self.x + 2250, self.y + 1350, 1350, 50), # BCCA: classroom2 top right wall [116:118]
+            pygame.Rect(self.x + 2500, self.y + 1550, 400, 400), # BCCA: classroom2 block [118:120]
+            pygame.Rect(self.x + 3300, self.y + 1400, 50, 700), # BCCA: classroom2 right wall [120]
 
-            pygame.Rect(self.x + 3550, self.y + 1400, 50, 50), # BCCA: bathroom top left door stud
-            pygame.Rect(self.x + 3550, self.y + 1550, 50, 50), # BCCA: bathroom bottom left door stud
-            pygame.Rect(self.x + 3850, self.y + 1400, 50, 50), # BCCA: bathroom top right door stud
-            pygame.Rect(self.x + 3850, self.y + 1550, 50, 50), # BCCA: bathroom bottom right door stud
-            pygame.Rect(self.x + 3550, self.y + 1600, 350, 50), # BCCA: bathroom top middle wall
-            pygame.Rect(self.x + 3700, self.y + 1650, 50, 450), # BCCA: bathroom middle wall
-            pygame.Rect(self.x + 3850, self.y + 1350, 300, 50), # BCCA: bathroom top right wall
-            pygame.Rect(self.x + 4100, self.y + 1400, 50, 700), # BCCA: bathroom right wall
+            pygame.Rect(self.x + 3550, self.y + 1400, 50, 50), # BCCA: bathroom top left door stud [121:123]
+            pygame.Rect(self.x + 3550, self.y + 1550, 50, 50), # BCCA: bathroom bottom left door stud [123:125]
+            pygame.Rect(self.x + 3850, self.y + 1400, 50, 50), # BCCA: bathroom top right door stud [125:127]
+            pygame.Rect(self.x + 3850, self.y + 1550, 50, 50), # BCCA: bathroom bottom right door stud [237:129]
+            pygame.Rect(self.x + 3550, self.y + 1600, 350, 50), # BCCA: bathroom top middle wall [129]
+            pygame.Rect(self.x + 3700, self.y + 1650, 50, 450), # BCCA: bathroom middle wall [130]
+            pygame.Rect(self.x + 3850, self.y + 1350, 300, 50), # BCCA: bathroom top right wall [131]
+            pygame.Rect(self.x + 4100, self.y + 1400, 50, 700), # BCCA: bathroom right wall [132]
 
-            pygame.Rect(self.x + 7100, self.y + 450, 50, 350), # BCCA: kitchen right wall
-            pygame.Rect(self.x + 5700, self.y + 800, 1200, 50), # BCCA: kitchen bottom left wall
-            pygame.Rect(self.x + 7000, self.y + 800, 250, 50), # BCCA: kitchen bottom right wall
+            pygame.Rect(self.x + 7100, self.y + 450, 50, 350), # BCCA: kitchen right wall [133]
+            pygame.Rect(self.x + 5700, self.y + 800, 1200, 50), # BCCA: kitchen bottom left wall [134:136]
+            pygame.Rect(self.x + 7000, self.y + 800, 250, 50), # BCCA: kitchen bottom right wall [136:138]
             
-            pygame.Rect(self.x + 7350, self.y + 800, 750, 50), # BCCA: meeting room bottom wall
-            pygame.Rect(self.x + 7450, self.y + 650, 50, 150), # BCCA: meeting room middle wall
+            pygame.Rect(self.x + 7350, self.y + 800, 750, 50), # BCCA: meeting room bottom wall [138:140]
+            pygame.Rect(self.x + 7450, self.y + 650, 50, 150), # BCCA: meeting room middle wall [140:142]
 
-            pygame.Rect(self.x + 6950, self.y + 1100, 700, 50), # BCCA: incubator top left wall
-            pygame.Rect(self.x + 7850, self.y + 1100, 250, 1000), # BCCA: incubator top right wall
-            pygame.Rect(self.x + 6950, self.y + 1150, 50, 400), # BCCA: incubator left top wall
-            pygame.Rect(self.x + 6950, self.y + 1650, 50, 450), # BCCA: incubator left bottom wall
-            pygame.Rect(self.x + 7650, self.y + 1200, 50, 50), # BCCA: incubator top entrance left wall
-            pygame.Rect(self.x + 7800, self.y + 1200, 50, 50), # BCCA: incubator top entrance right wall
-            pygame.Rect(self.x + 7000, self.y + 1450, 100, 50), # BCCA: incubator top room bottom left wall
-            pygame.Rect(self.x + 7200, self.y + 1450, 100, 50), # BCCA: incubator top room bottom right wall
+            pygame.Rect(self.x + 6950, self.y + 1100, 700, 50), # BCCA: incubator top left wall [142]
+            pygame.Rect(self.x + 7850, self.y + 1100, 250, 1000), # BCCA: incubator top right wall [143]
+            pygame.Rect(self.x + 6950, self.y + 1150, 50, 400), # BCCA: incubator left top wall [144:146]
+            pygame.Rect(self.x + 6950, self.y + 1650, 50, 450), # BCCA: incubator left bottom wall [146:148]
+            pygame.Rect(self.x + 7650, self.y + 1200, 50, 50), # BCCA: incubator top entrance left wall [148:150]
+            pygame.Rect(self.x + 7800, self.y + 1200, 50, 50), # BCCA: incubator top entrance right wall [150:152]
+            pygame.Rect(self.x + 7000, self.y + 1450, 100, 50), # BCCA: incubator top room bottom left wall [152:154]
+            pygame.Rect(self.x + 7200, self.y + 1450, 100, 50), # BCCA: incubator top room bottom right wall [154:156]
             pygame.Rect(self.x + 7250, self.y + 1400, 50, 50), # BCCA: incubator top room middle wall
-            pygame.Rect(self.x + 7250, self.y + 1350, 200, 50), # BCCA: incubator top room middle top wall
-            pygame.Rect(self.x + 7550, self.y + 1350, 50, 50), # BCCA: incubator top room bottom right wall
-            pygame.Rect(self.x + 7600, self.y + 1150, 50, 250), # BCCA: incubator top room right wall
-            pygame.Rect(self.x + 7000, self.y + 1700, 100, 50), # BCCA: incubator bottom room top left wall
-            pygame.Rect(self.x + 7200, self.y + 1700, 100, 50), # BCCA: incubator bottom room top right wall
+            pygame.Rect(self.x + 7250, self.y + 1350, 200, 50), # BCCA: incubator top room middle top wall [156:158]
+            pygame.Rect(self.x + 7550, self.y + 1350, 50, 50), # BCCA: incubator top room bottom right wall [158:160]
+            pygame.Rect(self.x + 7600, self.y + 1150, 50, 250), # BCCA: incubator top room right wall [160]
+            pygame.Rect(self.x + 7000, self.y + 1700, 100, 50), # BCCA: incubator bottom room top left wall [161:163]
+            pygame.Rect(self.x + 7200, self.y + 1700, 100, 50), # BCCA: incubator bottom room top right wall [163:165]
             pygame.Rect(self.x + 7250, self.y + 1750, 50, 50), # BCCA: incubator bottom room middle wall
-            pygame.Rect(self.x + 7250, self.y + 1800, 600, 50), # BCCA: incubator bottom room top right wall
+            pygame.Rect(self.x + 7250, self.y + 1800, 600, 50), # BCCA: incubator bottom room top right wall [165:]
         ]
 
     @property
@@ -147,21 +149,11 @@ class Map(object):
             # Outside: classrooms top wall
             {'a': {'x': self.x + 5000, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 350}}, 
             {'a': {'x': self.x + 100, 'y': self.y + 350}, 'b': {'x': self.x + 5300, 'y': self.y + 300}}, 
-            # Outside: classrooms left wall 
-            {'a': {'x': self.x + 100, 'y': self.y + 350}, 'b': {'x': self.x + 100, 'y': self.y + 2100}}, 
-            # Outside: classrooms bottom wall
-            {'a': {'x': self.x + 100, 'y': self.y + 2100}, 'b': {'x': self.x + 7850, 'y': self.y + 2100}},  
-            # Outside: offices top wall 
-            {'a': {'x': self.x + 6350, 'y': self.y + 100}, 'b': {'x': self.x + 5000, 'y': self.y + 100}},  
             # Outside: offices left wall
             {'a': {'x': self.x + 4950, 'y': self.y + 350}, 'b': {'x': self.x + 5000, 'y': self.y + 400}}, 
             {'a': {'x': self.x + 4950, 'y': self.y + 400}, 'b': {'x': self.x + 5000, 'y': self.y + 100}}, 
             # Outside: offices right wall 
             {'a': {'x': self.x + 6350, 'y': self.y + 100}, 'b': {'x': self.x + 6400, 'y': self.y + 800}}, 
-            # Outside: kitchen top wall
-            {'a': {'x': self.x + 8100, 'y': self.y + 450}, 'b': {'x': self.x + 6400, 'y': self.y + 450}},  
-            # Outside: student door wall
-            {'a': {'x': self.x + 8100, 'y': self.y + 1100}, 'b': {'x': self.x + 8100, 'y': self.y + 450}}, 
 
 
             # BCCA: top office middle wall
@@ -317,10 +309,8 @@ class Map(object):
             {'a': {'x': self.x + 550, 'y': self.y + 1600}, 'b': {'x': self.x + 750, 'y': self.y + 1650}}, 
             {'a': {'x': self.x + 600, 'y': self.y + 1650}, 'b': {'x': self.x + 750, 'y': self.y + 1600}}, 
             # BCCA: classroom4 center left wall
-            {'a': {'x': self.x + 550, 'y': self.y + 1600}, 'b': {'x': self.x + 600, 'y': self.y + 1900}}, 
             {'a': {'x': self.x + 550, 'y': self.y + 1950}, 'b': {'x': self.x + 600, 'y': self.y + 1650}}, 
             # BCCA: classroom4 center bottom wall 
-            {'a': {'x': self.x + 600, 'y': self.y + 1900}, 'b': {'x': self.x + 1100, 'y': self.y + 1950}}, 
             {'a': {'x': self.x + 550, 'y': self.y + 1950}, 'b': {'x': self.x + 1050, 'y': self.y + 1900}}, 
             # BCCA: classroom4 center right wall
             {'a': {'x': self.x + 1050, 'y': self.y + 1800}, 'b': {'x': self.x + 1100, 'y': self.y + 1950}},
@@ -374,14 +364,11 @@ class Map(object):
             {'a': {'x': self.x + 3850, 'y': self.y + 1600}, 'b': {'x': self.x + 3900, 'y': self.y + 1550}}, 
             # BCCA: bathroom top middle wall
             {'a': {'x': self.x + 3600, 'y': self.y + 1600}, 'b': {'x': self.x + 3900, 'y': self.y + 1650}}, 
-            {'a': {'x': self.x + 3550, 'y': self.y + 1650}, 'b': {'x': self.x + 3850, 'y': self.y + 1600}}, 
             # BCCA: bathroom middle wall
             {'a': {'x': self.x + 3700, 'y': self.y + 1650}, 'b': {'x': self.x + 3750, 'y': self.y + 2100}}, 
             # BCCA: bathroom top right wall
-            {'a': {'x': self.x + 3850, 'y': self.y + 1350}, 'b': {'x': self.x + 4100, 'y': self.y + 1400}}, 
             {'a': {'x': self.x + 3900, 'y': self.y + 1400}, 'b': {'x': self.x + 4150, 'y': self.y + 1350}}, 
             # BCCA: bathroom right wall
-            {'a': {'x': self.x + 4100, 'y': self.y + 1400}, 'b': {'x': self.x + 4150, 'y': self.y + 2100}}, 
             {'a': {'x': self.x + 4100, 'y': self.y + 2100}, 'b': {'x': self.x + 4150, 'y': self.y + 1350}}, 
 
 
@@ -404,13 +391,12 @@ class Map(object):
 
 
             # BCCA: incubator top left wall
-            {'a': {'x': self.x + 6950, 'y': self.y + 1100}, 'b': {'x': self.x + 7600, 'y': self.y + 1150}}, 
-            {'a': {'x': self.x + 7000, 'y': self.y + 1150}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
+            {'a': {'x': self.x + 6999, 'y': self.y + 1149}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
             # BCCA: incubator top right wall 
             {'a': {'x': self.x + 7850, 'y': self.y + 1100}, 'b': {'x': self.x + 7900, 'y': self.y + 2150}}, 
             # BCCA: incubator left top wall
             {'a': {'x': self.x + 6950, 'y': self.y + 1100}, 'b': {'x': self.x + 7000, 'y': self.y + 1550}}, 
-            {'a': {'x': self.x + 6950, 'y': self.y + 1550}, 'b': {'x': self.x + 7000, 'y': self.y + 1150}}, 
+            {'a': {'x': self.x + 6950, 'y': self.y + 1550}, 'b': {'x': self.x + 6999, 'y': self.y + 1149}}, 
             # BCCA: incubator left bottom wall
             {'a': {'x': self.x + 6950, 'y': self.y + 1650}, 'b': {'x': self.x + 7000, 'y': self.y + 2100}}, 
             {'a': {'x': self.x + 6950, 'y': self.y + 2100}, 'b': {'x': self.x + 7000, 'y': self.y + 1650}},
@@ -423,8 +409,6 @@ class Map(object):
             # BCCA: incubator top room bottom left wall
             {'a': {'x': self.x + 7000, 'y': self.y + 1450}, 'b': {'x': self.x + 7100, 'y': self.y + 1500}}, 
             {'a': {'x': self.x + 7000, 'y': self.y + 1500}, 'b': {'x': self.x + 7100, 'y': self.y + 1450}}, 
-
-
             # BCCA: incubator top room bottom right wall
             {'a': {'x': self.x + 7200, 'y': self.y + 1450}, 'b': {'x': self.x + 7300, 'y': self.y + 1500}}, 
             {'a': {'x': self.x + 7200, 'y': self.y + 1500}, 'b': {'x': self.x + 7300, 'y': self.y + 1400}},
@@ -435,7 +419,6 @@ class Map(object):
             {'a': {'x': self.x + 7550, 'y': self.y + 1350}, 'b': {'x': self.x + 7650, 'y': self.y + 1400}}, 
             {'a': {'x': self.x + 7550, 'y': self.y + 1400}, 'b': {'x': self.x + 7600, 'y': self.y + 1350}}, 
             # BCCA: incubator top room right wall
-            {'a': {'x': self.x + 7600, 'y': self.y + 1150}, 'b': {'x': self.x + 7650, 'y': self.y + 1400}}, 
             {'a': {'x': self.x + 7600, 'y': self.y + 1350}, 'b': {'x': self.x + 7650, 'y': self.y + 1100}}, 
             # BCCA: incubator bottom room top left wall
             {'a': {'x': self.x + 7000, 'y': self.y + 1700}, 'b': {'x': self.x + 7100, 'y': self.y + 1750}}, 
@@ -447,12 +430,7 @@ class Map(object):
             {'a': {'x': self.x + 7300, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1850}}, 
             {'a': {'x': self.x + 7250, 'y': self.y + 1850}, 'b': {'x': self.x + 7850, 'y': self.y + 1800}}, 
         ]
-        viewport = pygame.Rect(0, 0, 1920, 1080)
-        result = []
-        for segment in segments: 
-            if viewport.collidepoint(tuple(segment['a'].values())) or viewport.collidepoint(tuple(segment['b'].values())):
-                result.append(segment)
-        return result
+        return [segment for segment in segments if self.viewport.collidepoint(tuple(segment['a'].values())) or self.viewport.collidepoint(tuple(segment['b'].values()))]
 
     @property
     def get_task_rects(self):
@@ -627,7 +605,7 @@ class Map(object):
             draw(self.get_wall_segments)
             visible_surface.blit(shadow_surface, (0, 0))
         else:
-            visible_surface.fill((255,255,255))
+            visible_surface.fill((40,40,40))
             visible_surface.blit(self.visible_map_image, (self.x, self.y))
     
     def draw_collision(self, surface):
