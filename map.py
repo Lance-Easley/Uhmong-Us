@@ -11,7 +11,7 @@ class Map(object):
         self.x_velocity = 8
         self.y_velocity = 8
 
-        self.viewport = pygame.Rect(0, 0, 1920, 1080)
+        self.viewport = pygame.Rect(210, 0, 1500, 1080)
 
     @property
     def get_wall_rects(self):
@@ -138,13 +138,13 @@ class Map(object):
         # topleft-topright, topright-bottomright, bottomright-bottomleft, bottomleft-topleft
         segments = [
             # Viewport: top
-            {'a': {'x': 0, 'y': 0}, 'b': {'x': 1919, 'y': 0}}, 
+            {'a': {'x': 210, 'y': 0}, 'b': {'x': 1709, 'y': 0}}, 
             # Viewport: right
-            {'a': {'x': 1919, 'y': 0}, 'b': {'x': 1919, 'y': 1079}},  
+            {'a': {'x': 1709, 'y': 0}, 'b': {'x': 1709, 'y': 1079}},  
             # Viewport: bottom
-            {'a': {'x': 0, 'y': 1079}, 'b': {'x': 1919, 'y': 1079}},  
+            {'a': {'x': 210, 'y': 1079}, 'b': {'x': 1709, 'y': 1079}},  
             # Viewport: left
-            {'a': {'x': 0, 'y': 1079}, 'b': {'x': 0, 'y': 0}},  
+            {'a': {'x': 210, 'y': 1079}, 'b': {'x': 210, 'y': 0}},  
 
             # Outside: classrooms top wall
             {'a': {'x': self.x + 5000, 'y': self.y + 300}, 'b': {'x': self.x + 5300, 'y': self.y + 350}}, 
