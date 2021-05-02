@@ -143,11 +143,8 @@ def redrawGameWindow(do_ray_casting):
     game_map.draw_map_image(display, shadow_surface, do_ray_casting)
     if do_draw_collsion:
         game_map.draw_collision(display)
-    # game_map.draw_tasks(display)
-    # game_map.draw_vents(display)
     if player_1.in_vent:
         draw_vent_arrows(player_1, vent_arrow_image)
-    game_map.draw_coords(display, font)
     player_1.draw_player(display)
     # player_1.draw_hitboxes(display)
     pygame.display.update()
@@ -340,6 +337,7 @@ while running_game:
             for pixel in range(game_map.x_velocity):
                 if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost:
                     a_collision = True
+                    break
                 else:
                     game_map.x += 1
     if keys[pygame.K_s]:
@@ -347,6 +345,7 @@ while running_game:
             for pixel in range(game_map.y_velocity):
                 if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost:
                     s_collision = True
+                    break
                 else:
                     game_map.y -= 1
     if keys[pygame.K_d]:
@@ -354,6 +353,7 @@ while running_game:
             for pixel in range(game_map.x_velocity):
                 if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
                     d_collision = True
+                    break
                 else:
                     game_map.x -= 1
 

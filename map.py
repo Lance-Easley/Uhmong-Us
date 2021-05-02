@@ -15,7 +15,7 @@ class Map(object):
 
     @property
     def get_wall_rects(self):
-        return [
+        return (
             pygame.Rect(self.x + 50, self.y + 300, 5250, 50), # Outside: classrooms top wall [4:6]
             pygame.Rect(self.x + 50, self.y + 350, 50, 1750), # Outside: classrooms left wall 
             pygame.Rect(self.x + 50, self.y + 2100, 8100, 50), # Outside: classrooms bottom wall 
@@ -131,12 +131,12 @@ class Map(object):
             pygame.Rect(self.x + 7200, self.y + 1700, 100, 50), # BCCA: incubator bottom room top right wall [163:165]
             pygame.Rect(self.x + 7250, self.y + 1750, 50, 50), # BCCA: incubator bottom room middle wall
             pygame.Rect(self.x + 7250, self.y + 1800, 600, 50), # BCCA: incubator bottom room top right wall [165:]
-        ]
+        )
 
     @property
     def get_wall_segments(self):
         # topleft-topright, topright-bottomright, bottomright-bottomleft, bottomleft-topleft
-        segments = [
+        segments = (
             # Viewport: top
             {'a': {'x': 210, 'y': 0}, 'b': {'x': 1709, 'y': 0}}, 
             # Viewport: right
@@ -429,78 +429,78 @@ class Map(object):
             # BCCA: incubator bottom room top right wall
             {'a': {'x': self.x + 7300, 'y': self.y + 1800}, 'b': {'x': self.x + 7850, 'y': self.y + 1850}}, 
             {'a': {'x': self.x + 7250, 'y': self.y + 1850}, 'b': {'x': self.x + 7850, 'y': self.y + 1800}}, 
-        ]
+        )
         return [segment for segment in segments if self.viewport.collidepoint(tuple(segment['a'].values())) or self.viewport.collidepoint(tuple(segment['b'].values()))]
 
     @property
     def get_task_rects(self):
         return [
-            [pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"], # Check Inbox
+            (pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"), # Check Inbox
 
-            [pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "Refil Hand-Sanitizer"], # Refil Hand-Sanitizer: left
-            [pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "Refil Hand-Sanitizer"], # Refil Hand-Sanitizer: right
+            (pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "Refil Hand-Sanitizer"), # Refil Hand-Sanitizer: left
+            (pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "Refil Hand-Sanitizer"), # Refil Hand-Sanitizer: right
 
-            [pygame.Rect(self.x + 7000, self.y + 1050, 50, 50), "Check Temperature"], # Check Temperature
+            (pygame.Rect(self.x + 7000, self.y + 1050, 50, 50), "Check Temperature"), # Check Temperature
 
-            [pygame.Rect(self.x + 6150, self.y + 100, 100, 50), "Reset Wifi"], # Reset Wifi
+            (pygame.Rect(self.x + 6150, self.y + 100, 100, 50), "Reset Wifi"), # Reset Wifi
 
-            [pygame.Rect(self.x + 2100, self.y + 650, 50, 100), "Plug-In Laptops"], # Plug-In Laptops: top
-            [pygame.Rect(self.x + 2100, self.y + 1700, 50, 100), "Plug-In Laptops"], # Plug-In Laptops: bottom
+            (pygame.Rect(self.x + 2100, self.y + 650, 50, 100), "Plug-In Laptops"), # Plug-In Laptops: top
+            (pygame.Rect(self.x + 2100, self.y + 1700, 50, 100), "Plug-In Laptops"), # Plug-In Laptops: bottom
 
-            [pygame.Rect(self.x + 4300, self.y + 1050, 300, 300), "Wipe down Tables"], # Wipe down tables: top left
-            [pygame.Rect(self.x + 4300, self.y + 1700, 300, 300), "Wipe down Tables"], # Wipe down tables: bottom left
-            [pygame.Rect(self.x + 6500, self.y + 1050, 300, 300), "Wipe down Tables"], # Wipe down tables: top right
-            [pygame.Rect(self.x + 6500, self.y + 1750, 300, 300), "Wipe down Tables"], # Wipe down tables: bottom right
+            (pygame.Rect(self.x + 4300, self.y + 1050, 300, 300), "Wipe down Tables"), # Wipe down tables: top left
+            (pygame.Rect(self.x + 4300, self.y + 1700, 300, 300), "Wipe down Tables"), # Wipe down tables: bottom left
+            (pygame.Rect(self.x + 6500, self.y + 1050, 300, 300), "Wipe down Tables"), # Wipe down tables: top right
+            (pygame.Rect(self.x + 6500, self.y + 1750, 300, 300), "Wipe down Tables"), # Wipe down tables: bottom right
             
-            [pygame.Rect(self.x + 400, self.y + 1100, 400, 50), "Clean Windows"], # Clean Windows: left top left
-            [pygame.Rect(self.x + 900, self.y + 1100, 400, 50), "Clean Windows"], # Clean Windows: left top right
-            [pygame.Rect(self.x + 400, self.y + 1300, 400, 50), "Clean Windows"], # Clean Windows: left bottom left
-            [pygame.Rect(self.x + 900, self.y + 1300, 400, 50), "Clean Windows"], # Clean Windows: left bottom right
-            [pygame.Rect(self.x + 2350, self.y + 1100, 300, 50), "Clean Windows"], # Clean Windows: right top left
-            [pygame.Rect(self.x + 2750, self.y + 1100, 300, 50), "Clean Windows"], # Clean Windows: right top right
-            [pygame.Rect(self.x + 2350, self.y + 1300, 300, 50), "Clean Windows"], # Clean Windows: right bottom left
-            [pygame.Rect(self.x + 2750, self.y + 1300, 300, 50), "Clean Windows"], # Clean Windows: right bottom right
+            (pygame.Rect(self.x + 400, self.y + 1100, 400, 50), "Clean Windows"), # Clean Windows: left top left
+            (pygame.Rect(self.x + 900, self.y + 1100, 400, 50), "Clean Windows"), # Clean Windows: left top right
+            (pygame.Rect(self.x + 400, self.y + 1300, 400, 50), "Clean Windows"), # Clean Windows: left bottom left
+            (pygame.Rect(self.x + 900, self.y + 1300, 400, 50), "Clean Windows"), # Clean Windows: left bottom right
+            (pygame.Rect(self.x + 2350, self.y + 1100, 300, 50), "Clean Windows"), # Clean Windows: right top left
+            (pygame.Rect(self.x + 2750, self.y + 1100, 300, 50), "Clean Windows"), # Clean Windows: right top right
+            (pygame.Rect(self.x + 2350, self.y + 1300, 300, 50), "Clean Windows"), # Clean Windows: right bottom left
+            (pygame.Rect(self.x + 2750, self.y + 1300, 300, 50), "Clean Windows"), # Clean Windows: right bottom right
 
-            [pygame.Rect(self.x + 6700, self.y + 850, 150, 50), "Nominate For Awards"], # Nominate for Awards
+            (pygame.Rect(self.x + 6700, self.y + 850, 150, 50), "Nominate For Awards"), # Nominate for Awards
 
-            [pygame.Rect(self.x + 2300, self.y + 1000, 50, 50), "Collect Trash"], # Collect Trash: classroom1
-            [pygame.Rect(self.x + 2300, self.y + 1400, 50, 50), "Collect Trash"], # Collect Trash: classroom2
-            [pygame.Rect(self.x + 3700, self.y + 1550, 50, 50), "Collect Trash"], # Collect Trash: bathroom
-            [pygame.Rect(self.x + 4350, self.y + 750, 50, 50), "Collect Trash"], # Collect Trash: breakroom
-            [pygame.Rect(self.x + 4150, self.y + 2000, 50, 50), "Collect Trash"], # Collect Trash: left lobby
-            [pygame.Rect(self.x + 6900, self.y + 2000, 50, 50), "Collect Trash"], # Collect Trash: right lobby
-            [pygame.Rect(self.x + 7100, self.y + 850, 50, 50), "Collect Trash"], # Collect Trash: outside kitchen
-            [pygame.Rect(self.x + 6650, self.y + 750, 50, 50), "Collect Trash"], # Collect Trash: outside kitchen
+            (pygame.Rect(self.x + 2300, self.y + 1000, 50, 50), "Collect Trash"), # Collect Trash: classroom1
+            (pygame.Rect(self.x + 2300, self.y + 1400, 50, 50), "Collect Trash"), # Collect Trash: classroom2
+            (pygame.Rect(self.x + 3700, self.y + 1550, 50, 50), "Collect Trash"), # Collect Trash: bathroom
+            (pygame.Rect(self.x + 4350, self.y + 750, 50, 50), "Collect Trash"), # Collect Trash: breakroom
+            (pygame.Rect(self.x + 4150, self.y + 2000, 50, 50), "Collect Trash"), # Collect Trash: left lobby
+            (pygame.Rect(self.x + 6900, self.y + 2000, 50, 50), "Collect Trash"), # Collect Trash: right lobby
+            (pygame.Rect(self.x + 7100, self.y + 850, 50, 50), "Collect Trash"), # Collect Trash: outside kitchen
+            (pygame.Rect(self.x + 6650, self.y + 750, 50, 50), "Collect Trash"), # Collect Trash: outside kitchen
 
-            [pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "Do Flashcards"], # Do Flashcards
+            (pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "Do Flashcards"), # Do Flashcards
 
             # Sabotages
 
-            [pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Left A/C top"], # Left A/C: top
-            [pygame.Rect(self.x + 900, self.y + 1850, 100, 50), "Left A/C bottom"], # Left A/C: bottom
-            [pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C top"], # Right A/C: top
-            [pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C bottom"], # Right A/C: bottom
+            (pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Left A/C top"), # Left A/C: top
+            (pygame.Rect(self.x + 900, self.y + 1850, 100, 50), "Left A/C bottom"), # Left A/C: bottom
+            (pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C top"), # Right A/C: top
+            (pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C bottom"), # Right A/C: bottom
 
-            [pygame.Rect(self.x + 3400, self.y + 700, 150, 50), "Lights"], # Lights
+            (pygame.Rect(self.x + 3400, self.y + 700, 150, 50), "Lights"), # Lights
 
-            [pygame.Rect(self.x + 5000, self.y + 150, 50, 100), "Relaunch Zoom"], # Relaunch Zoom
+            (pygame.Rect(self.x + 5000, self.y + 150, 50, 100), "Relaunch Zoom"), # Relaunch Zoom
 
-            [pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "Remove Spoiled Food"], # Remove Spoiled Food
-            [pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "Remove Spoiled Food"], # Remove Spoiled Food
+            (pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "Remove Spoiled Food"), # Remove Spoiled Food
+            (pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "Remove Spoiled Food"), # Remove Spoiled Food
         ]
 
     @property
     def get_vent_rects(self):
         return [
-            [pygame.Rect(self.x + 170, self.y + 1200, 60, 50), "Left.1"], # Left system: 1
-            [pygame.Rect(self.x + 1795, self.y + 875, 60, 50), "Left.2"], # Left system: 2
-            [pygame.Rect(self.x + 3095, self.y + 1750, 60, 50), "Left.3"], # Left system: 3
-            [pygame.Rect(self.x + 3995, self.y + 425, 60, 50), "Left.4"], # Left system: 4
+            (pygame.Rect(self.x + 170, self.y + 1200, 60, 50), "Left.1"), # Left system: 1
+            (pygame.Rect(self.x + 1795, self.y + 875, 60, 50), "Left.2"), # Left system: 2
+            (pygame.Rect(self.x + 3095, self.y + 1750, 60, 50), "Left.3"), # Left system: 3
+            (pygame.Rect(self.x + 3995, self.y + 425, 60, 50), "Left.4"), # Left system: 4
 
-            [pygame.Rect(self.x + 5520, self.y + 1950, 60, 50), "Right.1"], # Right system: 1
-            [pygame.Rect(self.x + 6220, self.y + 450, 60, 50), "Right.2"], # Right system: 2
-            [pygame.Rect(self.x + 7195, self.y + 525, 60, 50), "Right.3"], # Right system: 3
-            [pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"], # Right system: 4
+            (pygame.Rect(self.x + 5520, self.y + 1950, 60, 50), "Right.1"), # Right system: 1
+            (pygame.Rect(self.x + 6220, self.y + 450, 60, 50), "Right.2"), # Right system: 2
+            (pygame.Rect(self.x + 7195, self.y + 525, 60, 50), "Right.3"), # Right system: 3
+            (pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"), # Right system: 4
         ]
 
     def draw_map_image(self, visible_surface, shadow_surface, do_ray_casting):
@@ -553,30 +553,27 @@ class Map(object):
 
             # DRAWING
             def draw(segments):
-                mouse_x, mouse_y = 960, 540
-
                 # Get all angles
                 uniqueAngles = set()
                 for uniquePoint in uniquePoints:
                     points_dict = dict(uniquePoint)
-                    angle = math.atan2(points_dict['y'] - mouse_y, points_dict['x'] - mouse_x)
-                    points_dict['angle'] = angle
+                    angle = math.atan2(points_dict['y'] - 540, points_dict['x'] - 960)
                     uniqueAngles.update([angle-0.00001, angle+0.00001])
 
                 uniqueAngles = sorted(uniqueAngles)
 
                 # RAYS IN ALL DIRECTIONS
-                intersects = []
+                points = []
                 for angle in uniqueAngles:
 
                     # Calculate dx & dy from angle
                     dx = math.cos(angle)
                     dy = math.sin(angle)
 
-                    # Ray from center of screen to mouse
+                    # Ray from center of screen to player
                     ray = {
-                        "a":{"x": mouse_x, "y": mouse_y},
-                        "b":{"x": mouse_x + dx, "y": mouse_y + dy}
+                        "a":{"x": 960, "y": 540},
+                        "b":{"x": 960 + dx, "y": 540 + dy}
                     }
 
                     # Find CLOSEST intersection
@@ -591,11 +588,9 @@ class Map(object):
                     if not closestIntersect: continue
                     # Add to list of intersects
                     else:
-                        intersects.append(closestIntersect)
+                        points.append((closestIntersect['x'], closestIntersect['y']))
 
                 # DRAW ALL RAYS
-                points = [(intersect['x'], intersect['y']) for intersect in intersects]
-
                 # # print("\n", points, "\n")
                 shadow_surface.blit(self.shadow_map_image, (self.x, self.y))
                 pygame.draw.polygon(shadow_surface, "#123456", points)
@@ -603,6 +598,8 @@ class Map(object):
             visible_surface.fill((40,40,40))
             visible_surface.blit(self.visible_map_image, (self.x, self.y))
             draw(self.get_wall_segments)
+            self.draw_vents(visible_surface)
+            self.draw_tasks(visible_surface)
             visible_surface.blit(shadow_surface, (0, 0))
         else:
             visible_surface.fill((40,40,40))
