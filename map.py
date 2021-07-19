@@ -495,7 +495,10 @@ class Map(object):
             (pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"),  # Right system: 4
         ]
 
-    def draw_map_image(self, visible_surface, shadow_surface, do_ray_casting):
+    def draw_map_image(self, visible_surface, shadow_surface, do_ray_casting, draw_lines):
+        # Points for shape drawing
+        points = []
+        
         if do_ray_casting:
             unique_points = set()
             for segment in self.get_wall_segments:
@@ -557,7 +560,6 @@ class Map(object):
                 unique_angles = sorted(unique_angles)
 
                 # RAYS IN ALL DIRECTIONS
-                points = []
                 for angle in unique_angles:
 
                     # Calculate dx & dy from angle
@@ -600,6 +602,11 @@ class Map(object):
         else:
             visible_surface.fill((40, 40, 40))
             visible_surface.blit(self.visible_map_image, (self.x, self.y))
+
+        if draw_lines:
+            # Player to corner
+            for point in points:
+                pygame.draw.line(visible_surface, "#FF00FF", (960, 540), point)
 
     def draw_collision(self, surface):
         # Draw Rects
