@@ -29,6 +29,6 @@ As I work on the tasks, I am optimizing the shadow code.
 I want to see if I can get the shadow limits to be circular instead of a rectangle as it is now.
 My only concern is the performance hit it might take.
 
-I have the tasks planned out in the `planning.png` image, I just need to design and code the tasks in.
+I have the tasks planned out in the [planning.png](https://github.com/Lance-Easley/Uhmong-Us/blob/main/images/planning.png) image, I just need to design and code the tasks in.
 Once a task is built, I already have the interaction areas built up and put on the map. 
 These areas are denoted by the yellow outlines drawn on the map.
