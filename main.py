@@ -18,7 +18,7 @@ SCREEN_HALF_Y = SCREEN_Y // 2
 ###
 
 # Image Loading & Processing ###
-flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE# | pygame.SCALED # for non-1080p screens
+flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.SCALED # for non-1080p screens
 display = pygame.display.set_mode((SCREEN_X, SCREEN_Y), flags)
 visible_map_image = pygame.image.load('images/BCCA_map/BCCA_map_visible.png').convert()
 shadow_map_image = pygame.image.load('images/BCCA_map/BCCA_map_shadow.png').convert()
@@ -30,6 +30,9 @@ vent_arrow_image.set_colorkey((255, 255, 255))
 # Surface Setup ###
 shadow_surface = pygame.Surface((shadow_map_image.get_width(), shadow_map_image.get_height()))
 shadow_surface.set_colorkey("#123456")
+
+shadow_limiter_surface = pygame.Surface((SCREEN_X, SCREEN_Y))
+shadow_limiter_surface.set_colorkey("#098765")
 ###
 
 # Font Initialization ###
@@ -109,6 +112,13 @@ def transport_vents(player):
         smooth_scroll(game_map, -6789, -1149, 3)
 
 
+def draw_shadow_limiter(game_map):
+    shadow_limiter_surface.fill((40, 40, 40))
+    shadow_limiter_surface.blit(shadow_map_image, (game_map.x, game_map.y))
+    pygame.draw.circle(shadow_limiter_surface, "#098765", (SCREEN_HALF_X, SCREEN_HALF_Y), 400)
+    display.blit(shadow_limiter_surface, (0, 0))
+
+
 def draw_vent_arrows(player, image):
     global left_vent_arrow
     global right_vent_arrow
@@ -155,6 +165,7 @@ def draw_vent_arrows(player, image):
 
 def redraw_game_window(ray_casting):
     game_map.draw_map_image(display, shadow_surface, ray_casting, do_draw_collision)
+    draw_shadow_limiter(game_map)
     if do_draw_collision:
         game_map.draw_collision(display)
         game_map.draw_coordinates(display, font)
