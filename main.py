@@ -23,7 +23,8 @@ shadow_surface.set_colorkey("#123456")
 ###
 
 # Image Loading & Processing ###
-display = pygame.display.set_mode((SCREEN_X, SCREEN_Y), pygame.FULLSCREEN)
+flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE# | pygame.SCALED # for non-1080p screens
+display = pygame.display.set_mode((SCREEN_X, SCREEN_Y), flags)
 visible_map_image = pygame.image.load('images/BCCA_map/BCCA_map_visible.png').convert()
 shadow_map_image = pygame.image.load('images/BCCA_map/BCCA_map_shadow.png').convert()
 
@@ -156,6 +157,7 @@ def redraw_game_window(ray_casting):
     game_map.draw_map_image(display, shadow_surface, ray_casting, do_draw_collision)
     if do_draw_collision:
         game_map.draw_collision(display)
+        game_map.draw_coordinates(display, font)
     if player_1.in_vent:
         draw_vent_arrows(player_1, vent_arrow_image)
     player_1.draw_player(display)
@@ -328,23 +330,27 @@ while running_game:
     if keys[pygame.K_w]:
         if player_1.in_vent == 0:
             for pixel in range(game_map.y_velocity):
-                if not (check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects) and not is_ghost):
-                    game_map.y += 1
+                if check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects) and not is_ghost:
+                    break
+                game_map.y += 1
     if keys[pygame.K_a]:
         if player_1.in_vent == 0:
             for pixel in range(game_map.x_velocity):
-                if not (check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost):
-                    game_map.x += 1
+                if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost:
+                    break    
+                game_map.x += 1
     if keys[pygame.K_s]:
         if player_1.in_vent == 0:
             for pixel in range(game_map.y_velocity):
-                if not (check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost):
-                    game_map.y -= 1
+                if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost:
+                    break    
+                game_map.y -= 1
     if keys[pygame.K_d]:
         if player_1.in_vent == 0:
             for pixel in range(game_map.x_velocity):
-                if not (check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost):
-                    game_map.x -= 1
+                if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
+                    break    
+                game_map.x -= 1
 
     if keys[pygame.K_ESCAPE]:
         pygame.quit()
@@ -352,6 +358,6 @@ while running_game:
 
     redraw_game_window(do_ray_casting)
 
-    clock.tick(60)
+    clock.tick(30)
 pygame.quit()
 sys.exit()

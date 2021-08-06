@@ -9,8 +9,8 @@ class Map(object):
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width
         self.height = self.visible_map_image.get_rect().height
-        self.x_velocity = 8
-        self.y_velocity = 8
+        self.x_velocity = 12
+        self.y_velocity = 12
 
         self.wall_segments = {
             # Outside: classrooms top wall
@@ -47,8 +47,8 @@ class Map(object):
             ((4300, 800), (4750, 850)),
             ((4300, 850), (4750, 800)),
             # BCCA: breakroom bottom left wall
-            ((4150, 800), (4200, 850)),
-            ((4150, 850), (4200, 800)),
+            ((4195, 800), (4200, 850)),
+            ((4150, 825), (4200, 800)),
             # BCCA: breakroom left wall
             ((4100, 350), (4150, 1100)),
 
@@ -91,20 +91,20 @@ class Map(object):
 
             # BCCA: supply bottom right wall
             ((3800, 1050), (4150, 1100)),
-            ((3800, 1100), (4100, 1050)),
+            ((3800, 1100), (3805, 1050)),
             # BCCA: supply middle wall
             ((3600, 600), (3650, 1050)),
-            ((3600, 750), (3650, 600)),
+            ((3600, 605), (3650, 600)),
 
             # BCCA: hallway top door stud
-            ((3150, 1100), (3200, 1150)),
+            ((3150, 1145), (3200, 1150)),
             ((3150, 1150), (3200, 1100)),
             # BCCA: hallway bottom door stud
             ((3150, 1300), (3200, 1350)),
-            ((3150, 1350), (3200, 1300)),
+            ((3150, 1305), (3200, 1300)),
 
             # BCCA: classroom1 right wall
-            ((3300, 350), (3350, 1050)),
+            ((3325, 350), (3325, 1050)),
             # BCCA: classroom1 bottom right wall
             ((2250, 1050), (3700, 1100)),
             ((2250, 1100), (3700, 1050)),
@@ -203,7 +203,7 @@ class Map(object):
             ((2500, 1550), (2900, 1950)),
             ((2500, 1950), (2900, 1550)),
             # BCCA: classroom2 right wall
-            ((3300, 1400), (3350, 2100)),
+            ((3325, 1400), (3325, 2100)),
 
             # BCCA: bathroom top left door stud 
             ((3550, 1400), (3600, 1450)),
@@ -216,18 +216,18 @@ class Map(object):
             ((3850, 1450), (3900, 1400)),
             # BCCA: bathroom bottom right door stud
             ((3850, 1550), (3900, 1650)),
-            ((3850, 1600), (3900, 1550)),
+            ((3850, 1555), (3900, 1550)),
             # BCCA: bathroom top middle wall
             ((3600, 1600), (3900, 1650)),
             # BCCA: bathroom middle wall
-            ((3700, 1650), (3750, 2100)),
+            ((3725, 1650), (3725, 2100)),
             # BCCA: bathroom top right wall
             ((3900, 1400), (4150, 1350)),
             # BCCA: bathroom right wall
             ((4100, 2100), (4150, 1350)),
 
             # BCCA: kitchen right wall
-            ((7100, 450), (7150, 800)),
+            ((7125, 450), (7125, 800)),
             # BCCA: kitchen bottom left wall
             ((5700, 800), (6900, 850)),
             ((5700, 850), (6900, 800)),
@@ -283,17 +283,27 @@ class Map(object):
             ((7250, 1850), (7850, 1800)),
         }
 
-        self.viewport = pygame.Rect(210, 0, 1500, 1080)
+        self.v_x = 210
+        self.v_y = 0
+        self.v_w = 1500
+        self.v_h = 1080
+
+        self.v_t = self.v_y
+        self.v_b = self.v_y + self.v_h
+        self.v_l = self.v_x
+        self.v_r = self.v_x + self.v_w
+
+        self.viewport = pygame.Rect(self.v_x, self.v_y, self.v_w, self.v_h)
 
         self.viewport_segments = [
             # Viewport: top
-            {'a': {'x': 210, 'y': 0}, 'b': {'x': 1709, 'y': 0}},
+            {'a': {'x': self.v_x, 'y': self.v_y}, 'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y}},
             # Viewport: right
-            {'a': {'x': 1709, 'y': 0}, 'b': {'x': 1709, 'y': 1079}},
+            {'a': {'x': self.v_x + self.v_w - 1, 'y': self.v_y}, 'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y + self.v_h - 1}},
             # Viewport: bottom
-            {'a': {'x': 210, 'y': 1079}, 'b': {'x': 1709, 'y': 1079}},
+            {'a': {'x': self.v_x, 'y': self.v_y + self.v_h - 1}, 'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y + self.v_h - 1}},
             # Viewport: left
-            {'a': {'x': 210, 'y': 1079}, 'b': {'x': 210, 'y': 0}},
+            {'a': {'x': self.v_x, 'y': self.v_y + self.v_h - 1}, 'b': {'x': self.v_x, 'y': self.v_y}},
         ]
 
     @property
@@ -416,11 +426,29 @@ class Map(object):
             pygame.Rect(self.x + 7250, self.y + 1800, 600, 50),  # BCCA: incubator bottom room top right wall [165:]
         ]
 
+    # These convert methods confine ray-casting lines to be inside the viewport.
+    # Returns either the coordinate or the limit of the viewport (top, bottom, left, or right)
+    def convert_x_to_view_range(self, num):
+        coordinate = num + self.x
+        if coordinate < self.v_l:
+            return self.v_l
+        if coordinate > self.v_r:
+            return self.v_r
+        return coordinate
+
+    def convert_y_to_view_range(self, num):
+        coordinate = num + self.y
+        if coordinate < self.v_t:
+            return self.v_t
+        if coordinate > self.v_b:
+            return self.v_b
+        return coordinate
+
     @property
     def get_wall_segments(self):
         return [
-                   {'a': {'x': seg[0][0] + self.x, 'y': seg[0][1] + self.y},
-                    'b': {'x': seg[1][0] + self.x, 'y': seg[1][1] + self.y}}
+                   {'a': {'x': self.convert_x_to_view_range(seg[0][0]), 'y': self.convert_y_to_view_range(seg[0][1])},
+                    'b': {'x': self.convert_x_to_view_range(seg[1][0]), 'y': self.convert_y_to_view_range(seg[1][1])}}
                    for seg in self.wall_segments
                    if self.viewport.collidepoint((seg[0][0] + self.x, seg[0][1] + self.y)) or self.viewport.collidepoint((seg[1][0] + self.x, seg[1][1] + self.y))] + self.viewport_segments
 
@@ -502,10 +530,10 @@ class Map(object):
         if do_ray_casting:
             unique_points = set()
             for segment in self.get_wall_segments:
-                if tuple(segment["a"].items()) not in unique_points:
-                    unique_points.add(tuple(segment["a"].items()))
-                if tuple(segment["b"].items()) not in unique_points:
-                    unique_points.add(tuple(segment["b"].items()))
+                if (('x', segment["a"]["x"]), ('y', segment["a"]["y"])) not in unique_points:
+                    unique_points.add((('x', segment["a"]["x"]), ('y', segment["a"]["y"])))
+                if (('x', segment["b"]["x"]), ('y', segment["b"]["y"])) not in unique_points:
+                    unique_points.add((('x', segment["b"]["x"]), ('y', segment["b"]["y"])))
 
             # Find intersection of RAY & SEGMENT
             def get_intersection(ray, segment_instance):
@@ -634,3 +662,6 @@ class Map(object):
         pos_text_rect = pos_text.get_rect()
         pos_text_rect.center = (250, 50)
         surface.blit(pos_text, pos_text_rect)
+
+if __name__ == '__main__':
+    import main
