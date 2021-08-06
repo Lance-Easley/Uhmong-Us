@@ -17,11 +17,6 @@ SCREEN_HALF_X = SCREEN_X // 2
 SCREEN_HALF_Y = SCREEN_Y // 2
 ###
 
-# Surface Setup ###
-shadow_surface = pygame.Surface((8200, 2200))
-shadow_surface.set_colorkey("#123456")
-###
-
 # Image Loading & Processing ###
 flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE# | pygame.SCALED # for non-1080p screens
 display = pygame.display.set_mode((SCREEN_X, SCREEN_Y), flags)
@@ -30,6 +25,11 @@ shadow_map_image = pygame.image.load('images/BCCA_map/BCCA_map_shadow.png').conv
 
 vent_arrow_image = pygame.image.load('images/hud/arrow.png').convert()
 vent_arrow_image.set_colorkey((255, 255, 255))
+###
+
+# Surface Setup ###
+shadow_surface = pygame.Surface((shadow_map_image.get_width(), shadow_map_image.get_height()))
+shadow_surface.set_colorkey("#123456")
 ###
 
 # Font Initialization ###
