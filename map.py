@@ -580,8 +580,8 @@ class Map(object):
             def draw(segments):
                 # Get all angles
                 unique_angles = set()
-                for uniquePoint in unique_points:
-                    points_dict = dict(uniquePoint)
+                for unique_point in unique_points:
+                    points_dict = dict(unique_point)
                     angle = math.atan2(points_dict['y'] - 540, points_dict['x'] - 960)
                     unique_angles.update([angle - 0.00001, angle + 0.00001])
 

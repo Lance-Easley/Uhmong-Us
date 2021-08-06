@@ -329,25 +329,37 @@ while running_game:
 
     if keys[pygame.K_w]:
         if player_1.in_vent == 0:
-            for pixel in range(game_map.y_velocity):
+            speed_modifier = 1
+            if keys[pygame.K_a] or keys[pygame.K_d]:
+                speed_modifier = 0.75
+            for pixel in range(int(game_map.y_velocity * speed_modifier)):
                 if check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break
                 game_map.y += 1
     if keys[pygame.K_a]:
         if player_1.in_vent == 0:
-            for pixel in range(game_map.x_velocity):
+            speed_modifier = 1
+            if keys[pygame.K_w] or keys[pygame.K_s]:
+                speed_modifier = 0.75
+            for pixel in range(int(game_map.x_velocity * speed_modifier)):
                 if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break    
                 game_map.x += 1
     if keys[pygame.K_s]:
         if player_1.in_vent == 0:
-            for pixel in range(game_map.y_velocity):
+            speed_modifier = 1
+            if keys[pygame.K_a] or keys[pygame.K_d]:
+                speed_modifier = 0.75
+            for pixel in range(int(game_map.y_velocity * speed_modifier)):
                 if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break    
                 game_map.y -= 1
     if keys[pygame.K_d]:
         if player_1.in_vent == 0:
-            for pixel in range(game_map.x_velocity):
+            speed_modifier = 1
+            if keys[pygame.K_w] or keys[pygame.K_s]:
+                speed_modifier = 0.75
+            for pixel in range(int(game_map.x_velocity * speed_modifier)):
                 if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break    
                 game_map.x -= 1
