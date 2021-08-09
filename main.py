@@ -41,7 +41,7 @@ font = pygame.font.Font("freesansbold.ttf", 32)
 ###
 
 
-def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level):
+def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level, shadow_range):
     current_x -= player_1.half_width
     current_y -= player_1.half_height
     last_x = game_map_instance.x
@@ -55,7 +55,7 @@ def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting)
+                redraw_game_window(do_ray_casting, shadow_range)
         else:
             while game_map_instance.x < current_x or game_map_instance.y > current_y:
                 game_map_instance.x -= round(game_map_instance.x - current_x, 1) / smoothness_level
@@ -64,7 +64,7 @@ def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting)
+                redraw_game_window(do_ray_casting, shadow_range)
     else:
         if game_map_instance.y < current_y:
             while game_map_instance.x > current_x or game_map_instance.y < current_y:
@@ -74,7 +74,7 @@ def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting)
+                redraw_game_window(do_ray_casting, shadow_range)
         else:
             while game_map_instance.x > current_x or game_map_instance.y > current_y:
                 game_map_instance.x -= round(game_map_instance.x - current_x, 1) / smoothness_level
@@ -83,7 +83,7 @@ def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level):
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting)
+                redraw_game_window(do_ray_casting, shadow_range)
     game_map_instance.x = current_x
     game_map_instance.y = current_y
 
@@ -95,27 +95,27 @@ def check_for_collisions(rect, columns):
 def transport_vents(player):
     # vent coordinates are hard coded for now
     if player.in_vent == 1:
-        smooth_scroll(game_map, 786, -624, 3)
+        smooth_scroll(game_map, 786, -624, 3, player.view_distance)
     elif player.in_vent == 2:
-        smooth_scroll(game_map, -839, -299, 3)
+        smooth_scroll(game_map, -839, -299, 3, player.view_distance)
     elif player.in_vent == 3:
-        smooth_scroll(game_map, -2139, -1174, 3)
+        smooth_scroll(game_map, -2139, -1174, 3, player.view_distance)
     elif player.in_vent == 4:
-        smooth_scroll(game_map, -3039, 151, 3)
+        smooth_scroll(game_map, -3039, 151, 3, player.view_distance)
     elif player.in_vent == 5:
-        smooth_scroll(game_map, -4564, -1374, 3)
+        smooth_scroll(game_map, -4564, -1374, 3, player.view_distance)
     elif player.in_vent == 6:
-        smooth_scroll(game_map, -5264, 126, 3)
+        smooth_scroll(game_map, -5264, 126, 3, player.view_distance)
     elif player.in_vent == 7:
-        smooth_scroll(game_map, -6239, 51, 3)
+        smooth_scroll(game_map, -6239, 51, 3, player.view_distance)
     elif player.in_vent == 8:
-        smooth_scroll(game_map, -6789, -1149, 3)
+        smooth_scroll(game_map, -6789, -1149, 3, player.view_distance)
 
 
-def draw_shadow_limiter(game_map):
+def draw_shadow_limiter(game_map, shadow_range):
     shadow_limiter_surface.fill((40, 40, 40))
     shadow_limiter_surface.blit(shadow_map_image, (game_map.x, game_map.y))
-    pygame.draw.circle(shadow_limiter_surface, "#098765", (SCREEN_HALF_X, SCREEN_HALF_Y), 400)
+    pygame.draw.circle(shadow_limiter_surface, "#098765", (SCREEN_HALF_X, SCREEN_HALF_Y), shadow_range)
     display.blit(shadow_limiter_surface, (0, 0))
 
 
@@ -163,9 +163,9 @@ def draw_vent_arrows(player, image):
                                         (870 - player_1.half_width, 570 - player_1.half_height))
 
 
-def redraw_game_window(ray_casting):
+def redraw_game_window(ray_casting, shadow_range):
     game_map.draw_map_image(display, shadow_surface, ray_casting, do_draw_collision)
-    draw_shadow_limiter(game_map)
+    draw_shadow_limiter(game_map, shadow_range)
     if do_draw_collision:
         game_map.draw_collision(display)
         game_map.draw_coordinates(display, font)
@@ -276,6 +276,27 @@ while running_game:
                 do_ray_casting = not do_ray_casting
             elif event.key == pygame.K_l:
                 do_draw_collision = not do_draw_collision
+            elif event.key == pygame.K_1:
+                player_1.view_distance = 100
+            elif event.key == pygame.K_2:
+                player_1.view_distance = 200
+            elif event.key == pygame.K_3:
+                player_1.view_distance = 300
+            elif event.key == pygame.K_4:
+                player_1.view_distance = 400
+            elif event.key == pygame.K_5:
+                player_1.view_distance = 500
+            elif event.key == pygame.K_6:
+                player_1.view_distance = 600
+            elif event.key == pygame.K_7:
+                player_1.view_distance = 700
+            elif event.key == pygame.K_8:
+                player_1.view_distance = 800
+            elif event.key == pygame.K_9:
+                player_1.view_distance = 900
+            elif event.key == pygame.K_0:
+                player_1.view_distance = 950
+            
 
             if player_1.in_vent != 0:
                 transport_vents(player_1)
@@ -379,7 +400,7 @@ while running_game:
         pygame.quit()
         sys.exit()
 
-    redraw_game_window(do_ray_casting)
+    redraw_game_window(do_ray_casting, player_1.view_distance)
 
     clock.tick(30)
 pygame.quit()

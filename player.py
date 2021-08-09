@@ -43,6 +43,7 @@ class Player(object):
         
         self.is_traitor = is_traitor
         self.in_vent = in_vent
+        self.view_distance = 400
 
     def draw_player(self, window):
         # `self.in_vent = 0` Represents a player not in a vent
