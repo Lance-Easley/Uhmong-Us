@@ -14,7 +14,7 @@ Ever since, I have been working on the project in bursts, influenced by my free-
 - [x] Map Design
 - [x] Player Movement & Collision
 - [x] Vent Systems
-- [x] Shadow Logic *
+- [x] Shadow Logic
 - [ ] Tasks *
 - [ ] HUD
 - [ ] Role Assignment (Crewmate, Imposter)
@@ -22,12 +22,10 @@ Ever since, I have been working on the project in bursts, influenced by my free-
 - [ ] Round Win/Lose Logic
 - [ ] Menus
 
-## Progress (7/22/2021)
+## Progress (8/6/2021)
 
-Right now, I am working in between shadow logic and tasks. 
-As I work on the tasks, I am optimizing the shadow code.
-I want to see if I can get the shadow limits to be circular instead of a rectangle as it is now.
-My only concern is the performance hit it might take.
+The shadow system is now fully built (finally). 
+Now I can focus entirely on making tasks.
 
 I have the tasks planned out in the [planning.png](https://github.com/Lance-Easley/Uhmong-Us/blob/main/images/planning.png) image, I just need to design and code the tasks in.
 Once a task is built, I already have the interaction areas built up and put on the map. 
