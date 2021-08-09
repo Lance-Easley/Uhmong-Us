@@ -283,9 +283,9 @@ class Map(object):
             ((7250, 1850), (7300, 1800)),
         }
 
-        self.v_x = 210
+        self.v_x = 0
         self.v_y = 0
-        self.v_w = 1500
+        self.v_w = 1920
         self.v_h = 1080
 
         self.v_t = self.v_y
