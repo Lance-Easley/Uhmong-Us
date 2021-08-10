@@ -115,7 +115,7 @@ def transport_vents(player):
 def smooth_shadow_transition(player, target, speed):
     if player.view_distance > target:
         player.view_distance -= speed
-    if player.view_distance < target:
+    elif player.view_distance < target:
         player.view_distance += speed
 
 
@@ -408,7 +408,8 @@ while running_game:
         pygame.quit()
         sys.exit()
 
-    smooth_shadow_transition(player_1, target_view_distance, 10)
+    if player_1.view_distance != target_view_distance:
+        smooth_shadow_transition(player_1, target_view_distance, 10)
 
     redraw_game_window(do_ray_casting, player_1.view_distance)
 
