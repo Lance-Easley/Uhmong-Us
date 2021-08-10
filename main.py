@@ -112,6 +112,13 @@ def transport_vents(player):
         smooth_scroll(game_map, -6789, -1149, 3, player.view_distance)
 
 
+def smooth_shadow_transition(player, target, speed):
+    if player.view_distance > target:
+        player.view_distance -= speed
+    if player.view_distance < target:
+        player.view_distance += speed
+
+
 def draw_shadow_limiter(game_map, shadow_range):
     shadow_limiter_surface.fill((40, 40, 40))
     shadow_limiter_surface.blit(shadow_map_image, (game_map.x, game_map.y))
@@ -186,6 +193,7 @@ do_draw_collision = True
 running_game = True
 left_vent_arrow = None
 right_vent_arrow = None
+target_view_distance = player_1.view_distance
 while running_game:
 
     for event in pygame.event.get():
@@ -277,25 +285,25 @@ while running_game:
             elif event.key == pygame.K_l:
                 do_draw_collision = not do_draw_collision
             elif event.key == pygame.K_1:
-                player_1.view_distance = 100
+                target_view_distance = 100
             elif event.key == pygame.K_2:
-                player_1.view_distance = 200
+                target_view_distance = 200
             elif event.key == pygame.K_3:
-                player_1.view_distance = 300
+                target_view_distance = 300
             elif event.key == pygame.K_4:
-                player_1.view_distance = 400
+                target_view_distance = 400
             elif event.key == pygame.K_5:
-                player_1.view_distance = 500
+                target_view_distance = 500
             elif event.key == pygame.K_6:
-                player_1.view_distance = 600
+                target_view_distance = 600
             elif event.key == pygame.K_7:
-                player_1.view_distance = 700
+                target_view_distance = 700
             elif event.key == pygame.K_8:
-                player_1.view_distance = 800
+                target_view_distance = 800
             elif event.key == pygame.K_9:
-                player_1.view_distance = 900
+                target_view_distance = 900
             elif event.key == pygame.K_0:
-                player_1.view_distance = 950
+                target_view_distance = 950
             
 
             if player_1.in_vent != 0:
@@ -399,6 +407,8 @@ while running_game:
     if keys[pygame.K_ESCAPE]:
         pygame.quit()
         sys.exit()
+
+    smooth_shadow_transition(player_1, target_view_distance, 10)
 
     redraw_game_window(do_ray_casting, player_1.view_distance)
 
