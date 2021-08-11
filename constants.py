@@ -1,0 +1,6 @@
+# Variables ###
+SCREEN_X = 1920
+SCREEN_Y = 1080
+SCREEN_HALF_X = SCREEN_X // 2
+SCREEN_HALF_Y = SCREEN_Y // 2
+###

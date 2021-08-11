@@ -21,7 +21,7 @@
 - Check Temperature
 - Reset Wifi
 - Plug-in Laptops
-- Swipe down tables
+- Wipe down tables
 - Clean Windows
 - Nominate someone for awards
 - Collect Trash

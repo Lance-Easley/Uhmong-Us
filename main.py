@@ -3,6 +3,8 @@ import sys
 
 from map import Map
 from player import Player
+from constants import *
+import tasks
 
 # Pygame Initialization ###
 pygame.init()
@@ -10,18 +12,14 @@ pygame.display.set_caption("Uhmong-Us")
 pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN])
 ###
 
-# Constant Variables ###
-SCREEN_X = 1920
-SCREEN_Y = 1080
-SCREEN_HALF_X = SCREEN_X // 2
-SCREEN_HALF_Y = SCREEN_Y // 2
-###
-
 # Image Loading & Processing ###
 flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.SCALED # for non-1080p screens
 display = pygame.display.set_mode((SCREEN_X, SCREEN_Y), flags)
 visible_map_image = pygame.image.load('images/BCCA_map/BCCA_map_visible.png').convert()
 shadow_map_image = pygame.image.load('images/BCCA_map/BCCA_map_shadow.png').convert()
+
+task_surface = pygame.Surface((SCREEN_X, SCREEN_Y))
+task_surface.set_colorkey((18, 52, 86))
 
 vent_arrow_image = pygame.image.load('images/hud/arrow.png').convert()
 vent_arrow_image.set_colorkey((255, 255, 255))
@@ -180,6 +178,8 @@ def redraw_game_window(ray_casting, shadow_range):
         draw_vent_arrows(player_1, vent_arrow_image)
     player_1.draw_player(display)
     # player_1.draw_hitboxes(display)
+    if player_1.in_task != "None":
+        task.task_clean_windows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
     pygame.display.update()
 
 
@@ -187,6 +187,7 @@ def redraw_game_window(ray_casting, shadow_range):
 game_map = Map(visible_map_image, shadow_map_image)
 clock = pygame.time.Clock()
 player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255, 0, 0), game_map, True, 0)
+task = tasks.TaskHandler()
 is_ghost = False
 do_ray_casting = True
 do_draw_collision = True
@@ -229,44 +230,6 @@ while running_game:
                             player_1.in_vent = 8
                 else:
                     player_1.in_vent = 0
-
-            # Code to enable vent travel with WASD ###
-            # elif event.key == pygame.K_w:
-            #     if player_1.in_vent == 5:
-            #         player_1.in_vent = 6
-            #     elif player_1.in_vent == 8:
-            #         player_1.in_vent = 7
-
-            # elif event.key == pygame.K_s:
-            #     if player_1.in_vent == 6:
-            #         player_1.in_vent = 5
-            #     elif player_1.in_vent == 7:
-            #         player_1.in_vent = 8
-
-            # elif event.key == pygame.K_a:
-            #     if player_1.in_vent == 2:
-            #         player_1.in_vent = 1
-            #     elif player_1.in_vent == 3:
-            #         player_1.in_vent = 2
-            #     elif player_1.in_vent == 4:
-            #         player_1.in_vent = 3
-            #     elif player_1.in_vent == 8:
-            #         player_1.in_vent = 5
-            #     elif player_1.in_vent == 7:
-            #         player_1.in_vent = 6
-
-            # elif event.key == pygame.K_d:
-            #     if player_1.in_vent == 1:
-            #         player_1.in_vent = 2
-            #     elif player_1.in_vent == 2:
-            #         player_1.in_vent = 3
-            #     elif player_1.in_vent == 3:
-            #         player_1.in_vent = 4
-            #     elif player_1.in_vent == 5:
-            #         player_1.in_vent = 8
-            #     elif player_1.in_vent == 6:
-            #         player_1.in_vent = 7
-            ###
 
             elif event.key == pygame.K_x:
                 is_ghost = not is_ghost
@@ -368,7 +331,7 @@ while running_game:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_w]:
-        if player_1.in_vent == 0:
+        if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
                 speed_modifier = 0.75
@@ -377,7 +340,7 @@ while running_game:
                     break
                 game_map.y += 1
     if keys[pygame.K_a]:
-        if player_1.in_vent == 0:
+        if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 speed_modifier = 0.75
@@ -386,7 +349,7 @@ while running_game:
                     break    
                 game_map.x += 1
     if keys[pygame.K_s]:
-        if player_1.in_vent == 0:
+        if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
                 speed_modifier = 0.75
@@ -395,7 +358,7 @@ while running_game:
                     break    
                 game_map.y -= 1
     if keys[pygame.K_d]:
-        if player_1.in_vent == 0:
+        if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 speed_modifier = 0.75
@@ -403,6 +366,8 @@ while running_game:
                 if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break    
                 game_map.x -= 1
+    if keys[pygame.K_t]:
+        player_1.in_task = "Check Inbox"
 
     if keys[pygame.K_ESCAPE]:
         pygame.quit()
