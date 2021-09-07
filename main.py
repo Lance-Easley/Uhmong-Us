@@ -39,7 +39,7 @@ font = pygame.font.Font("freesansbold.ttf", 32)
 ###
 
 
-def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level, shadow_range):
+def smooth_scroll(game_map_instance: Map, current_x: int, current_y: int, smoothness_level: int, shadow_range: int):
     current_x -= player_1.half_width
     current_y -= player_1.half_height
     last_x = game_map_instance.x
@@ -86,11 +86,20 @@ def smooth_scroll(game_map_instance, current_x, current_y, smoothness_level, sha
     game_map_instance.y = current_y
 
 
-def check_for_collisions(rect, columns):
-    return [wall for wall in columns if rect.colliderect(wall)]
+def check_for_collisions(rect: pygame.Rect, wall_rects: list[pygame.Rect]):
+    return [wall for wall in wall_rects if rect.colliderect(wall)]
 
 
-def transport_vents(player):
+def start_task():
+    for task_info in game_map.get_task_rects:
+        if player_1.general_hitbox.colliderect(task_info[0]):
+            player_1.in_task = task_info[1]
+            return
+
+    player_1.in_task = "None"
+
+
+def transport_vents(player: Player):
     # vent coordinates are hard coded for now
     if player.in_vent == 1:
         smooth_scroll(game_map, 786, -624, 3, player.view_distance)
@@ -110,21 +119,21 @@ def transport_vents(player):
         smooth_scroll(game_map, -6789, -1149, 3, player.view_distance)
 
 
-def smooth_shadow_transition(player, target, speed):
+def smooth_shadow_transition(player: Player, target: int, speed: int):
     if player.view_distance > target:
         player.view_distance -= speed
     elif player.view_distance < target:
         player.view_distance += speed
 
 
-def draw_shadow_limiter(game_map, shadow_range):
+def draw_shadow_limiter(shadow_range: int):
     shadow_limiter_surface.fill((40, 40, 40))
     shadow_limiter_surface.blit(shadow_map_image, (game_map.x, game_map.y))
     pygame.draw.circle(shadow_limiter_surface, "#098765", (SCREEN_HALF_X, SCREEN_HALF_Y), shadow_range)
     display.blit(shadow_limiter_surface, (0, 0))
 
 
-def draw_vent_arrows(player, image):
+def draw_vent_arrows(player: Player, image: pygame.Surface):
     global left_vent_arrow
     global right_vent_arrow
     if player.in_vent == 1:
@@ -168,9 +177,9 @@ def draw_vent_arrows(player, image):
                                         (870 - player_1.half_width, 570 - player_1.half_height))
 
 
-def redraw_game_window(ray_casting, shadow_range):
+def redraw_game_window(ray_casting: bool, shadow_range: int):
     game_map.draw_map_image(display, shadow_surface, ray_casting, do_draw_collision)
-    draw_shadow_limiter(game_map, shadow_range)
+    draw_shadow_limiter(shadow_range)
     if do_draw_collision:
         game_map.draw_collision(display)
         game_map.draw_coordinates(display, font)
@@ -179,7 +188,9 @@ def redraw_game_window(ray_casting, shadow_range):
     player_1.draw_player(display)
     # player_1.draw_hitboxes(display)
     if player_1.in_task != "None":
-        task.task_clean_windows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+        result = task.show_task(player_1.in_task)
+        if result:
+            player_1.in_task = "None"
     pygame.display.update()
 
 
@@ -187,7 +198,7 @@ def redraw_game_window(ray_casting, shadow_range):
 game_map = Map(visible_map_image, shadow_map_image)
 clock = pygame.time.Clock()
 player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255, 0, 0), game_map, True, 0)
-task = tasks.TaskHandler()
+task = tasks.TaskHandler(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 is_ghost = False
 do_ray_casting = True
 do_draw_collision = True
@@ -231,6 +242,13 @@ while running_game:
                 else:
                     player_1.in_vent = 0
 
+            elif event.key == pygame.K_t:
+                if player_1.in_task == "None":
+                    task.renew_task_surface()
+                    start_task()
+                else:
+                    player_1.in_task = "None"
+
             elif event.key == pygame.K_x:
                 is_ghost = not is_ghost
             elif event.key == pygame.K_LEFT:
@@ -267,7 +285,6 @@ while running_game:
                 target_view_distance = 900
             elif event.key == pygame.K_0:
                 target_view_distance = 950
-            
 
             if player_1.in_vent != 0:
                 transport_vents(player_1)
@@ -366,8 +383,6 @@ while running_game:
                 if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break    
                 game_map.x -= 1
-    if keys[pygame.K_t]:
-        player_1.in_task = "Check Inbox"
 
     if keys[pygame.K_ESCAPE]:
         pygame.quit()

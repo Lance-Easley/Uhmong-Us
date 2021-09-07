@@ -4,7 +4,7 @@ import pygame
 
 class Map(object):
     def __init__(self, visible_map_image, shadow_map_image):
-        self.x, self.y = -3500, 0
+        self.x, self.y = -1994, -697
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width
@@ -299,9 +299,11 @@ class Map(object):
             # Viewport: top
             {'a': {'x': self.v_x, 'y': self.v_y}, 'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y}},
             # Viewport: right
-            {'a': {'x': self.v_x + self.v_w - 1, 'y': self.v_y}, 'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y + self.v_h - 1}},
+            {'a': {'x': self.v_x + self.v_w - 1, 'y': self.v_y},
+             'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y + self.v_h - 1}},
             # Viewport: bottom
-            {'a': {'x': self.v_x, 'y': self.v_y + self.v_h - 1}, 'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y + self.v_h - 1}},
+            {'a': {'x': self.v_x, 'y': self.v_y + self.v_h - 1},
+             'b': {'x': self.v_x + self.v_w - 1, 'y': self.v_y + self.v_h - 1}},
             # Viewport: left
             {'a': {'x': self.v_x, 'y': self.v_y + self.v_h - 1}, 'b': {'x': self.v_x, 'y': self.v_y}},
         ]
@@ -428,7 +430,7 @@ class Map(object):
 
     # These convert methods confine ray-casting lines to be inside the viewport.
     # Returns either the coordinate or the limit of the viewport (top, bottom, left, or right)
-    def convert_x_to_view_range(self, num):
+    def conform_x_to_view_range(self, num: int):
         coordinate = num + self.x
         if coordinate < self.v_l:
             return self.v_l
@@ -436,7 +438,7 @@ class Map(object):
             return self.v_r
         return coordinate
 
-    def convert_y_to_view_range(self, num):
+    def conform_y_to_view_range(self, num: int):
         coordinate = num + self.y
         if coordinate < self.v_t:
             return self.v_t
@@ -447,10 +449,12 @@ class Map(object):
     @property
     def get_wall_segments(self):
         return [
-                   {'a': {'x': self.convert_x_to_view_range(seg[0][0]), 'y': self.convert_y_to_view_range(seg[0][1])},
-                    'b': {'x': self.convert_x_to_view_range(seg[1][0]), 'y': self.convert_y_to_view_range(seg[1][1])}}
+                   {'a': {'x': self.conform_x_to_view_range(seg[0][0]), 'y': self.conform_y_to_view_range(seg[0][1])},
+                    'b': {'x': self.conform_x_to_view_range(seg[1][0]), 'y': self.conform_y_to_view_range(seg[1][1])}}
                    for seg in self.wall_segments
-                   if self.viewport.collidepoint((seg[0][0] + self.x, seg[0][1] + self.y)) or self.viewport.collidepoint((seg[1][0] + self.x, seg[1][1] + self.y))] + self.viewport_segments
+                   if
+                   self.viewport.collidepoint((seg[0][0] + self.x, seg[0][1] + self.y)) or self.viewport.collidepoint(
+                       (seg[1][0] + self.x, seg[1][1] + self.y))] + self.viewport_segments
 
     @property
     def get_task_rects(self):
@@ -458,7 +462,8 @@ class Map(object):
             (pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"),  # Check Inbox
 
             (pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "Refill Hand-Sanitizer"),  # Refill Hand-Sanitizer: left
-            (pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "Refill Hand-Sanitizer"),  # Refill Hand-Sanitizer: right
+            (pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "Refill Hand-Sanitizer"),
+            # Refill Hand-Sanitizer: right
 
             (pygame.Rect(self.x + 7000, self.y + 1050, 50, 50), "Check Temperature"),  # Check Temperature
 
@@ -523,10 +528,11 @@ class Map(object):
             (pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"),  # Right system: 4
         ]
 
-    def draw_map_image(self, visible_surface, shadow_surface, do_ray_casting, draw_lines):
+    def draw_map_image(self, visible_surface: pygame.Surface, shadow_surface: pygame.Surface,
+                       do_ray_casting: bool, draw_lines: bool):
         # Points for shape drawing
         points = []
-        
+
         if do_ray_casting:
             unique_points = set()
             for segment in self.get_wall_segments:
@@ -636,7 +642,7 @@ class Map(object):
             for point in points:
                 pygame.draw.line(visible_surface, "#FF00FF", (960, 540), point)
 
-    def draw_collision(self, surface):
+    def draw_collision(self, surface: pygame.Surface):
         # Draw Rects
         # for wall in self.get_wall_rects:
         #     pygame.draw.rect(surface, (0,255,0), wall, 1)
@@ -646,22 +652,24 @@ class Map(object):
         for seg in self.get_wall_segments:
             pygame.draw.line(surface, color, (seg["a"]["x"], seg["a"]["y"]), (seg["b"]["x"], seg["b"]["y"]))
 
-    def draw_tasks(self, surface):
+    def draw_tasks(self, surface: pygame.Surface):
         for task in self.get_task_rects:
             pygame.draw.rect(surface, (242, 242, 0), task[0], 3)
 
-    def draw_vents(self, surface):
+    def draw_vents(self, surface: pygame.Surface):
         for vent in self.get_vent_rects:
             pygame.draw.rect(surface, (0, 242, 242), vent[0], 3)
 
-    def draw_coordinates(self, surface, font):
+    def draw_coordinates(self, surface: pygame.Surface, font: pygame.font):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         pos_text = font.render(
-            f"X: {round(self.x, 2)}Y: {round(self.y, 3)} ~ X: {round(mouse_x - self.x, 2)}Y: {round(mouse_y - self.y, 3)}",
+            f"X: {round(self.x, 2)}Y: {round(self.y, 3)}" +
+            f" ~ X: {round(mouse_x - self.x, 2)}Y: {round(mouse_y - self.y, 3)}",
             True, (255, 0, 0))
         pos_text_rect = pos_text.get_rect()
         pos_text_rect.center = (250, 50)
         surface.blit(pos_text, pos_text_rect)
+
 
 if __name__ == '__main__':
     import main
