@@ -188,7 +188,11 @@ def redraw_game_window(ray_casting: bool, shadow_range: int):
     player_1.draw_player(display)
     # player_1.draw_hitboxes(display)
     if player_1.in_task != "None":
-        result = task.show_task(player_1.in_task)
+        result = False
+        if player_1.in_task == "Clean Windows":
+            result = clean_windows_task.show_task()
+        elif player_1.in_task == "Wipe down Tables":
+            result = wipe_tables_task.show_task()
         if result:
             player_1.in_task = "None"
     pygame.display.update()
@@ -198,10 +202,11 @@ def redraw_game_window(ray_casting: bool, shadow_range: int):
 game_map = Map(visible_map_image, shadow_map_image)
 clock = pygame.time.Clock()
 player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255, 0, 0), game_map, True, 0)
-task = tasks.TaskHandler(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+clean_windows_task = tasks.CleanWindows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+wipe_tables_task = tasks.WipeDownTables(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 is_ghost = False
 do_ray_casting = True
-do_draw_collision = True
+do_draw_collision = False
 running_game = True
 left_vent_arrow = None
 right_vent_arrow = None
@@ -244,7 +249,7 @@ while running_game:
 
             elif event.key == pygame.K_t:
                 if player_1.in_task == "None":
-                    task.renew_task_surface()
+                    wipe_tables_task.renew_task_surface()
                     start_task()
                 else:
                     player_1.in_task = "None"
