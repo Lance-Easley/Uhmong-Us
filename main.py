@@ -1,9 +1,9 @@
 import pygame
 import sys
 
+from constants import *
 from map import Map
 from player import Player
-from constants import *
 import tasks
 
 # Pygame Initialization ###
@@ -13,8 +13,11 @@ pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN])
 ###
 
 # Image Loading & Processing ###
-flags = pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.SCALED # for non-1080p screens
-display = pygame.display.set_mode((SCREEN_X, SCREEN_Y), flags)
+display = pygame.display.set_mode(
+    (SCREEN_X, SCREEN_Y),
+    pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE | pygame.SCALED  # for non-1080p screens
+)
+
 visible_map_image = pygame.image.load('images/BCCA_map/BCCA_map_visible.png').convert()
 shadow_map_image = pygame.image.load('images/BCCA_map/BCCA_map_shadow.png').convert()
 
@@ -35,7 +38,7 @@ shadow_limiter_surface.set_colorkey("#098765")
 
 # Font Initialization ###
 pygame.font.init()
-font = pygame.font.Font("freesansbold.ttf", 32)
+font = pygame.font.Font("freesansbold.ttf", 24)
 ###
 
 
@@ -53,7 +56,7 @@ def smooth_scroll(game_map_instance: Map, current_x: int, current_y: int, smooth
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting, shadow_range)
+                redraw_game_window(shadow_range)
         else:
             while game_map_instance.x < current_x or game_map_instance.y > current_y:
                 game_map_instance.x -= round(game_map_instance.x - current_x, 1) / smoothness_level
@@ -62,7 +65,7 @@ def smooth_scroll(game_map_instance: Map, current_x: int, current_y: int, smooth
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting, shadow_range)
+                redraw_game_window(shadow_range)
     else:
         if game_map_instance.y < current_y:
             while game_map_instance.x > current_x or game_map_instance.y < current_y:
@@ -72,7 +75,7 @@ def smooth_scroll(game_map_instance: Map, current_x: int, current_y: int, smooth
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting, shadow_range)
+                redraw_game_window(shadow_range)
         else:
             while game_map_instance.x > current_x or game_map_instance.y > current_y:
                 game_map_instance.x -= round(game_map_instance.x - current_x, 1) / smoothness_level
@@ -81,7 +84,7 @@ def smooth_scroll(game_map_instance: Map, current_x: int, current_y: int, smooth
                     break
                 last_x = game_map_instance.x
                 last_y = game_map_instance.y
-                redraw_game_window(do_ray_casting, shadow_range)
+                redraw_game_window(shadow_range)
     game_map_instance.x = current_x
     game_map_instance.y = current_y
 
@@ -94,6 +97,12 @@ def start_task():
     for task_info in game_map.get_task_rects:
         if player_1.general_hitbox.colliderect(task_info[0]):
             player_1.in_task = task_info[1]
+            if task_info[1] == "Clean Windows":
+                clean_windows_task.renew_task_surface()
+            elif task_info[1] == "Wipe down Tables":
+                wipe_tables_task.renew_task_surface()
+            elif task_info[1] == "Reset Wifi":
+                reset_wifi_task.renew_task_surface()
             return
 
     player_1.in_task = "None"
@@ -177,8 +186,13 @@ def draw_vent_arrows(player: Player, image: pygame.Surface):
                                         (870 - player_1.half_width, 570 - player_1.half_height))
 
 
-def redraw_game_window(ray_casting: bool, shadow_range: int):
-    game_map.draw_map_image(display, shadow_surface, ray_casting, do_draw_collision)
+def draw_fps():
+    fps_text = font.render(f"{clock.get_fps():2.0f} FPS", False, (180, 180, 180))
+    display.blit(fps_text, (SCREEN_X - fps_text.get_width() - 1, 0))
+
+
+def redraw_game_window(shadow_range: int):
+    game_map.draw_map_image(display, shadow_surface, do_draw_collision)
     draw_shadow_limiter(shadow_range)
     if do_draw_collision:
         game_map.draw_collision(display)
@@ -186,15 +200,17 @@ def redraw_game_window(ray_casting: bool, shadow_range: int):
     if player_1.in_vent:
         draw_vent_arrows(player_1, vent_arrow_image)
     player_1.draw_player(display)
-    # player_1.draw_hitboxes(display)
     if player_1.in_task != "None":
         result = False
         if player_1.in_task == "Clean Windows":
             result = clean_windows_task.show_task()
         elif player_1.in_task == "Wipe down Tables":
             result = wipe_tables_task.show_task()
+        elif player_1.in_task == "Reset Wifi":
+            result = reset_wifi_task.show_task()
         if result:
             player_1.in_task = "None"
+    draw_fps()
     pygame.display.update()
 
 
@@ -204,8 +220,8 @@ clock = pygame.time.Clock()
 player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255, 0, 0), game_map, True, 0)
 clean_windows_task = tasks.CleanWindows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 wipe_tables_task = tasks.WipeDownTables(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+reset_wifi_task = tasks.ResetWifi(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 is_ghost = False
-do_ray_casting = True
 do_draw_collision = False
 running_game = True
 left_vent_arrow = None
@@ -217,7 +233,9 @@ while running_game:
         if event.type == pygame.QUIT:
             running_game = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_v:
+            if event.key == pygame.K_a or event.key == pygame.K_d or event.key == pygame.K_w or event.key == pygame.K_s:
+                pass
+            elif event.key == pygame.K_v:
                 if player_1.in_vent == 0 and player_1.is_traitor:
                     if 886 > game_map.x > 686:
                         if -524 > game_map.y > -724:
@@ -249,106 +267,65 @@ while running_game:
 
             elif event.key == pygame.K_t:
                 if player_1.in_task == "None":
-                    wipe_tables_task.renew_task_surface()
                     start_task()
                 else:
                     player_1.in_task = "None"
 
             elif event.key == pygame.K_x:
                 is_ghost = not is_ghost
-            elif event.key == pygame.K_LEFT:
-                game_map.x += 1
-            elif event.key == pygame.K_RIGHT:
-                game_map.x -= 1
-            elif event.key == pygame.K_UP:
-                game_map.y += 1
-            elif event.key == pygame.K_DOWN:
-                game_map.y -= 1
             elif event.key == pygame.K_c:
                 print(f"{game_map.x}, {game_map.y}")
-            elif event.key == pygame.K_r:
-                do_ray_casting = not do_ray_casting
             elif event.key == pygame.K_l:
                 do_draw_collision = not do_draw_collision
             elif event.key == pygame.K_1:
                 target_view_distance = 100
             elif event.key == pygame.K_2:
-                target_view_distance = 200
-            elif event.key == pygame.K_3:
-                target_view_distance = 300
-            elif event.key == pygame.K_4:
                 target_view_distance = 400
-            elif event.key == pygame.K_5:
-                target_view_distance = 500
-            elif event.key == pygame.K_6:
-                target_view_distance = 600
-            elif event.key == pygame.K_7:
-                target_view_distance = 700
-            elif event.key == pygame.K_8:
-                target_view_distance = 800
-            elif event.key == pygame.K_9:
-                target_view_distance = 900
-            elif event.key == pygame.K_0:
+            elif event.key == pygame.K_3:
                 target_view_distance = 950
-
-            if player_1.in_vent != 0:
-                transport_vents(player_1)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_position = pygame.mouse.get_pos()
             if event.button == 1:
                 if player_1.in_vent == 1:
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 2
+                    if right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 2
                 elif player_1.in_vent == 2:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 1
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 3
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 1
+                    elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 3
                 elif player_1.in_vent == 3:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 2
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 4
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 2
+                    elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 4
                 elif player_1.in_vent == 4:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 3
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 3
                 elif player_1.in_vent == 5:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 6
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 8
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 6
+                    elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 8
                 elif player_1.in_vent == 6:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 5
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 7
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 5
+                    elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 7
                 elif player_1.in_vent == 7:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 6
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 8
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 6
+                    elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 8
                 elif player_1.in_vent == 8:
-                    if left_vent_arrow:
-                        if left_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 7
-                    if right_vent_arrow:
-                        if right_vent_arrow.collidepoint(mouse_position):
-                            player_1.in_vent = 5
-                if player_1.in_vent != 0:
-                    transport_vents(player_1)
+                    if left_vent_arrow and left_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 7
+                    elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
+                        player_1.in_vent = 5
+
+    if player_1.in_vent != 0:
+        transport_vents(player_1)
 
     keys = pygame.key.get_pressed()
 
@@ -356,7 +333,7 @@ while running_game:
         if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
-                speed_modifier = 0.75
+                speed_modifier = 0.7
             for pixel in range(int(game_map.y_velocity * speed_modifier)):
                 if check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break
@@ -365,28 +342,28 @@ while running_game:
         if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
-                speed_modifier = 0.75
+                speed_modifier = 0.7
             for pixel in range(int(game_map.x_velocity * speed_modifier)):
                 if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost:
-                    break    
+                    break
                 game_map.x += 1
     if keys[pygame.K_s]:
         if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
-                speed_modifier = 0.75
+                speed_modifier = 0.7
             for pixel in range(int(game_map.y_velocity * speed_modifier)):
                 if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost:
-                    break    
+                    break
                 game_map.y -= 1
     if keys[pygame.K_d]:
         if player_1.in_vent == 0 and player_1.in_task == "None":
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
-                speed_modifier = 0.75
+                speed_modifier = 0.7
             for pixel in range(int(game_map.x_velocity * speed_modifier)):
                 if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
-                    break    
+                    break
                 game_map.x -= 1
 
     if keys[pygame.K_ESCAPE]:
@@ -396,8 +373,8 @@ while running_game:
     if player_1.view_distance != target_view_distance:
         smooth_shadow_transition(player_1, target_view_distance, 10)
 
-    redraw_game_window(do_ray_casting, player_1.view_distance)
+    redraw_game_window(player_1.view_distance)
 
-    clock.tick(30)
+    clock.tick(50)
 pygame.quit()
 sys.exit()
