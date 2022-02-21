@@ -103,6 +103,8 @@ def start_task():
                 wipe_tables_task.renew_task_surface()
             elif task_info[1] == "Reset Wifi":
                 reset_wifi_task.renew_task_surface()
+            elif task_info[1] == "Plug-In Laptops":
+                plug_in_laptops_task.renew_task_surface()
             return
 
     player_1.in_task = "None"
@@ -203,11 +205,13 @@ def redraw_game_window(shadow_range: int):
     if player_1.in_task != "None":
         result = False
         if player_1.in_task == "Clean Windows":
-            result = clean_windows_task.show_task()
+            result = clean_windows_task.task()
         elif player_1.in_task == "Wipe down Tables":
-            result = wipe_tables_task.show_task()
+            result = wipe_tables_task.task()
         elif player_1.in_task == "Reset Wifi":
-            result = reset_wifi_task.show_task()
+            result = reset_wifi_task.task()
+        elif player_1.in_task == "Plug-In Laptops":
+            result = plug_in_laptops_task.task()
         if result:
             player_1.in_task = "None"
     draw_fps()
@@ -221,6 +225,7 @@ player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255, 0, 0), game_map, True, 0)
 clean_windows_task = tasks.CleanWindows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 wipe_tables_task = tasks.WipeDownTables(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 reset_wifi_task = tasks.ResetWifi(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+plug_in_laptops_task = tasks.PlugInLaptops(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 is_ghost = False
 do_draw_collision = False
 running_game = True
