@@ -105,6 +105,8 @@ def start_task():
                 reset_wifi_task.renew_task_surface()
             elif task_info[1] == "Plug-In Laptops":
                 plug_in_laptops_task.renew_task_surface()
+            elif task_info[1] == "Check Temperature":
+                check_temperature_task.renew_task_surface()
             return
 
     player_1.in_task = "None"
@@ -212,6 +214,8 @@ def redraw_game_window(shadow_range: int):
             result = reset_wifi_task.task()
         elif player_1.in_task == "Plug-In Laptops":
             result = plug_in_laptops_task.task()
+        elif player_1.in_task == "Check Temperature":
+            result = check_temperature_task.task()
         if result:
             player_1.in_task = "None"
     draw_fps()
@@ -226,6 +230,7 @@ clean_windows_task = tasks.CleanWindows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 wipe_tables_task = tasks.WipeDownTables(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 reset_wifi_task = tasks.ResetWifi(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 plug_in_laptops_task = tasks.PlugInLaptops(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+check_temperature_task = tasks.CheckTemperature(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 is_ghost = False
 do_draw_collision = False
 running_game = True

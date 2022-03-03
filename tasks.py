@@ -630,3 +630,38 @@ class PlugInLaptops(BaseTask):
             done = self.success()
             if done:
                 return True
+
+
+class CheckTemperature(BaseTask):
+    def __init__(self, x: int, y: int, surface: pygame.Surface):
+        super().__init__(x, y, surface)
+
+        # Resources
+        self.scanner = pygame.image.load('images/tasks/check-temperature/scanner.png').convert()
+        self.scanner_rect = pygame.Rect(810, 420, 300, 300)
+
+        self.progress = 0
+
+    def renew_task_surface(self):
+        self.success_frame = 35
+        self.show_success = False
+
+        self.task_surface.fill((18, 52, 86))
+
+        self.progress = 0
+
+    def task(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+        self.display.blit(self.scanner, (self.x - 480, self.y - 360))
+
+        # Visuals
+        if pygame.mouse.get_pressed(3)[0] and self.scanner_rect.collidepoint(mouse_x, mouse_y) and self.progress < 150:
+            self.progress += 1
+            pygame.draw.rect(self.display, (255, 255, 255), (785, 420 + (self.progress * 2), 350, 10))
+        elif self.progress >= 150:
+            done = self.success()
+            if done:
+                return True
+        else:
+            self.progress = 0
