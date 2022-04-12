@@ -1,5 +1,6 @@
 import pygame
 import sys
+import time
 
 from constants import *
 from map import Map
@@ -146,48 +147,71 @@ def draw_shadow_limiter(shadow_range: int):
     display.blit(shadow_limiter_surface, (0, 0))
 
 
-def draw_vent_arrows(player: Player, image: pygame.Surface):
+def draw_vent_arrows(player: Player):
     global left_vent_arrow
     global right_vent_arrow
+
     if player.in_vent == 1:
         left_vent_arrow = None
-        right_vent_arrow = display.blit(pygame.transform.rotate(image, 10.0),
-                                        (1050 - player_1.half_width, 540 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, 10.0),
+            (1050 - player_1.half_width, 540 - player_1.half_height))
     elif player.in_vent == 2:
-        left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0),
-                                       (870 - player_1.half_width, 570 - player_1.half_height))
-        right_vent_arrow = display.blit(pygame.transform.rotate(image, -30.0),
-                                        (1030 - player_1.half_width, 605 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), 10.0),
+            (870 - player_1.half_width, 570 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, -30.0),
+            (1030 - player_1.half_width, 605 - player_1.half_height))
     elif player.in_vent == 3:
-        left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -30.0),
-                                       (870 - player_1.half_width, 510 - player_1.half_height))
-        right_vent_arrow = display.blit(pygame.transform.rotate(image, 45.0),
-                                        (1020 - player_1.half_width, 490 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), -30.0),
+            (870 - player_1.half_width, 510 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, 45.0),
+            (1020 - player_1.half_width, 490 - player_1.half_height))
     elif player.in_vent == 4:
-        left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 45.0),
-                                       (870 - player_1.half_width, 605 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), 45.0),
+            (870 - player_1.half_width, 605 - player_1.half_height))
+
         right_vent_arrow = None
 
     if player.in_vent == 5:
-        left_vent_arrow = display.blit(pygame.transform.rotate(image, 80.0),
-                                       (970 - player_1.half_width, 450 - player_1.half_height))
-        right_vent_arrow = display.blit(pygame.transform.rotate(image, 10.0),
-                                        (1050 - player_1.half_width, 540 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, 80.0),
+            (970 - player_1.half_width, 450 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, 10.0),
+            (1050 - player_1.half_width, 540 - player_1.half_height))
     elif player.in_vent == 6:
-        left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 80.0),
-                                       (935 - player_1.half_width, 645 - player_1.half_height))
-        right_vent_arrow = display.blit(pygame.transform.rotate(image, -8.0),
-                                        (1045 - player_1.half_width, 570 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), 80.0),
+            (935 - player_1.half_width, 645 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, -8.0),
+            (1045 - player_1.half_width, 570 - player_1.half_height))
     elif player.in_vent == 7:
-        left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -8.0),
-                                       (870 - player_1.half_width, 545 - player_1.half_height))
-        right_vent_arrow = display.blit(pygame.transform.rotate(image, -70.0),
-                                        (985 - player_1.half_width, 640 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), -8.0),
+            (870 - player_1.half_width, 545 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(vent_arrow_image, -70.0),
+            (985 - player_1.half_width, 640 - player_1.half_height))
     elif player.in_vent == 8:
-        left_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), -70.0),
-                                       (920 - player_1.half_width, 450 - player_1.half_height))
-        right_vent_arrow = display.blit(pygame.transform.rotate(pygame.transform.flip(image, True, False), 10.0),
-                                        (870 - player_1.half_width, 570 - player_1.half_height))
+        left_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), -70.0),
+            (920 - player_1.half_width, 450 - player_1.half_height))
+
+        right_vent_arrow = display.blit(
+            pygame.transform.rotate(pygame.transform.flip(vent_arrow_image, True, False), 10.0),
+            (870 - player_1.half_width, 570 - player_1.half_height))
 
 
 def draw_fps():
@@ -202,18 +226,18 @@ def redraw_game_window(shadow_range: int):
         game_map.draw_collision(display)
         game_map.draw_coordinates(display, font)
     if player_1.in_vent:
-        draw_vent_arrows(player_1, vent_arrow_image)
+        draw_vent_arrows(player_1)
     player_1.draw_player(display)
     if player_1.in_task != "None":
         result = False
         if player_1.in_task == "Clean Windows":
-            result = clean_windows_task.task()
+            result = clean_windows_task.task(dt)
         elif player_1.in_task == "Wipe down Tables":
-            result = wipe_tables_task.task()
+            result = wipe_tables_task.task(dt)
         elif player_1.in_task == "Reset Wifi":
-            result = reset_wifi_task.task()
+            result = reset_wifi_task.task(dt)
         elif player_1.in_task == "Plug-In Laptops":
-            result = plug_in_laptops_task.task()
+            result = plug_in_laptops_task.task(dt)
         elif player_1.in_task == "Check Temperature":
             result = check_temperature_task.task()
         if result:
@@ -237,7 +261,10 @@ running_game = True
 left_vent_arrow = None
 right_vent_arrow = None
 target_view_distance = player_1.view_distance
+previous_time = time.monotonic()
 while running_game:
+    dt = time.monotonic() - previous_time
+    previous_time = time.monotonic()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -344,7 +371,7 @@ while running_game:
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
                 speed_modifier = 0.7
-            for pixel in range(int(game_map.y_velocity * speed_modifier)):
+            for pixel in range(int(game_map.y_velocity * speed_modifier * dt)):
                 if check_for_collisions(player_1.w_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break
                 game_map.y += 1
@@ -353,7 +380,7 @@ while running_game:
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 speed_modifier = 0.7
-            for pixel in range(int(game_map.x_velocity * speed_modifier)):
+            for pixel in range(int(game_map.x_velocity * speed_modifier * dt)):
                 if check_for_collisions(player_1.a_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break
                 game_map.x += 1
@@ -362,7 +389,7 @@ while running_game:
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
                 speed_modifier = 0.7
-            for pixel in range(int(game_map.y_velocity * speed_modifier)):
+            for pixel in range(int(game_map.y_velocity * speed_modifier * dt)):
                 if check_for_collisions(player_1.s_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break
                 game_map.y -= 1
@@ -371,7 +398,7 @@ while running_game:
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 speed_modifier = 0.7
-            for pixel in range(int(game_map.x_velocity * speed_modifier)):
+            for pixel in range(int(game_map.x_velocity * speed_modifier * dt)):
                 if check_for_collisions(player_1.d_hitbox, game_map.get_wall_rects) and not is_ghost:
                     break
                 game_map.x -= 1

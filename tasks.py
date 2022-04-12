@@ -58,11 +58,11 @@ class BaseTask:
         self.show_success = False
         self.success_frame = 35
 
-    def success(self):
+    def success(self, dt: float):
         if self.success_frame > 0:
             bold_text(self.x, self.y, self.display, 2)
 
-            self.success_frame -= 1
+            self.success_frame -= 40 * dt
         else:
             return True
 
@@ -147,7 +147,7 @@ class WipeDownTables(BaseTask):
         self.dirty_layer.blit(self.table_mark2, self.mark_coords[1])
         self.dirty_layer.blit(self.table_mark3, self.mark_coords[2])
 
-    def task(self):
+    def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         self.display.blit(self.table_background, (self.x - 480, self.y - 360))
@@ -199,7 +199,7 @@ class WipeDownTables(BaseTask):
             self.display.blit(self.dirty_layer, (self.x - 480, self.y - 360))
             self.display.blit(self.rag, (mouse_x - 100, mouse_y - 100))
         else:
-            done = self.success()
+            done = self.success(dt)
             if done:
                 return True
 
@@ -286,7 +286,7 @@ class CleanWindows(BaseTask):
         self.dirty_layer.blit(self.window_mark2, self.mark_coords[1])
         self.dirty_layer.blit(self.window_mark3, self.mark_coords[2])
 
-    def task(self):
+    def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         self.display.blit(self.clean_window_background, (self.x - 480, self.y - 360))
@@ -336,7 +336,7 @@ class CleanWindows(BaseTask):
             self.display.blit(self.dirty_layer, (self.x - 480, self.y - 360))
             self.display.blit(self.squeegee, (mouse_x - 100, mouse_y - 100))
         else:
-            done = self.success()
+            done = self.success(dt)
             if done:
                 return True
 
@@ -375,7 +375,7 @@ class ResetWifi(BaseTask):
         self.loading_progress = 0
         self.has_clicked_reset = False
 
-    def task(self):
+    def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         self.display.blit(self.desktop_background, (self.x - 480, self.y - 360))
@@ -385,7 +385,7 @@ class ResetWifi(BaseTask):
             self.display.blit(self.loading_bar, (763, 568))
             pygame.draw.rect(self.display, "#00FF00", pygame.Rect(766, 571, (3.88 * self.loading_progress), 38))
             if not self.show_success:
-                self.loading_progress += 1 * self.progress_modifier
+                self.loading_progress += 30 * self.progress_modifier * dt
 
                 if round(self.loading_progress % 20) == 0:
                     self.progress_modifier = randint(1, 10) / 10
@@ -405,7 +405,7 @@ class ResetWifi(BaseTask):
                 if not self.has_clicked_reset and self.reset_button_rect.collidepoint(mouse_x, mouse_y):
                     self.has_clicked_reset = True
         else:
-            done = self.success()
+            done = self.success(dt)
             if done:
                 return True
 
@@ -509,7 +509,7 @@ class PlugInLaptops(BaseTask):
 
         self.task_surface.fill((18, 52, 86))
 
-    def task(self):
+    def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         self.display.blit(self.computer_cart, (self.x - 480, self.y - 360))
@@ -578,6 +578,8 @@ class PlugInLaptops(BaseTask):
                 cord_rect_width = max(self.charger_positions[self.dragged_charger][0] + 17, mouse_x) - cord_x
                 cord_rect_height = max(self.charger_positions[self.dragged_charger][1] + 17, mouse_y) - cord_y
 
+                # pygame.draw.arc did not draw a solid line in this case
+                # fix: draw ellipse and show one quarter of the circle, forming an arc
                 cord_surface = pygame.Surface(
                     (max(cord_rect_width + 1, cord_width), max(cord_rect_height + 1, cord_width)))
                 cord_surface.set_colorkey("#000000")
@@ -627,7 +629,7 @@ class PlugInLaptops(BaseTask):
             self.dragged_charger = None
 
         if all(self.computer_statuses):
-            done = self.success()
+            done = self.success(dt)
             if done:
                 return True
 
@@ -650,7 +652,7 @@ class CheckTemperature(BaseTask):
 
         self.progress = 0
 
-    def task(self):
+    def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         self.display.blit(self.scanner, (self.x - 480, self.y - 360))
@@ -660,7 +662,7 @@ class CheckTemperature(BaseTask):
             self.progress += 1
             pygame.draw.rect(self.display, (255, 255, 255), (785, 420 + (self.progress * 2), 350, 10))
         elif self.progress >= 150:
-            done = self.success()
+            done = self.success(dt)
             if done:
                 return True
         else:

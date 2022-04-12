@@ -9,8 +9,8 @@ class Map(object):
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width
         self.height = self.visible_map_image.get_rect().height
-        self.x_velocity = 8
-        self.y_velocity = 8
+        self.x_velocity = 375
+        self.y_velocity = 375
 
         self.wall_segments = {
             # Outside: classrooms top wall
