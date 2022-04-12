@@ -22,11 +22,8 @@ Ever since, I have been working on the project in bursts, influenced by my free-
 - [ ] Round Win/Lose Logic
 - [ ] Menus
 
-## Progress (8/6/2021)
+## Progress (4/11/2022)
 
-The shadow system is now fully built (finally). 
-Now I can focus entirely on making tasks.
+Progress has been slower recently due to life doing it's thing. I've got about half of the tasks done (yay). My main constraint is designing artwork, as I get bored with it quicker than anything lol.
 
-I have the tasks planned out in the [planning.png](https://github.com/Lance-Easley/Uhmong-Us/blob/main/images/planning.png) image, I just need to design and code the tasks in.
-Once a task is built, I already have the interaction areas built up and put on the map. 
-These areas are denoted by the yellow outlines drawn on the map.
+I have the tasks planned out in the [planning.png](https://github.com/Lance-Easley/Uhmong-Us/blob/main/images/planning.png) image, I just need to design and code the rest of the tasks in.
