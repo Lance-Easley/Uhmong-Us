@@ -19,7 +19,7 @@ class Map(object):
             # Outside: offices left wall
             ((4950, 395), (5000, 400)),
             ((4950, 400), (5000, 100)),
-            # Outside: offices right wall 
+            # Outside: offices right wall
             ((6350, 100), (6400, 800)),
 
             # BCCA: top office middle wall
