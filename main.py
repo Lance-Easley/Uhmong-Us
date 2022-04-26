@@ -110,6 +110,8 @@ def start_task():
                 check_temperature_task.renew_task_surface()
             elif task_info[1] == "Nominate For Awards":
                 nominate_task.renew_task_surface()
+            elif task_info[1] == "Collect Trash":
+                collect_trash.renew_task_surface()
             return
 
     player_1.in_task = "None"
@@ -244,6 +246,8 @@ def redraw_game_window(shadow_range: int):
             result = check_temperature_task.task(dt)
         elif player_1.in_task == "Nominate For Awards":
             result = nominate_task.task(dt)
+        elif player_1.in_task == "Collect Trash":
+            result = collect_trash.task(dt)
         if result:
             player_1.in_task = "None"
     draw_fps()
@@ -260,6 +264,7 @@ reset_wifi_task = tasks.ResetWifi(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 plug_in_laptops_task = tasks.PlugInLaptops(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 check_temperature_task = tasks.CheckTemperature(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 nominate_task = tasks.NominateForAwards(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+collect_trash = tasks.CollectTrash(SCREEN_HALF_X, SCREEN_HALF_Y, display)
 is_ghost = False
 do_draw_collision = False
 running_game = True
