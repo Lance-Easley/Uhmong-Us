@@ -838,3 +838,69 @@ class CollectTrash(BaseTask):
         elif self.task_phase == 4:
             self.display.blit(self.replaced_bag, (self.x - 215, self.y + 48))
             return self.success(dt)
+
+
+class RefillHandSanitizer(BaseTask):
+    def __init__(self, x: int, y: int, surface: pygame.Surface):
+        super().__init__(x, y, surface)
+
+        # Resources
+        self.wall = pygame.image.load('images/tasks/refill_hand_sanitizer/wall.png').convert()
+        self.buckle = pygame.image.load('images/tasks/refill_hand_sanitizer/buckle.png').convert()
+        self.new_sanitizer = pygame.image.load('images/tasks/refill_hand_sanitizer/new_sanitizer.png').convert()
+        self.old_sanitizer = pygame.image.load('images/tasks/refill_hand_sanitizer/old_sanitizer.png').convert()
+        self.unlatched_buckle = pygame.image.load('images/tasks/refill_hand_sanitizer/unlatched_buckle.png').convert()
+
+        self.wall.set_colorkey((255, 255, 255))
+        self.buckle.set_colorkey((255, 255, 255))
+        self.new_sanitizer.set_colorkey((255, 255, 255))
+        self.old_sanitizer.set_colorkey((255, 255, 255))
+        self.unlatched_buckle.set_colorkey((255, 255, 255))
+
+        self.unlock_rect = pygame.Rect(745, 557, 420, 60)
+
+        self.task_phase = 0
+
+    def renew_task_surface(self):
+        self.success_frame = 35
+        self.show_success = False
+
+        self.task_surface.fill((18, 52, 86))
+
+        self.task_phase = 0
+
+    def task(self, dt: float):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+        self.display.blit(self.wall, (self.x - 480, self.y - 360))
+        self.display.blit(self.buckle, (self.x - 130, self.y + 142))
+
+        # if self.task_phase < 2:
+        #     if pygame.mouse.get_pressed(3)[0]:
+        #         if mouse_over_bag_rect:
+        #             self.task_phase = 1
+        #
+        #         if self.task_phase == 1:
+        #             # Hover Highlight
+        #             if mouse_over_trash_lifted_rect:
+        #                 self.display.blit(self.pull_up_arrow_hover,
+        #                                   (self.trash_lifted_rect.x, self.trash_lifted_rect.y + 20))
+        #             else:
+        #                 self.display.blit(self.pull_up_arrow, (self.trash_lifted_rect.x, self.trash_lifted_rect.y + 20))
+        #
+        #             self.display.blit(self.sacked_bag, (mouse_x - 175, mouse_y))
+        #     else:
+        #         if mouse_over_trash_lifted_rect and self.task_phase == 1:
+        #             self.task_phase = 2
+        #         else:
+        #             self.task_phase = 0
+        #
+        # elif self.task_phase < 4:
+        #     if pygame.mouse.get_pressed(3)[0]:
+        #         if self.new_bag_rect.collidepoint(mouse_x, mouse_y):
+        #             self.task_phase = 3
+        #     else:
+        #         if mouse_over_bag_rect and self.task_phase == 3:
+        #             self.task_phase = 4
+        #         else:
+        #             self.task_phase = 2
