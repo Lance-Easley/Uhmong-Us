@@ -4,7 +4,7 @@ import pygame
 
 class Map(object):
     def __init__(self, visible_map_image, shadow_map_image):
-        self.x, self.y = -5098, 325
+        self.x, self.y = -2665, -1207
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width

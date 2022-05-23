@@ -261,15 +261,15 @@ def redraw_game_window(shadow_range: int):
 # mainloop
 game_map = Map(visible_map_image, shadow_map_image)
 clock = pygame.time.Clock()
-player_1 = Player(SCREEN_HALF_X, SCREEN_HALF_Y, (255, 0, 0), game_map, True, 0)
-clean_windows_task = tasks.CleanWindows(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-wipe_tables_task = tasks.WipeDownTables(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-reset_wifi_task = tasks.ResetWifi(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-plug_in_laptops_task = tasks.PlugInLaptops(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-check_temperature_task = tasks.CheckTemperature(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-nominate_task = tasks.NominateForAwards(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-collect_trash = tasks.CollectTrash(SCREEN_HALF_X, SCREEN_HALF_Y, display)
-refill_hand_sanitizer = tasks.RefillHandSanitizer(SCREEN_HALF_X, SCREEN_HALF_Y, display)
+player_1 = Player((255, 0, 0), game_map, True, 0)
+clean_windows_task = tasks.CleanWindows(display)
+wipe_tables_task = tasks.WipeDownTables(display)
+reset_wifi_task = tasks.ResetWifi(display)
+plug_in_laptops_task = tasks.PlugInLaptops(display)
+check_temperature_task = tasks.CheckTemperature(display)
+nominate_task = tasks.NominateForAwards(display)
+collect_trash = tasks.CollectTrash(display)
+refill_hand_sanitizer = tasks.RefillHandSanitizer(display)
 is_ghost = False
 do_draw_collision = False
 running_game = True

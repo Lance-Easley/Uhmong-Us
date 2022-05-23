@@ -1,15 +1,16 @@
+from constants import *
 import pygame
 
 
 class Player(object):
-    def __init__(self, x: int, y: int, color: tuple[int, int, int], map_object, is_traitor: bool, in_vent: int):
+    def __init__(self, color: tuple[int, int, int], map_object, is_traitor: bool, in_vent: int):
         self.width = 52
         self.height = 82
         self.half_width = self.width // 2
         self.half_height = self.height // 2
 
-        self.x = x - self.half_width
-        self.y = y - self.half_height
+        self.x = SCREEN_HALF_X - self.half_width
+        self.y = SCREEN_HALF_Y - self.half_height
         self.x_coord = map_object.x
         self.y_coord = map_object.y
 
