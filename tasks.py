@@ -1026,6 +1026,7 @@ class CheckInbox(BaseTask):
         self.desktop = pygame.image.load('images/tasks/check_inbox/desktop.png').convert()
 
         self.font = pygame.font.Font("freesansbold.ttf", 20)
+        self.small_font = pygame.font.Font("freesansbold.ttf", 12)
 
         self.email_count = randint(3, 5)
         self.email_contents = [
@@ -1137,6 +1138,7 @@ class CheckInbox(BaseTask):
 
         # Visuals
         self.display.blit(self.desktop, (480, 180))
+        self.display.blit(self.small_font.render(str(len(self.email_list)), True, (0, 0, 0)), (655, 290))
 
         if self.opened_email_index == -1:
             for index, email in enumerate(self.email_list):
