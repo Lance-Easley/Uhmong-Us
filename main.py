@@ -116,6 +116,8 @@ def start_task():
                 refill_hand_sanitizer.renew_task_surface()
             elif task_info[1] == "Check Inbox":
                 check_inbox.renew_task_surface()
+            elif task_info[1] == "Do Flashcards":
+                do_flashcards.renew_task_surface()
             return
 
     player_1.in_task = "None"
@@ -256,6 +258,8 @@ def redraw_game_window(shadow_range: int):
             result = refill_hand_sanitizer.task(dt)
         elif player_1.in_task == "Check Inbox":
             result = check_inbox.task(dt)
+        elif player_1.in_task == "Do Flashcards":
+            result = do_flashcards.task(dt)
         if result:
             player_1.in_task = "None"
     draw_fps()
@@ -275,6 +279,7 @@ nominate_task = tasks.NominateForAwards(display)
 collect_trash = tasks.CollectTrash(display)
 refill_hand_sanitizer = tasks.RefillHandSanitizer(display)
 check_inbox = tasks.CheckInbox(display)
+do_flashcards = tasks.DoFlashcards(display)
 is_ghost = False
 do_draw_collision = False
 running_game = True
