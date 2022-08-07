@@ -114,6 +114,8 @@ def start_task():
                 collect_trash.renew_task_surface()
             elif task_info[1] == "Refill Hand-Sanitizer":
                 refill_hand_sanitizer.renew_task_surface()
+            elif task_info[1] == "Check Inbox":
+                check_inbox.renew_task_surface()
             return
 
     player_1.in_task = "None"
@@ -252,6 +254,8 @@ def redraw_game_window(shadow_range: int):
             result = collect_trash.task(dt)
         elif player_1.in_task == "Refill Hand-Sanitizer":
             result = refill_hand_sanitizer.task(dt)
+        elif player_1.in_task == "Check Inbox":
+            result = check_inbox.task(dt)
         if result:
             player_1.in_task = "None"
     draw_fps()
@@ -270,6 +274,7 @@ check_temperature_task = tasks.CheckTemperature(display)
 nominate_task = tasks.NominateForAwards(display)
 collect_trash = tasks.CollectTrash(display)
 refill_hand_sanitizer = tasks.RefillHandSanitizer(display)
+check_inbox = tasks.CheckInbox(display)
 is_ghost = False
 do_draw_collision = False
 running_game = True
