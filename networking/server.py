@@ -1,9 +1,8 @@
 import socket
 from _thread import *
-import sys
 import pickle
 
-from player import Player
+from entities.player import Player
 from main import skeld
 
 server = "192.168.1.59"

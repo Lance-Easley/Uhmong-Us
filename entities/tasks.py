@@ -298,7 +298,7 @@ class CleanWindows(BaseTask):
     def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        self.display.blit(self.clean_window_background, (480, 180))
+        self.display.blit(self.window_background, (480, 180))
 
         if not self.show_success:
             clean_rect = pygame.Rect(mouse_x - 579, mouse_y - 278, 197, 15)
@@ -859,8 +859,10 @@ class RefillHandSanitizer(BaseTask):
         self.buckle = pygame.image.load('images/tasks/refill_hand_sanitizer/buckle.png').convert()
         self.new_sanitizer = pygame.image.load('images/tasks/refill_hand_sanitizer/new_sanitizer.png').convert()
         self.old_sanitizer = pygame.image.load('images/tasks/refill_hand_sanitizer/old_sanitizer.png').convert()
-        self.unlatched_buckle = pygame.image.load('images/tasks/refill_hand_sanitizer/unlatched_buckle.png').convert()
-        self.up_arrow_hover = pygame.image.load('images/tasks/refill_hand_sanitizer/pull_up_arrow_hover.png').convert()
+        self.unlatched_buckle = pygame.image.load(
+            'images/tasks/refill_hand_sanitizer/unlatched_buckle.png').convert()
+        self.up_arrow_hover = pygame.image.load(
+            'images/tasks/refill_hand_sanitizer/pull_up_arrow_hover.png').convert()
         self.up_arrow = pygame.image.load('images/tasks/refill_hand_sanitizer/pull_up_arrow.png').convert()
 
         self.wall.set_colorkey((255, 255, 255))
