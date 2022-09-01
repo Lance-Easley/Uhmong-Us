@@ -298,7 +298,7 @@ class CleanWindows(BaseTask):
     def task(self, dt: float):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        self.display.blit(self.window_background, (480, 180))
+        self.display.blit(self.clean_window_background, (480, 180))
 
         if not self.show_success:
             clean_rect = pygame.Rect(mouse_x - 579, mouse_y - 278, 197, 15)

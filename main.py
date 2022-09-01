@@ -1,11 +1,13 @@
+import math
+
 import pygame
 import sys
 import time
 
 from constants import *
-from map import Map
-from player import Player
-import tasks
+from entities.map import Map
+from entities.player import Player
+from entities import tasks
 
 # Pygame Initialization ###
 pygame.init()
@@ -27,6 +29,26 @@ task_surface.set_colorkey((18, 52, 86))
 
 vent_arrow_image = pygame.image.load('images/hud/arrow.png').convert()
 vent_arrow_image.set_colorkey((255, 255, 255))
+task_bar_image = pygame.image.load('images/hud/task_bar.png').convert()
+task_bar_image.set_colorkey((255, 255, 255))
+
+use_button_image = pygame.image.load('images/hud/use_button.png').convert()
+use_button_image.set_colorkey((255, 255, 255))
+use_button_disabled_image = pygame.image.load('images/hud/use_button_disabled.png').convert()
+use_button_disabled_image.set_colorkey((255, 255, 255))
+report_button_image = pygame.image.load('images/hud/report_button.png').convert()
+report_button_image.set_colorkey((255, 255, 255))
+report_button_disabled_image = pygame.image.load('images/hud/report_button_disabled.png').convert()
+report_button_disabled_image.set_colorkey((255, 255, 255))
+
+minimap_image = pygame.image.load('images/hud/minimap.png').convert()  # TODO: Fix minimap image proportions
+minimap_image.set_colorkey((255, 255, 255))
+minimap_player_locator_image = pygame.image.load('images/hud/minimap_player_locator.png').convert()
+minimap_player_locator_image.set_colorkey((255, 255, 255))
+minimap_task_locator_image = pygame.image.load('images/hud/minimap_task_locator.png').convert()
+minimap_task_locator_image.set_colorkey((255, 255, 255))
+map_icon_image = pygame.image.load('images/hud/map_icon.png').convert()
+map_icon_image.set_colorkey((255, 255, 255))
 ###
 
 # Surface Setup ###
@@ -229,6 +251,33 @@ def draw_fps():
     display.blit(fps_text, (SCREEN_X - fps_text.get_width() - 1, 0))
 
 
+def get_player_coords(map_x: int, map_y: int, x_offset: int = 0, y_offset: int = 0) -> tuple[int, int]:
+    x = abs((map_x - SCREEN_HALF_X) * 0.1560975609756098) + x_offset
+    y = abs((map_y - SCREEN_HALF_Y) * 0.1560975609756098) + y_offset
+    return x, y
+
+
+def draw_ui(progress: float):
+    pygame.draw.rect(display, (0, 255, 0), (9, 9, math.ceil(392 * progress), 32))
+    display.blit(task_bar_image, (5, 5))
+
+    display.blit(map_icon_image, (1770, 50))
+
+    for task_info in game_map.get_task_rects:
+        if player_1.in_task == "None" and player_1.general_hitbox.colliderect(task_info[0]):
+            display.blit(use_button_image, (1670, 830))
+            break
+        else:
+            display.blit(use_button_disabled_image, (1670, 830))
+
+    # TODO: Add if (sees dead body) once dead bodies and multiplayer added to game
+    display.blit(report_button_disabled_image, (1420, 830))
+
+    if show_minimap:
+        display.blit(minimap_image, (320, 372))
+        display.blit(minimap_player_locator_image, get_player_coords(game_map.x, game_map.y, 320 - 20, 372 - 15))
+
+
 def redraw_game_window(shadow_range: int):
     game_map.draw_map_image(display, shadow_surface, do_draw_collision)
     draw_shadow_limiter(shadow_range)
@@ -263,6 +312,7 @@ def redraw_game_window(shadow_range: int):
         if result:
             player_1.in_task = "None"
     draw_fps()
+    draw_ui(0.3)
     pygame.display.update()
 
 
@@ -280,6 +330,8 @@ collect_trash = tasks.CollectTrash(display)
 refill_hand_sanitizer = tasks.RefillHandSanitizer(display)
 check_inbox = tasks.CheckInbox(display)
 do_flashcards = tasks.DoFlashcards(display)
+show_minimap = False
+minimap_button_rect = pygame.Rect(1770, 50, 100, 100)
 is_ghost = False
 do_draw_collision = False
 running_game = True
@@ -327,12 +379,15 @@ while running_game:
                 else:
                     player_1.in_vent = 0
 
-            elif event.key == pygame.K_t:
+            # Use Button
+            elif event.key == pygame.K_e:
                 if player_1.in_task == "None":
                     start_task()
                 else:
                     player_1.in_task = "None"
 
+            elif event.key == pygame.K_TAB:
+                show_minimap = not show_minimap
             elif event.key == pygame.K_x:
                 is_ghost = not is_ghost
             elif event.key == pygame.K_c:
@@ -386,6 +441,9 @@ while running_game:
                     elif right_vent_arrow and right_vent_arrow.collidepoint(mouse_position):
                         player_1.in_vent = 5
 
+                if minimap_button_rect.collidepoint(mouse_position):
+                    show_minimap = not show_minimap
+
     if player_1.in_vent != 0:
         transport_vents(player_1)
 
@@ -429,14 +487,13 @@ while running_game:
                 game_map.x -= 1
 
     if keys[pygame.K_ESCAPE]:
-        pygame.quit()
-        sys.exit()
+        running_game = False
 
     if player_1.view_distance != target_view_distance:
         smooth_shadow_transition(player_1, target_view_distance, 10)
 
     redraw_game_window(player_1.view_distance)
 
-    clock.tick(50)
+    clock.tick(60)
 pygame.quit()
 sys.exit()
