@@ -3,7 +3,7 @@ import pygame
 
 
 class Map(object):
-    def __init__(self, visible_map_image, shadow_map_image):
+    def __init__(self, visible_map_image, shadow_map_image, tasks_to_render: list[int]):
         self.x, self.y = -1403, -1084
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
@@ -11,6 +11,8 @@ class Map(object):
         self.height = self.visible_map_image.get_rect().height
         self.x_velocity = 375
         self.y_velocity = 375
+
+        self.tasks_to_render = tasks_to_render
 
         self.wall_segments = {
             # Outside: classrooms top wall
@@ -459,73 +461,71 @@ class Map(object):
     @property
     def get_task_rects(self):
         return [
-            (pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "Check Inbox"),  # Check Inbox
+            {"rect": pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "name": "Check Inbox"},
 
-            (pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "Refill Hand-Sanitizer"),  # Refill Hand-Sanitizer: left
-            (pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "Refill Hand-Sanitizer"),
-            # Refill Hand-Sanitizer: right
+            {"rect": pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "name": "Refill Hand-Sanitizer"},  # left
+            {"rect": pygame.Rect(self.x + 3800, self.y + 1650, 50, 50), "name": "Refill Hand-Sanitizer"},  # right
 
-            (pygame.Rect(self.x + 7000, self.y + 1050, 50, 50), "Check Temperature"),  # Check Temperature
+            {"rect": pygame.Rect(self.x + 7000, self.y + 1050, 50, 50), "name": "Check Temperature"},
 
-            (pygame.Rect(self.x + 6150, self.y + 100, 100, 50), "Reset Wifi"),  # Reset Wifi
+            {"rect": pygame.Rect(self.x + 6150, self.y + 100, 100, 50), "name": "Reset Wifi"},
 
-            (pygame.Rect(self.x + 2100, self.y + 650, 50, 100), "Plug-In Laptops"),  # Plug-In Laptops: top
-            (pygame.Rect(self.x + 2100, self.y + 1700, 50, 100), "Plug-In Laptops"),  # Plug-In Laptops: bottom
+            {"rect": pygame.Rect(self.x + 2100, self.y + 650, 50, 100), "name": "Plug-In Laptops"},  # top
+            {"rect": pygame.Rect(self.x + 2100, self.y + 1700, 50, 100), "name": "Plug-In Laptops"},  # bottom
 
-            (pygame.Rect(self.x + 4300, self.y + 1050, 300, 300), "Wipe down Tables"),  # Wipe down tables: top left
-            (pygame.Rect(self.x + 4300, self.y + 1700, 300, 300), "Wipe down Tables"),  # Wipe down tables: bottom left
-            (pygame.Rect(self.x + 6500, self.y + 1050, 300, 300), "Wipe down Tables"),  # Wipe down tables: top right
-            (pygame.Rect(self.x + 6500, self.y + 1750, 300, 300), "Wipe down Tables"),  # Wipe down tables: bottom right
+            {"rect": pygame.Rect(self.x + 4300, self.y + 1050, 300, 300), "name": "Wipe down Tables"},  # top left
+            {"rect": pygame.Rect(self.x + 4300, self.y + 1700, 300, 300), "name": "Wipe down Tables"},  # bottom left
+            {"rect": pygame.Rect(self.x + 6500, self.y + 1050, 300, 300), "name": "Wipe down Tables"},  # top right
+            {"rect": pygame.Rect(self.x + 6500, self.y + 1750, 300, 300), "name": "Wipe down Tables"},  # bottom right
 
-            (pygame.Rect(self.x + 400, self.y + 1100, 400, 50), "Clean Windows"),  # Clean Windows: left top left
-            (pygame.Rect(self.x + 900, self.y + 1100, 400, 50), "Clean Windows"),  # Clean Windows: left top right
-            (pygame.Rect(self.x + 400, self.y + 1300, 400, 50), "Clean Windows"),  # Clean Windows: left bottom left
-            (pygame.Rect(self.x + 900, self.y + 1300, 400, 50), "Clean Windows"),  # Clean Windows: left bottom right
-            (pygame.Rect(self.x + 2350, self.y + 1100, 300, 50), "Clean Windows"),  # Clean Windows: right top left
-            (pygame.Rect(self.x + 2750, self.y + 1100, 300, 50), "Clean Windows"),  # Clean Windows: right top right
-            (pygame.Rect(self.x + 2350, self.y + 1300, 300, 50), "Clean Windows"),  # Clean Windows: right bottom left
-            (pygame.Rect(self.x + 2750, self.y + 1300, 300, 50), "Clean Windows"),  # Clean Windows: right bottom right
+            {"rect": pygame.Rect(self.x + 400, self.y + 1100, 400, 50), "name": "Clean Windows"},  # left top left
+            {"rect": pygame.Rect(self.x + 900, self.y + 1100, 400, 50), "name": "Clean Windows"},  # left top right
+            {"rect": pygame.Rect(self.x + 400, self.y + 1300, 400, 50), "name": "Clean Windows"},  # left bottom left
+            {"rect": pygame.Rect(self.x + 900, self.y + 1300, 400, 50), "name": "Clean Windows"},  # left bottom right
+            {"rect": pygame.Rect(self.x + 2350, self.y + 1100, 300, 50), "name": "Clean Windows"},  # right top left
+            {"rect": pygame.Rect(self.x + 2750, self.y + 1100, 300, 50), "name": "Clean Windows"},  # right top right
+            {"rect": pygame.Rect(self.x + 2350, self.y + 1300, 300, 50), "name": "Clean Windows"},  # right bottom left
+            {"rect": pygame.Rect(self.x + 2750, self.y + 1300, 300, 50), "name": "Clean Windows"},  # right bottom right
 
-            (pygame.Rect(self.x + 6700, self.y + 850, 150, 50), "Nominate For Awards"),  # Nominate for Awards
+            {"rect": pygame.Rect(self.x + 6700, self.y + 850, 150, 50), "name": "Nominate For Awards"},
 
-            (pygame.Rect(self.x + 2300, self.y + 1000, 50, 50), "Collect Trash"),  # Collect Trash: classroom1
-            (pygame.Rect(self.x + 2300, self.y + 1400, 50, 50), "Collect Trash"),  # Collect Trash: classroom2
-            (pygame.Rect(self.x + 3700, self.y + 1550, 50, 50), "Collect Trash"),  # Collect Trash: bathroom
-            (pygame.Rect(self.x + 4350, self.y + 750, 50, 50), "Collect Trash"),  # Collect Trash: breakroom
-            (pygame.Rect(self.x + 4150, self.y + 2000, 50, 50), "Collect Trash"),  # Collect Trash: left lobby
-            (pygame.Rect(self.x + 6900, self.y + 2000, 50, 50), "Collect Trash"),  # Collect Trash: right lobby
-            (pygame.Rect(self.x + 7100, self.y + 850, 50, 50), "Collect Trash"),  # Collect Trash: outside kitchen
-            (pygame.Rect(self.x + 6650, self.y + 750, 50, 50), "Collect Trash"),  # Collect Trash: outside kitchen
+            {"rect": pygame.Rect(self.x + 2300, self.y + 1000, 50, 50), "name": "Collect Trash"},  # classroom1
+            {"rect": pygame.Rect(self.x + 2300, self.y + 1400, 50, 50), "name": "Collect Trash"},  # classroom2
+            {"rect": pygame.Rect(self.x + 3700, self.y + 1550, 50, 50), "name": "Collect Trash"},  # bathroom
+            {"rect": pygame.Rect(self.x + 4350, self.y + 750, 50, 50), "name": "Collect Trash"},  # breakroom
+            {"rect": pygame.Rect(self.x + 4150, self.y + 2000, 50, 50), "name": "Collect Trash"},  # left lobby
+            {"rect": pygame.Rect(self.x + 6900, self.y + 2000, 50, 50), "name": "Collect Trash"},  # right lobby
+            {"rect": pygame.Rect(self.x + 7100, self.y + 850, 50, 50), "name": "Collect Trash"},  # outside kitchen
+            {"rect": pygame.Rect(self.x + 6650, self.y + 750, 50, 50), "name": "Collect Trash"},  # outside kitchen
 
-            (pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "Do Flashcards"),  # Do Flashcards
+            {"rect": pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "name": "Do Flashcards"},  # Do Flashcards
 
             # Sabotages
+            {"rect": pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "name": "Left A/C top"},
+            {"rect": pygame.Rect(self.x + 900, self.y + 1850, 100, 50), "name": "Left A/C bottom"},
+            {"rect": pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "name": "Right A/C top"},
+            {"rect": pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "name": "Right A/C bottom"},
 
-            (pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Left A/C top"),  # Left A/C: top
-            (pygame.Rect(self.x + 900, self.y + 1850, 100, 50), "Left A/C bottom"),  # Left A/C: bottom
-            (pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C top"),  # Right A/C: top
-            (pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "Right A/C bottom"),  # Right A/C: bottom
+            {"rect": pygame.Rect(self.x + 3400, self.y + 700, 150, 50), "name": "Lights"},
 
-            (pygame.Rect(self.x + 3400, self.y + 700, 150, 50), "Lights"),  # Lights
+            {"rect": pygame.Rect(self.x + 5000, self.y + 150, 50, 100), "name": "Relaunch Zoom"},
 
-            (pygame.Rect(self.x + 5000, self.y + 150, 50, 100), "Relaunch Zoom"),  # Relaunch Zoom
-
-            (pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "Remove Spoiled Food"),  # Remove Spoiled Food
-            (pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "Remove Spoiled Food"),  # Remove Spoiled Food
+            {"rect": pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "name": "Remove Spoiled Food"},  # right
+            {"rect": pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "name": "Remove Spoiled Food"},  # left
         ]
 
     @property
     def get_vent_rects(self):
         return [
-            (pygame.Rect(self.x + 170, self.y + 1200, 60, 50), "Left.1"),  # Left system: 1
-            (pygame.Rect(self.x + 1795, self.y + 875, 60, 50), "Left.2"),  # Left system: 2
-            (pygame.Rect(self.x + 3095, self.y + 1750, 60, 50), "Left.3"),  # Left system: 3
-            (pygame.Rect(self.x + 3995, self.y + 425, 60, 50), "Left.4"),  # Left system: 4
+            pygame.Rect(self.x + 170, self.y + 1200, 60, 50),  # Left system: 1
+            pygame.Rect(self.x + 1795, self.y + 875, 60, 50),  # Left system: 2
+            pygame.Rect(self.x + 3095, self.y + 1750, 60, 50),  # Left system: 3
+            pygame.Rect(self.x + 3995, self.y + 425, 60, 50),  # Left system: 4
 
-            (pygame.Rect(self.x + 5520, self.y + 1950, 60, 50), "Right.1"),  # Right system: 1
-            (pygame.Rect(self.x + 6220, self.y + 450, 60, 50), "Right.2"),  # Right system: 2
-            (pygame.Rect(self.x + 7195, self.y + 525, 60, 50), "Right.3"),  # Right system: 3
-            (pygame.Rect(self.x + 7745, self.y + 1725, 60, 50), "Right.4"),  # Right system: 4
+            pygame.Rect(self.x + 5520, self.y + 1950, 60, 50),  # Right system: 1
+            pygame.Rect(self.x + 6220, self.y + 450, 60, 50),  # Right system: 2
+            pygame.Rect(self.x + 7195, self.y + 525, 60, 50),  # Right system: 3
+            pygame.Rect(self.x + 7745, self.y + 1725, 60, 50),  # Right system: 4
         ]
 
     def draw_map_image(self, visible_surface: pygame.Surface, shadow_surface: pygame.Surface, draw_lines: bool):
@@ -647,12 +647,12 @@ class Map(object):
             pygame.draw.line(surface, color, (seg["a"]["x"], seg["a"]["y"]), (seg["b"]["x"], seg["b"]["y"]))
 
     def draw_tasks(self, surface: pygame.Surface):
-        for task in self.get_task_rects:
-            pygame.draw.rect(surface, (242, 242, 0), task[0], 3)
+        for task in [self.get_task_rects[i] for i in self.tasks_to_render]:
+            pygame.draw.rect(surface, (242, 242, 0), task["rect"], 3)
 
     def draw_vents(self, surface: pygame.Surface):
         for vent in self.get_vent_rects:
-            pygame.draw.rect(surface, (0, 242, 242), vent[0], 3)
+            pygame.draw.rect(surface, (0, 242, 242), vent, 3)
 
     def draw_coordinates(self, surface: pygame.Surface, font: pygame.font):
         mouse_x, mouse_y = pygame.mouse.get_pos()

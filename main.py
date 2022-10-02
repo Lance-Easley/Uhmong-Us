@@ -1,4 +1,5 @@
 import math
+import random
 
 import pygame
 import sys
@@ -41,8 +42,9 @@ report_button_image.set_colorkey((255, 255, 255))
 report_button_disabled_image = pygame.image.load('images/hud/report_button_disabled.png').convert()
 report_button_disabled_image.set_colorkey((255, 255, 255))
 
-minimap_image = pygame.image.load('images/hud/minimap.png').convert()  # TODO: Fix minimap image proportions
+minimap_image = pygame.image.load('images/hud/minimap.png').convert()
 minimap_image.set_colorkey((255, 255, 255))
+minimap_image.set_alpha(220)
 minimap_player_locator_image = pygame.image.load('images/hud/minimap_player_locator.png').convert()
 minimap_player_locator_image.set_colorkey((255, 255, 255))
 minimap_task_locator_image = pygame.image.load('images/hud/minimap_task_locator.png').convert()
@@ -117,28 +119,28 @@ def check_for_collisions(rect: pygame.Rect, wall_rects: list[pygame.Rect]):
 
 
 def start_task():
-    for task_info in game_map.get_task_rects:
-        if player_1.general_hitbox.colliderect(task_info[0]):
-            player_1.in_task = task_info[1]
-            if task_info[1] == "Clean Windows":
+    for task_info in [game_map.get_task_rects[task["index"]] for task in player_1.tasks]:
+        if player_1.general_hitbox.colliderect(task_info["rect"]):
+            player_1.in_task = task_info["name"]
+            if task_info["name"] == "Clean Windows":
                 clean_windows_task.renew_task_surface()
-            elif task_info[1] == "Wipe down Tables":
+            elif task_info["name"] == "Wipe down Tables":
                 wipe_tables_task.renew_task_surface()
-            elif task_info[1] == "Reset Wifi":
+            elif task_info["name"] == "Reset Wifi":
                 reset_wifi_task.renew_task_surface()
-            elif task_info[1] == "Plug-In Laptops":
+            elif task_info["name"] == "Plug-In Laptops":
                 plug_in_laptops_task.renew_task_surface()
-            elif task_info[1] == "Check Temperature":
+            elif task_info["name"] == "Check Temperature":
                 check_temperature_task.renew_task_surface()
-            elif task_info[1] == "Nominate For Awards":
+            elif task_info["name"] == "Nominate For Awards":
                 nominate_task.renew_task_surface()
-            elif task_info[1] == "Collect Trash":
+            elif task_info["name"] == "Collect Trash":
                 collect_trash.renew_task_surface()
-            elif task_info[1] == "Refill Hand-Sanitizer":
+            elif task_info["name"] == "Refill Hand-Sanitizer":
                 refill_hand_sanitizer.renew_task_surface()
-            elif task_info[1] == "Check Inbox":
+            elif task_info["name"] == "Check Inbox":
                 check_inbox.renew_task_surface()
-            elif task_info[1] == "Do Flashcards":
+            elif task_info["name"] == "Do Flashcards":
                 do_flashcards.renew_task_surface()
             return
 
@@ -251,10 +253,16 @@ def draw_fps():
     display.blit(fps_text, (SCREEN_X - fps_text.get_width() - 1, 0))
 
 
-def get_player_coords(map_x: int, map_y: int, x_offset: int = 0, y_offset: int = 0) -> tuple[int, int]:
-    x = abs((map_x - SCREEN_HALF_X) * 0.1560975609756098) + x_offset
-    y = abs((map_y - SCREEN_HALF_Y) * 0.1560975609756098) + y_offset
+def get_minimap_coords(map_x: int, map_y: int) -> tuple[int, int]:
+    x = abs((map_x - SCREEN_HALF_X) // 8) + MINIMAP_X
+    y = abs((map_y - SCREEN_HALF_Y) // 8) + MINIMAP_Y
     return x, y
+
+
+def center_image_in_rect(image: pygame.Surface, rect: pygame.Rect):
+    image_rect = image.get_rect()
+    display.blit(image, ((rect.x + rect.width // 2) - image_rect.width // 2,
+                         (rect.y + rect.height // 2) - image_rect.height // 2))
 
 
 def draw_ui(progress: float):
@@ -263,19 +271,34 @@ def draw_ui(progress: float):
 
     display.blit(map_icon_image, (1770, 50))
 
-    for task_info in game_map.get_task_rects:
-        if player_1.in_task == "None" and player_1.general_hitbox.colliderect(task_info[0]):
-            display.blit(use_button_image, (1670, 830))
-            break
-        else:
-            display.blit(use_button_disabled_image, (1670, 830))
+    use_button_enabled = False
+    for task_info in player_1.tasks:
+        if player_1.in_task == "None":
+            if player_1.general_hitbox.colliderect(game_map.get_task_rects[task_info["index"]]["rect"]):
+                use_button_enabled = True
+                break
+
+    if use_button_enabled:
+        display.blit(use_button_image, (1670, 830))
+    else:
+        display.blit(use_button_disabled_image, (1670, 830))
 
     # TODO: Add if (sees dead body) once dead bodies and multiplayer added to game
     display.blit(report_button_disabled_image, (1420, 830))
 
     if show_minimap:
-        display.blit(minimap_image, (320, 372))
-        display.blit(minimap_player_locator_image, get_player_coords(game_map.x, game_map.y, 320 - 20, 372 - 15))
+        display.blit(minimap_image, (MINIMAP_X, MINIMAP_Y))
+
+        for task_info in player_1.tasks:
+            task_rect = game_map.get_task_rects[task_info["index"]]["rect"]
+            task_x, task_y = get_minimap_coords(
+                task_rect.x - game_map.x + SCREEN_HALF_X, task_rect.y - game_map.y + SCREEN_HALF_Y)
+            center_image_in_rect(minimap_task_locator_image,
+                                 pygame.Rect(task_x, task_y, task_rect.w / 8, task_rect.h / 8))
+
+        player_x, player_y = get_minimap_coords(game_map.x + player_1.half_width, game_map.y + player_1.half_height)
+        center_image_in_rect(minimap_player_locator_image,
+                             pygame.Rect(player_x, player_y, player_1.width / 8, player_1.height / 8))
 
 
 def redraw_game_window(shadow_range: int):
@@ -310,16 +333,21 @@ def redraw_game_window(shadow_range: int):
         elif player_1.in_task == "Do Flashcards":
             result = do_flashcards.task(dt)
         if result:
+            task_to_remove = next(t for t in player_1.tasks if t["name"] == player_1.in_task)
+            player_1.tasks.remove(task_to_remove)
+            game_map.tasks_to_render.remove(task_to_remove["index"])
             player_1.in_task = "None"
+
     draw_fps()
-    draw_ui(0.3)
+    draw_ui((100 / 4) * (4 - len(player_1.tasks)) / 100)
     pygame.display.update()
 
 
 # mainloop
-game_map = Map(visible_map_image, shadow_map_image)
+random_tasks = [{"name": t["name"], "index": (random.choice(t["indexes"]))} for t in random.sample(TASK_LIST, 4)]
+player_1 = Player((255, 0, 0), True, 0, random_tasks)
+game_map = Map(visible_map_image, shadow_map_image, [t["index"] for t in player_1.tasks])
 clock = pygame.time.Clock()
-player_1 = Player((255, 0, 0), game_map, True, 0)
 clean_windows_task = tasks.CleanWindows(display)
 wipe_tables_task = tasks.WipeDownTables(display)
 reset_wifi_task = tasks.ResetWifi(display)
@@ -382,6 +410,7 @@ while running_game:
             # Use Button
             elif event.key == pygame.K_e:
                 if player_1.in_task == "None":
+                    show_minimap = False
                     start_task()
                 else:
                     player_1.in_task = "None"

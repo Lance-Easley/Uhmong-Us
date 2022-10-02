@@ -3,7 +3,7 @@ import pygame
 
 
 class Player(object):
-    def __init__(self, color: tuple[int, int, int], map_object, is_traitor: bool, in_vent: int):
+    def __init__(self, color: tuple[int, int, int], is_traitor: bool, in_vent: int, tasks: list):
         self.width = 52
         self.height = 82
         self.half_width = self.width // 2
@@ -11,8 +11,6 @@ class Player(object):
 
         self.x = SCREEN_HALF_X - self.half_width
         self.y = SCREEN_HALF_Y - self.half_height
-        self.x_coord = map_object.x
-        self.y_coord = map_object.y
 
         self.color = color
 
@@ -48,6 +46,7 @@ class Player(object):
         self.in_vent = in_vent
         self.view_distance = 400
         self.in_task = "None"
+        self.tasks = tasks
 
     def draw_player(self, window: pygame.Surface):
         # `self.in_vent = 0` Represents a player not in a vent
