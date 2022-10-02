@@ -271,12 +271,20 @@ def draw_ui(progress: float):
 
     display.blit(map_icon_image, (1770, 50))
 
+    task_list_surface = pygame.Surface((268, len(player_1.tasks) * 30 + 5), pygame.SRCALPHA)
+    task_list_surface.fill((140, 140, 140, 180))
     use_button_enabled = False
-    for task_info in player_1.tasks:
+    for i, task_info in enumerate(player_1.tasks):
+        task_list_surface.blit(
+            font.render(task_info["name"], False,
+                        (0, 255, 0) if task_info["done"] else (255, 255, 255)), (5, i * 30 + 5))
+
         if player_1.in_task == "None":
             if player_1.general_hitbox.colliderect(game_map.get_task_rects[task_info["index"]]["rect"]):
-                use_button_enabled = True
-                break
+                if not task_info["done"]:
+                    use_button_enabled = True
+
+    display.blit(task_list_surface, (5, 50))
 
     if use_button_enabled:
         display.blit(use_button_image, (1670, 830))
@@ -290,11 +298,12 @@ def draw_ui(progress: float):
         display.blit(minimap_image, (MINIMAP_X, MINIMAP_Y))
 
         for task_info in player_1.tasks:
-            task_rect = game_map.get_task_rects[task_info["index"]]["rect"]
-            task_x, task_y = get_minimap_coords(
-                task_rect.x - game_map.x + SCREEN_HALF_X, task_rect.y - game_map.y + SCREEN_HALF_Y)
-            center_image_in_rect(minimap_task_locator_image,
-                                 pygame.Rect(task_x, task_y, task_rect.w / 8, task_rect.h / 8))
+            if not task_info["done"]:
+                task_rect = game_map.get_task_rects[task_info["index"]]["rect"]
+                task_x, task_y = get_minimap_coords(
+                    task_rect.x - game_map.x + SCREEN_HALF_X, task_rect.y - game_map.y + SCREEN_HALF_Y)
+                center_image_in_rect(minimap_task_locator_image,
+                                     pygame.Rect(task_x, task_y, task_rect.w / 8, task_rect.h / 8))
 
         player_x, player_y = get_minimap_coords(game_map.x + player_1.half_width, game_map.y + player_1.half_height)
         center_image_in_rect(minimap_player_locator_image,
@@ -333,18 +342,19 @@ def redraw_game_window(shadow_range: int):
         elif player_1.in_task == "Do Flashcards":
             result = do_flashcards.task(dt)
         if result:
-            task_to_remove = next(t for t in player_1.tasks if t["name"] == player_1.in_task)
-            player_1.tasks.remove(task_to_remove)
-            game_map.tasks_to_render.remove(task_to_remove["index"])
+            completed_task = next(t for t in player_1.tasks if t["name"] == player_1.in_task)
+            completed_task["done"] = True
+            game_map.tasks_to_render.remove(completed_task["index"])
             player_1.in_task = "None"
 
     draw_fps()
-    draw_ui((100 / 4) * (4 - len(player_1.tasks)) / 100)
+    draw_ui((100 / 4) * (4 - len(game_map.tasks_to_render)) / 100)
     pygame.display.update()
 
 
 # mainloop
-random_tasks = [{"name": t["name"], "index": (random.choice(t["indexes"]))} for t in random.sample(TASK_LIST, 4)]
+random_tasks = [
+    {"name": t["name"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 4)]
 player_1 = Player((255, 0, 0), True, 0, random_tasks)
 game_map = Map(visible_map_image, shadow_map_image, [t["index"] for t in player_1.tasks])
 clock = pygame.time.Clock()
