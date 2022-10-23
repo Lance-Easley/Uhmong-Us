@@ -45,10 +45,23 @@ report_button_disabled_image.set_colorkey((255, 255, 255))
 minimap_image = pygame.image.load('images/hud/minimap.png').convert()
 minimap_image.set_colorkey((255, 255, 255))
 minimap_image.set_alpha(220)
+sabotage_minimap_image = pygame.image.load('images/hud/sabotage_minimap.png').convert()
+sabotage_minimap_image.set_colorkey((255, 255, 255))
+sabotage_minimap_image.set_alpha(220)
 minimap_player_locator_image = pygame.image.load('images/hud/minimap_player_locator.png').convert()
 minimap_player_locator_image.set_colorkey((255, 255, 255))
 minimap_task_locator_image = pygame.image.load('images/hud/minimap_task_locator.png').convert()
 minimap_task_locator_image.set_colorkey((255, 255, 255))
+door_open_image = pygame.image.load('images/hud/door_open_icon.png').convert()
+door_open_image.set_colorkey((255, 255, 255))
+door_closed_full_image = pygame.image.load('images/hud/door_closed_full_icon.png').convert()
+door_closed_full_image.set_colorkey((255, 255, 255))
+door_closed_half_image = pygame.image.load('images/hud/door_closed_half_icon.png').convert()
+door_closed_half_image.set_colorkey((255, 255, 255))
+door_closed_danger_image = pygame.image.load('images/hud/door_closed_danger_icon.png').convert()
+door_closed_danger_image.set_colorkey((255, 255, 255))
+door_disabled_image = pygame.image.load('images/hud/door_disabled_icon.png').convert()
+door_disabled_image.set_colorkey((255, 255, 255))
 map_icon_image = pygame.image.load('images/hud/map_icon.png').convert()
 map_icon_image.set_colorkey((255, 255, 255))
 ###
@@ -265,6 +278,23 @@ def center_image_in_rect(image: pygame.Surface, rect: pygame.Rect):
                          (rect.y + rect.height // 2) - image_rect.height // 2))
 
 
+def draw_doors_ui(all_doors: dict):
+    for door in all_doors.keys():
+        room_info = all_doors[door]
+        if game_map.door_data[door]["closed"]:
+            if game_map.door_data[door]["timer"] > DOOR_CLOSED_TIME * 0.66 + DOOR_CLOSED_TIME:
+                center_image_in_rect(door_closed_full_image, room_info["minimap_button_rect"])
+            elif game_map.door_data[door]["timer"] > DOOR_CLOSED_TIME * 0.33 + DOOR_CLOSED_TIME:
+                center_image_in_rect(door_closed_half_image, room_info["minimap_button_rect"])
+            else:
+                center_image_in_rect(door_closed_danger_image, room_info["minimap_button_rect"])
+        else:
+            if game_map.door_data[door]["timer"] == 0:
+                center_image_in_rect(door_open_image, room_info["minimap_button_rect"])
+            else:
+                center_image_in_rect(door_disabled_image, room_info["minimap_button_rect"])
+
+
 def draw_ui(progress: float):
     pygame.draw.rect(display, (0, 255, 0), (9, 9, math.ceil(392 * progress), 32))
     display.blit(task_bar_image, (5, 5))
@@ -295,15 +325,20 @@ def draw_ui(progress: float):
     display.blit(report_button_disabled_image, (1420, 830))
 
     if show_minimap:
-        display.blit(minimap_image, (MINIMAP_X, MINIMAP_Y))
+        if player_1.is_traitor:
+            display.blit(sabotage_minimap_image, (MINIMAP_X, MINIMAP_Y))
 
-        for task_info in player_1.tasks:
-            if not task_info["done"]:
-                task_rect = game_map.get_task_rects[task_info["index"]]["rect"]
-                task_x, task_y = get_minimap_coords(
-                    task_rect.x - game_map.x + SCREEN_HALF_X, task_rect.y - game_map.y + SCREEN_HALF_Y)
-                center_image_in_rect(minimap_task_locator_image,
-                                     pygame.Rect(task_x, task_y, task_rect.w / 8, task_rect.h / 8))
+            draw_doors_ui(game_map.get_door_rect_info)
+        else:
+            display.blit(minimap_image, (MINIMAP_X, MINIMAP_Y))
+
+            for task_info in player_1.tasks:
+                if not task_info["done"]:
+                    task_rect = game_map.get_task_rects[task_info["index"]]["rect"]
+                    task_x, task_y = get_minimap_coords(
+                        task_rect.x - game_map.x + SCREEN_HALF_X, task_rect.y - game_map.y + SCREEN_HALF_Y)
+                    center_image_in_rect(minimap_task_locator_image,
+                                         pygame.Rect(task_x, task_y, task_rect.w / 8, task_rect.h / 8))
 
         player_x, player_y = get_minimap_coords(game_map.x + player_1.half_width, game_map.y + player_1.half_height)
         center_image_in_rect(minimap_player_locator_image,
@@ -354,10 +389,11 @@ def redraw_game_window(shadow_range: int):
 
 # mainloop
 random_tasks = [
-    {"name": t["name"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 4)]
+    {"name": t["name"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 8)]
 player_1 = Player((255, 0, 0), True, 0, random_tasks)
 game_map = Map(visible_map_image, shadow_map_image, [t["index"] for t in player_1.tasks])
 clock = pygame.time.Clock()
+
 clean_windows_task = tasks.CleanWindows(display)
 wipe_tables_task = tasks.WipeDownTables(display)
 reset_wifi_task = tasks.ResetWifi(display)
@@ -368,6 +404,7 @@ collect_trash = tasks.CollectTrash(display)
 refill_hand_sanitizer = tasks.RefillHandSanitizer(display)
 check_inbox = tasks.CheckInbox(display)
 do_flashcards = tasks.DoFlashcards(display)
+
 show_minimap = False
 minimap_button_rect = pygame.Rect(1770, 50, 100, 100)
 is_ghost = False
@@ -483,6 +520,11 @@ while running_game:
                 if minimap_button_rect.collidepoint(mouse_position):
                     show_minimap = not show_minimap
 
+                if player_1.is_traitor and show_minimap:
+                    for room in game_map.get_door_rect_info.keys():
+                        if game_map.get_door_rect_info[room]["minimap_button_rect"].collidepoint(mouse_position):
+                            game_map.close_door(room)
+
     if player_1.in_vent != 0:
         transport_vents(player_1)
 
@@ -531,8 +573,11 @@ while running_game:
     if player_1.view_distance != target_view_distance:
         smooth_shadow_transition(player_1, target_view_distance, 10)
 
+    game_map.process_door_timers(dt)
+
     redraw_game_window(player_1.view_distance)
 
     clock.tick(60)
+
 pygame.quit()
 sys.exit()
