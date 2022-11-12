@@ -128,11 +128,11 @@ def smooth_scroll(game_map_instance: Map, current_x: int, current_y: int, smooth
 
 
 def check_for_collisions(rect: pygame.Rect, wall_rects: list[pygame.Rect]):
-    return [wall for wall in wall_rects if rect.colliderect(wall)]
+    return any((wall for wall in wall_rects if rect.colliderect(wall)))
 
 
 def start_task():
-    for task_info in [game_map.get_task_rects[task["index"]] for task in player_1.tasks]:
+    for task_info in (game_map.get_task_rects[task["index"]] for task in player_1.tasks):
         if player_1.general_hitbox.colliderect(task_info["rect"]):
             player_1.in_task = task_info["name"]
             if task_info["name"] == "Clean Windows":
@@ -188,7 +188,6 @@ def smooth_shadow_transition(player: Player, target: int, speed: int):
 
 
 def draw_shadow_limiter(shadow_range: int):
-    shadow_limiter_surface.fill((40, 40, 40))
     shadow_limiter_surface.blit(shadow_map_image, (game_map.x, game_map.y))
     pygame.draw.circle(shadow_limiter_surface, "#098765", (SCREEN_HALF_X, SCREEN_HALF_Y), shadow_range)
     display.blit(shadow_limiter_surface, (0, 0))
@@ -388,10 +387,10 @@ def redraw_game_window(shadow_range: int):
 
 
 # mainloop
-random_tasks = [
-    {"name": t["name"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 8)]
+random_tasks = tuple(
+    {"name": t["name"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 8))
 player_1 = Player((255, 0, 0), True, 0, random_tasks)
-game_map = Map(visible_map_image, shadow_map_image, [t["index"] for t in player_1.tasks])
+game_map = Map(visible_map_image, shadow_map_image, {t["index"] for t in player_1.tasks})
 clock = pygame.time.Clock()
 
 clean_windows_task = tasks.CleanWindows(display)
@@ -577,7 +576,7 @@ while running_game:
 
     redraw_game_window(player_1.view_distance)
 
-    clock.tick(60)
+    clock.tick()
 
 pygame.quit()
 sys.exit()

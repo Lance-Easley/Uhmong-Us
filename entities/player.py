@@ -3,7 +3,7 @@ import pygame
 
 
 class Player(object):
-    def __init__(self, color: tuple[int, int, int], is_traitor: bool, in_vent: int, tasks: list):
+    def __init__(self, color: tuple[int, int, int], is_traitor: bool, in_vent: int, tasks: tuple):
         self.width = 52
         self.height = 82
         self.half_width = self.width // 2
@@ -40,7 +40,6 @@ class Player(object):
             self.hitbox_depth,
             self.height - self.hitbox_depth * 2
         )
-        self.hitboxes = [self.w_hitbox, self.a_hitbox, self.s_hitbox, self.d_hitbox]
 
         self.is_traitor = is_traitor
         self.in_vent = in_vent

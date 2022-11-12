@@ -1030,7 +1030,7 @@ class CheckInbox(BaseTask):
         self.small_font = pygame.font.Font("freesansbold.ttf", 12)
 
         self.email_count = randint(3, 5)
-        self.email_contents = [
+        self.email_contents = (
             {
                 "subject": "You hAve woN!!!!!1!!!",
                 "body": "Please replY with your sOcial security numbr and\ncredit card info to claIm your prize!1!!!!!",
@@ -1104,11 +1104,12 @@ class CheckInbox(BaseTask):
             },
             {
                 "subject": "Your Credit Score has increased!",
-                "body": f"Congrats on your new score of ${randint(680, 850)}!\nReply for tips to keep it going!",
+                "body": f"Congrats on your new score of {randint(680, 850)}!\nReply for tips to keep it going!",
                 "type": "reply",
                 "reply": "Yay! I'd love some advice to get it higher and higher!"
             }
-        ]
+        )
+
         self.email_list = []  # populated in renew_task_surface()
         self.email_rects = []  # populated in renew_task_surface()
 
@@ -1128,7 +1129,7 @@ class CheckInbox(BaseTask):
         self.task_surface.fill((18, 52, 86))
 
         self.email_list = random.sample(self.email_contents, self.email_count)
-        self.email_rects = [pygame.Rect((680, 400 + (index * 52), 560, 51)) for index in range(self.email_count)]
+        self.email_rects = (pygame.Rect((680, 400 + (index * 52), 560, 51)) for index in range(self.email_count))
 
         self.opened_email_index = -1
         self.is_replying = False
@@ -1210,7 +1211,7 @@ class DoFlashcards(BaseTask):
         self.small_font = pygame.font.Font("freesansbold.ttf", 12)
 
         self.flashcard_count = randint(7, 9)
-        self.flashcard_contents = [
+        self.flashcard_contents = (
             {
                 "question": "2 + 2 = 4",
                 "answer": True
@@ -1283,7 +1284,7 @@ class DoFlashcards(BaseTask):
                 "question": "You cannot recreate Among Us in Python",
                 "answer": False
             }
-        ]
+        )
         self.flashcard_list = []  # populated in renew_task_surface()
 
         self.yes_button_rect = pygame.Rect(1120, 660, 100, 50)

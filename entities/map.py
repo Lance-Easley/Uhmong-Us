@@ -7,7 +7,7 @@ from pprint import pprint
 
 
 class Map(object):
-    def __init__(self, visible_map_image, shadow_map_image, tasks_to_render: list[int]):
+    def __init__(self, visible_map_image, shadow_map_image, tasks_to_render: set):
         self.x, self.y = -1403, -1084
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
@@ -36,7 +36,7 @@ class Map(object):
             "Incubator": {"closed": False, "timer": 0}
         }
 
-        self.wall_segments = {
+        self.wall_segments = (
             # Outside: classrooms top wall
             ((4995, 300), (5300, 350)),
             ((5295, 350), (5300, 300)),
@@ -305,7 +305,7 @@ class Map(object):
             # BCCA: incubator bottom room top right wall
             ((7300, 1800), (7855, 1850)),
             ((7250, 1850), (7300, 1800)),
-        }
+        )
 
         self.v_x = 0
         self.v_y = 0
@@ -334,7 +334,7 @@ class Map(object):
 
     @property
     def get_wall_rects(self):
-        return [
+        return (
             pygame.Rect(self.x + 50, self.y + 300, 5250, 50),  # Outside: classrooms top wall [4:6]
             pygame.Rect(self.x + 50, self.y + 350, 50, 1750),  # Outside: classrooms left wall
             pygame.Rect(self.x + 50, self.y + 2100, 8100, 50),  # Outside: classrooms bottom wall
@@ -455,7 +455,7 @@ class Map(object):
             *(rect for room in self.door_data.keys()
               for rect in self.get_door_rect_info[room]["rects"]
               if self.door_data[room]["closed"])
-        ]
+        )
 
     # These convert methods confine ray-casting lines to be inside the viewport.
     # Returns either the coordinate or the limit of the viewport (top, bottom, left, or right)
@@ -476,7 +476,7 @@ class Map(object):
         return coordinate
 
     def update_wall_segments(self):
-        self.wall_segments = {
+        self.wall_segments = (
             # Outside: classrooms top wall
             ((4995, 300), (5300, 350)),
             ((5295, 350), (5300, 300)),
@@ -746,10 +746,10 @@ class Map(object):
             ((7300, 1800), (7855, 1850)),
             ((7250, 1850), (7300, 1800)),
 
-            *{segment for room in self.door_data.keys()
+            *(segment for room in self.door_data.keys()
               for segment in self.get_door_rect_info[room]["segments"]
-              if self.door_data[room]["closed"]}
-        }
+              if self.door_data[room]["closed"])
+        )
 
     @property
     def get_wall_segments(self):
@@ -763,7 +763,7 @@ class Map(object):
 
     @property
     def get_task_rects(self):
-        return [
+        return (
             {"rect": pygame.Rect(self.x + 2450, self.y + 450, 500, 500), "name": "Check Inbox"},
 
             {"rect": pygame.Rect(self.x + 3600, self.y + 1650, 50, 50), "name": "Refill Hand-Sanitizer"},  # left
@@ -815,11 +815,11 @@ class Map(object):
 
             {"rect": pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "name": "Remove Spoiled Food"},  # right
             {"rect": pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "name": "Remove Spoiled Food"},  # left
-        ]
+        )
 
     @property
     def get_vent_rects(self):
-        return [
+        return (
             pygame.Rect(self.x + 170, self.y + 1200, 60, 50),  # Left system: 1
             pygame.Rect(self.x + 1795, self.y + 875, 60, 50),  # Left system: 2
             pygame.Rect(self.x + 3095, self.y + 1750, 60, 50),  # Left system: 3
@@ -829,7 +829,7 @@ class Map(object):
             pygame.Rect(self.x + 6220, self.y + 450, 60, 50),  # Right system: 2
             pygame.Rect(self.x + 7195, self.y + 525, 60, 50),  # Right system: 3
             pygame.Rect(self.x + 7745, self.y + 1725, 60, 50),  # Right system: 4
-        ]
+        )
 
     @property
     def get_door_rect_info(self):
@@ -1013,11 +1013,13 @@ class Map(object):
                 self.door_data[room]["timer"] = 0
 
     def draw_map_image(self, visible_surface: pygame.Surface, shadow_surface: pygame.Surface, draw_lines: bool):
+        wall_segments = self.get_wall_segments
+
         # Points for shape drawing
         points = []
 
         unique_points = set()
-        for segment in self.get_wall_segments:
+        for segment in wall_segments:
             if (('x', segment["a"]["x"]), ('y', segment["a"]["y"])) not in unique_points:
                 unique_points.add((('x', segment["a"]["x"]), ('y', segment["a"]["y"])))
             if (('x', segment["b"]["x"]), ('y', segment["b"]["y"])) not in unique_points:
@@ -1065,7 +1067,7 @@ class Map(object):
         #######################################################
 
         # DRAWING
-        def draw(segments):
+        def draw():
             # Get all angles
             unique_angles = set()
             for unique_point in unique_points:
@@ -1090,27 +1092,23 @@ class Map(object):
 
                 # Find CLOSEST intersection
                 closest_intersect = None
-                for seg in segments:
+                for seg in wall_segments:
                     intersect = get_intersection(ray, seg)
                     if not intersect:
                         continue
                     elif not closest_intersect or intersect["param"] < closest_intersect["param"]:
                         closest_intersect = intersect
 
-                # Intersect angle
-                if not closest_intersect:
-                    continue
                 # Add to list of intersects
-                else:
+                if closest_intersect:
                     points.append((closest_intersect['x'], closest_intersect['y']))
 
             # DRAW ALL RAYS
             shadow_surface.blit(self.shadow_map_image, (self.x, self.y))
             pygame.draw.polygon(shadow_surface, "#123456", points)
 
-        visible_surface.fill((40, 40, 40))
         visible_surface.blit(self.visible_map_image, (self.x, self.y))
-        draw(self.get_wall_segments)
+        draw()
         self.draw_vents(visible_surface)
         self.draw_tasks(visible_surface)
         self.draw_doors(visible_surface)
@@ -1132,7 +1130,7 @@ class Map(object):
             pygame.draw.line(surface, color, (seg["a"]["x"], seg["a"]["y"]), (seg["b"]["x"], seg["b"]["y"]))
 
     def draw_tasks(self, surface: pygame.Surface):
-        for task in [self.get_task_rects[i] for i in self.tasks_to_render]:
+        for task in (self.get_task_rects[i] for i in self.tasks_to_render):
             pygame.draw.rect(surface, (242, 242, 0), task["rect"], 3)
 
     def draw_vents(self, surface: pygame.Surface):
