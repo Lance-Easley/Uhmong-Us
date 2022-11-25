@@ -8,7 +8,18 @@ import time
 from constants import *
 from entities.map import Map
 from entities.player import Player
-from entities import tasks
+
+# Tasks
+from entities.tasks.CheckInbox import *
+from entities.tasks.CheckTemperature import *
+from entities.tasks.CleanWindows import *
+from entities.tasks.CollectTrash import *
+from entities.tasks.DoFlashcards import *
+from entities.tasks.NominateForAwards import *
+from entities.tasks.PlugInLaptops import *
+from entities.tasks.RefillHandSanitizer import *
+from entities.tasks.ResetWifi import *
+from entities.tasks.WipeDownTables import *
 
 # Pygame Initialization ###
 pygame.init()
@@ -393,16 +404,16 @@ player_1 = Player((255, 0, 0), True, 0, random_tasks)
 game_map = Map(visible_map_image, shadow_map_image, {t["index"] for t in player_1.tasks})
 clock = pygame.time.Clock()
 
-clean_windows_task = tasks.CleanWindows(display)
-wipe_tables_task = tasks.WipeDownTables(display)
-reset_wifi_task = tasks.ResetWifi(display)
-plug_in_laptops_task = tasks.PlugInLaptops(display)
-check_temperature_task = tasks.CheckTemperature(display)
-nominate_task = tasks.NominateForAwards(display)
-collect_trash = tasks.CollectTrash(display)
-refill_hand_sanitizer = tasks.RefillHandSanitizer(display)
-check_inbox = tasks.CheckInbox(display)
-do_flashcards = tasks.DoFlashcards(display)
+clean_windows_task = CleanWindows(display)
+wipe_tables_task = WipeDownTables(display)
+reset_wifi_task = ResetWifi(display)
+plug_in_laptops_task = PlugInLaptops(display)
+check_temperature_task = CheckTemperature(display)
+nominate_task = NominateForAwards(display)
+collect_trash = CollectTrash(display)
+refill_hand_sanitizer = RefillHandSanitizer(display)
+check_inbox = CheckInbox(display)
+do_flashcards = DoFlashcards(display)
 
 show_minimap = False
 minimap_button_rect = pygame.Rect(1770, 50, 100, 100)
