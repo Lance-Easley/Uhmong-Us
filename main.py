@@ -359,9 +359,7 @@ def draw_sabotage_ui(all_sabotages: dict):
         cooldown_data = game_map.sabotage_cooldown_data[sabotage_name]
         images = sabotage_images[sabotage_name]
 
-        print(active_sabotage)
-        print(sabotage_name)
-        if active_sabotage and sabotage_name != active_sabotage[0]:
+        if active_sabotage and sabotage_name != active_sabotage:
             center_image_in_rect(images["disabled"], sabotage_info["minimap_button_rect"])
         elif cooldown_data["activated"]:
             center_image_in_rect(images["off"], sabotage_info["minimap_button_rect"])
@@ -499,9 +497,6 @@ while running_game:
     dt = time.monotonic() - previous_time
     previous_time = time.monotonic()
 
-    active_sabotage = [key for key in game_map.sabotage_cooldown_data
-                       if game_map.sabotage_cooldown_data[key]["activated"]]
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running_game = False
@@ -612,6 +607,7 @@ while running_game:
                     if not active_sabotage:
                         for key in game_map.get_sabotage_rect_info.keys():
                             if game_map.get_sabotage_rect_info[key]["minimap_button_rect"].collidepoint(mouse_position):
+                                active_sabotage = key
                                 game_map.start_sabotage(
                                     key, (key in (Sabotage.LEFT_AC, Sabotage.RIGHT_AC, Sabotage.SPOILED_FOOD)))
 
