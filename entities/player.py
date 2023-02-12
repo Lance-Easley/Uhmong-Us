@@ -44,7 +44,7 @@ class Player(object):
         self.is_traitor = is_traitor
         self.in_vent = in_vent
         self.view_distance = MAX_VIEW_DISTANCE
-        self.in_task = "None"
+        self.in_task = None
         self.tasks = tasks
 
     def draw_player(self, window: pygame.Surface):

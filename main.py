@@ -193,30 +193,30 @@ def check_for_collisions(rect: pygame.Rect, wall_rects: list[pygame.Rect]):
 def start_task():
     for task_info in (game_map.get_task_rects[task["index"]] for task in player_1.tasks):
         if player_1.general_hitbox.colliderect(task_info["rect"]):
-            player_1.in_task = task_info["name"]
-            if task_info["name"] == "Clean Windows":
+            player_1.in_task = task_info["task"]
+            if task_info["task"] == Tasks.CLEAN_WINDOWS:
                 clean_windows_task.renew_task_surface()
-            elif task_info["name"] == "Wipe down Tables":
+            elif task_info["task"] == Tasks.WIPE_DOWN_TABLES:
                 wipe_tables_task.renew_task_surface()
-            elif task_info["name"] == "Reset Wifi":
+            elif task_info["task"] == Tasks.RESET_WIFI:
                 reset_wifi_task.renew_task_surface()
-            elif task_info["name"] == "Plug-In Laptops":
+            elif task_info["task"] == Tasks.PLUG_IN_LAPTOPS:
                 plug_in_laptops_task.renew_task_surface()
-            elif task_info["name"] == "Check Temperature":
+            elif task_info["task"] == Tasks.CHECK_TEMPERATURE:
                 check_temperature_task.renew_task_surface()
-            elif task_info["name"] == "Nominate For Awards":
+            elif task_info["task"] == Tasks.NOMINATE_FOR_AWARDS:
                 nominate_task.renew_task_surface()
-            elif task_info["name"] == "Collect Trash":
+            elif task_info["task"] == Tasks.COLLECT_TRASH:
                 collect_trash.renew_task_surface()
-            elif task_info["name"] == "Refill Hand-Sanitizer":
+            elif task_info["task"] == Tasks.REFILL_HAND_SANITIZER:
                 refill_hand_sanitizer.renew_task_surface()
-            elif task_info["name"] == "Check Inbox":
+            elif task_info["task"] == Tasks.CHECK_INBOX:
                 check_inbox.renew_task_surface()
-            elif task_info["name"] == "Do Flashcards":
+            elif task_info["task"] == Tasks.DO_FLASHCARDS:
                 do_flashcards.renew_task_surface()
             return
 
-    player_1.in_task = "None"
+    player_1.in_task = None
 
 
 def transport_vents(player: Player):
@@ -381,10 +381,10 @@ def draw_ui(progress: float):
     use_button_enabled = False
     for i, task_info in enumerate(player_1.tasks):
         task_list_surface.blit(
-            font.render(task_info["name"], False,
+            font.render(task_info["task"].value, False,
                         (0, 255, 0) if task_info["done"] else (255, 255, 255)), (5, i * 30 + 5))
 
-        if player_1.in_task == "None":
+        if player_1.in_task is None:
             if player_1.general_hitbox.colliderect(game_map.get_task_rects[task_info["index"]]["rect"]):
                 if not task_info["done"]:
                     use_button_enabled = True
@@ -430,33 +430,33 @@ def redraw_game_window(shadow_range: int):
     if player_1.in_vent:
         draw_vent_arrows(player_1)
     player_1.draw_player(display)
-    if player_1.in_task != "None":
+    if player_1.in_task is not None:
         result = False
-        if player_1.in_task == "Clean Windows":
+        if player_1.in_task == Tasks.CLEAN_WINDOWS:
             result = clean_windows_task.task(dt)
-        elif player_1.in_task == "Wipe down Tables":
+        elif player_1.in_task == Tasks.WIPE_DOWN_TABLES:
             result = wipe_tables_task.task(dt)
-        elif player_1.in_task == "Reset Wifi":
+        elif player_1.in_task == Tasks.RESET_WIFI:
             result = reset_wifi_task.task(dt)
-        elif player_1.in_task == "Plug-In Laptops":
+        elif player_1.in_task == Tasks.PLUG_IN_LAPTOPS:
             result = plug_in_laptops_task.task(dt)
-        elif player_1.in_task == "Check Temperature":
+        elif player_1.in_task == Tasks.CHECK_TEMPERATURE:
             result = check_temperature_task.task(dt)
-        elif player_1.in_task == "Nominate For Awards":
+        elif player_1.in_task == Tasks.NOMINATE_FOR_AWARDS:
             result = nominate_task.task(dt)
-        elif player_1.in_task == "Collect Trash":
+        elif player_1.in_task == Tasks.COLLECT_TRASH:
             result = collect_trash.task(dt)
-        elif player_1.in_task == "Refill Hand-Sanitizer":
+        elif player_1.in_task == Tasks.REFILL_HAND_SANITIZER:
             result = refill_hand_sanitizer.task(dt)
-        elif player_1.in_task == "Check Inbox":
+        elif player_1.in_task == Tasks.CHECK_INBOX:
             result = check_inbox.task(dt)
-        elif player_1.in_task == "Do Flashcards":
+        elif player_1.in_task == Tasks.DO_FLASHCARDS:
             result = do_flashcards.task(dt)
         if result:
-            completed_task = next(t for t in player_1.tasks if t["name"] == player_1.in_task)
+            completed_task = next(t for t in player_1.tasks if t["task"] == player_1.in_task)
             completed_task["done"] = True
             game_map.tasks_to_render.remove(completed_task["index"])
-            player_1.in_task = "None"
+            player_1.in_task = None
 
     draw_fps()
     draw_ui((100 / 4) * (4 - len(game_map.tasks_to_render)) / 100)
@@ -465,8 +465,8 @@ def redraw_game_window(shadow_range: int):
 
 # mainloop
 random_tasks = tuple(
-    {"name": t["name"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 8))
-player_1 = Player((255, 0, 0), True, 0, random_tasks)
+    {"task": t["task"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 8))
+player_1 = Player((255, 0, 0), False, 0, random_tasks)
 game_map = Map(visible_map_image, shadow_map_image, {t["index"] for t in player_1.tasks})
 clock = pygame.time.Clock()
 
@@ -535,11 +535,11 @@ while running_game:
 
             # Use Button
             elif event.key == pygame.K_e:
-                if player_1.in_task == "None":
+                if player_1.in_task is None:
                     show_minimap = False
                     start_task()
                 else:
-                    player_1.in_task = "None"
+                    player_1.in_task = None
 
             elif event.key == pygame.K_TAB:
                 show_minimap = not show_minimap
@@ -617,7 +617,7 @@ while running_game:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_w]:
-        if player_1.in_vent == 0 and player_1.in_task == "None":
+        if player_1.in_vent == 0 and player_1.in_task is None:
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
                 speed_modifier = 0.7
@@ -626,7 +626,7 @@ while running_game:
                     break
                 game_map.y += 1
     if keys[pygame.K_a]:
-        if player_1.in_vent == 0 and player_1.in_task == "None":
+        if player_1.in_vent == 0 and player_1.in_task is None:
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 speed_modifier = 0.7
@@ -635,7 +635,7 @@ while running_game:
                     break
                 game_map.x += 1
     if keys[pygame.K_s]:
-        if player_1.in_vent == 0 and player_1.in_task == "None":
+        if player_1.in_vent == 0 and player_1.in_task is None:
             speed_modifier = 1
             if keys[pygame.K_a] or keys[pygame.K_d]:
                 speed_modifier = 0.7
@@ -644,7 +644,7 @@ while running_game:
                     break
                 game_map.y -= 1
     if keys[pygame.K_d]:
-        if player_1.in_vent == 0 and player_1.in_task == "None":
+        if player_1.in_vent == 0 and player_1.in_task is None:
             speed_modifier = 1
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 speed_modifier = 0.7
