@@ -2,13 +2,14 @@ import math
 import pygame
 
 from constants import *
+from enums.Sabotages import Sabotage
 
 from pprint import pprint
 
 
 class Map(object):
     def __init__(self, visible_map_image, shadow_map_image, tasks_to_render: set):
-        self.x, self.y = -1403, -1084
+        self.x, self.y = -6403, -1084
         self.visible_map_image = visible_map_image
         self.shadow_map_image = shadow_map_image
         self.width = self.visible_map_image.get_rect().width
@@ -34,6 +35,17 @@ class Map(object):
             "Kitchen": {"closed": False, "timer": 0},
             "Meeting Room": {"closed": False, "timer": 0},
             "Incubator": {"closed": False, "timer": 0}
+        }
+
+        # `None` means timer not started
+        self.doomsday_clock = None
+
+        self.sabotage_cooldown_data = {
+            Sabotage.LEFT_AC: {"activated": False, "timer": 0},
+            Sabotage.RIGHT_AC: {"activated": False, "timer": 0},
+            Sabotage.LIGHTS: {"activated": False, "timer": 0},
+            Sabotage.ZOOM_MEETING: {"activated": False, "timer": 0},
+            Sabotage.SPOILED_FOOD: {"activated": False, "timer": 0},
         }
 
         self.wall_segments = (
@@ -802,20 +814,45 @@ class Map(object):
             {"rect": pygame.Rect(self.x + 6650, self.y + 750, 50, 50), "name": "Collect Trash"},  # outside kitchen
 
             {"rect": pygame.Rect(self.x + 2450, self.y + 1500, 500, 500), "name": "Do Flashcards"},  # Do Flashcards
-
-            # Sabotages
-            {"rect": pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "name": "Left A/C top"},
-            {"rect": pygame.Rect(self.x + 900, self.y + 1850, 100, 50), "name": "Left A/C bottom"},
-            {"rect": pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "name": "Right A/C top"},
-            {"rect": pygame.Rect(self.x + 600, self.y + 1700, 50, 100), "name": "Right A/C bottom"},
-
-            {"rect": pygame.Rect(self.x + 3400, self.y + 700, 150, 50), "name": "Lights"},
-
-            {"rect": pygame.Rect(self.x + 5000, self.y + 150, 50, 100), "name": "Relaunch Zoom"},
-
-            {"rect": pygame.Rect(self.x + 7050, self.y + 450, 50, 100), "name": "Remove Spoiled Food"},  # right
-            {"rect": pygame.Rect(self.x + 6400, self.y + 450, 50, 100), "name": "Remove Spoiled Food"},  # left
         )
+
+    @property
+    def get_sabotage_rect_info(self):
+        return {
+            Sabotage.LEFT_AC: {
+                "minimap_button_rect": pygame.Rect(459, 577, 92, 87),
+                "rects": (
+                    pygame.Rect(self.x + 600, self.y + 1700, 50, 100),
+                    pygame.Rect(self.x + 900, self.y + 1850, 100, 50)
+                )
+            },
+            Sabotage.RIGHT_AC: {
+                "minimap_button_rect": pygame.Rect(1322, 546, 53, 119),
+                "rects": (
+                    pygame.Rect(self.x + 7200, self.y + 1350, 50, 100),
+                    pygame.Rect(self.x + 7200, self.y + 1750, 50, 100)
+                )
+            },
+            Sabotage.LIGHTS: {
+                "minimap_button_rect": pygame.Rect(865, 446, 47, 87),
+                "rects": (
+                    pygame.Rect(self.x + 3400, self.y + 700, 150, 50),
+                )
+            },
+            Sabotage.ZOOM_MEETING: {
+                "minimap_button_rect": pygame.Rect(1072, 414, 84, 88),
+                "rects": (
+                    pygame.Rect(self.x + 5000, self.y + 150, 50, 100),
+                )
+            },
+            Sabotage.SPOILED_FOOD: {
+                "minimap_button_rect": pygame.Rect(1246, 458, 44, 44),
+                "rects": (
+                    pygame.Rect(self.x + 7050, self.y + 450, 50, 100),
+                    pygame.Rect(self.x + 6400, self.y + 450, 50, 100)
+                )
+            }
+        }
 
     @property
     def get_vent_rects(self):
@@ -848,7 +885,7 @@ class Map(object):
                 )
             },
             "Classroom 2": {
-                "minimap_button_rect": pygame.Rect(459, 577, 182, 87),
+                "minimap_button_rect": pygame.Rect(549, 577, 92, 87),
                 "rects": (
                     pygame.Rect(self.x + 150, self.y + 1560, 100, 30),  # Classroom 2 left
                     pygame.Rect(self.x + 1400, self.y + 1360, 100, 30),  # Classroom 2 mid
@@ -910,7 +947,7 @@ class Map(object):
                 )
             },
             "Utility": {
-                "minimap_button_rect": pygame.Rect(865, 446, 94, 87),
+                "minimap_button_rect": pygame.Rect(912, 446, 47, 87),
                 "rects": (
                     pygame.Rect(self.x + 3700, self.y + 1060, 100, 30),  # Utility
                 ),
@@ -954,7 +991,7 @@ class Map(object):
                 )
             },
             "Office": {
-                "minimap_button_rect": pygame.Rect(1072, 414, 169, 88),
+                "minimap_button_rect": pygame.Rect(1156, 414, 84, 88),
                 "rects": (
                     pygame.Rect(self.x + 4960, self.y + 400, 30, 100),  # Office left
                     pygame.Rect(self.x + 5600, self.y + 810, 100, 30),  # Office bottom
@@ -965,7 +1002,7 @@ class Map(object):
                 )
             },
             "Kitchen": {
-                "minimap_button_rect": pygame.Rect(1246, 458, 88, 44),
+                "minimap_button_rect": pygame.Rect(1290, 458, 44, 44),
                 "rects": (
                     pygame.Rect(self.x + 6900, self.y + 810, 100, 30),  # Kitchen
                 ),
@@ -983,7 +1020,7 @@ class Map(object):
                 )
             },
             "Incubator": {
-                "minimap_button_rect": pygame.Rect(1322, 546, 106, 119),
+                "minimap_button_rect": pygame.Rect(1375, 546, 53, 119),
                 "rects": (
                     pygame.Rect(self.x + 6960, self.y + 1550, 30, 100),  # Incubator left
                     pygame.Rect(self.x + 7700, self.y + 1210, 100, 30),  # Incubator top
@@ -1002,6 +1039,14 @@ class Map(object):
             self.door_data[room]["timer"] = DOOR_CLOSED_TIME * 2
             self.update_wall_segments()
 
+    def start_sabotage(self, sabotage: Sabotage, is_doomsday_sabotage: bool):
+        self.sabotage_cooldown_data[sabotage]["activated"] = True
+        # This timer is purely a cooldown timer
+        # self.sabotage_cooldown_data[sabotage]["timer"] = SABOTAGE_COOLDOWN_TIMES[sabotage]
+
+        if is_doomsday_sabotage:
+            self.doomsday_clock = DOOMSDAY_CLOCK_TIME
+
     def process_door_timers(self, dt: float):
         for room in self.get_door_rect_info.keys():
             if self.door_data[room]["timer"] > 0:
@@ -1011,6 +1056,20 @@ class Map(object):
                     self.update_wall_segments()
             elif self.door_data[room]["timer"] < 0:
                 self.door_data[room]["timer"] = 0
+
+    def process_sabotage_timers(self, dt: float):
+        for sabotage in self.sabotage_cooldown_data.keys():
+            if self.sabotage_cooldown_data[sabotage]["timer"] > 0:
+                self.sabotage_cooldown_data[sabotage]["timer"] -= dt
+            elif self.sabotage_cooldown_data[sabotage]["timer"] < 0:
+                self.sabotage_cooldown_data[sabotage]["timer"] = 0
+
+        if self.doomsday_clock is not None:
+            if self.doomsday_clock > 0:
+                self.doomsday_clock -= dt
+                print(self.doomsday_clock)
+            elif self.doomsday_clock <= 0:
+                print("IMPOSTER WIN")
 
     def draw_map_image(self, visible_surface: pygame.Surface, shadow_surface: pygame.Surface, draw_lines: bool):
         wall_segments = self.get_wall_segments
@@ -1110,7 +1169,6 @@ class Map(object):
         visible_surface.blit(self.visible_map_image, (self.x, self.y))
         draw()
         self.draw_vents(visible_surface)
-        self.draw_tasks(visible_surface)
         self.draw_doors(visible_surface)
         visible_surface.blit(shadow_surface, (0, 0))
 
@@ -1131,6 +1189,10 @@ class Map(object):
 
     def draw_tasks(self, surface: pygame.Surface):
         for task in (self.get_task_rects[i] for i in self.tasks_to_render):
+            pygame.draw.rect(surface, (242, 242, 0), task["rect"], 3)
+
+    def draw_all_tasks(self, surface: pygame.Surface):
+        for task in self.get_task_rects:
             pygame.draw.rect(surface, (242, 242, 0), task["rect"], 3)
 
     def draw_vents(self, surface: pygame.Surface):

@@ -1,14 +1,11 @@
 import math
-import random
-
-import pygame
 import sys
 import time
 
-from constants import *
 from entities.map import Map
 from entities.player import Player
-
+# Sabotages
+from entities.sabotages.Lights import *
 # Tasks
 from entities.tasks.CheckInbox import *
 from entities.tasks.CheckTemperature import *
@@ -53,29 +50,80 @@ report_button_image.set_colorkey((255, 255, 255))
 report_button_disabled_image = pygame.image.load('images/hud/report_button_disabled.png').convert()
 report_button_disabled_image.set_colorkey((255, 255, 255))
 
-minimap_image = pygame.image.load('images/hud/minimap.png').convert()
+minimap_image = pygame.image.load('images/hud/minimap/minimap.png').convert()
 minimap_image.set_colorkey((255, 255, 255))
 minimap_image.set_alpha(220)
-sabotage_minimap_image = pygame.image.load('images/hud/sabotage_minimap.png').convert()
+sabotage_minimap_image = pygame.image.load('images/hud/minimap/sabotage_minimap.png').convert()
 sabotage_minimap_image.set_colorkey((255, 255, 255))
 sabotage_minimap_image.set_alpha(220)
-minimap_player_locator_image = pygame.image.load('images/hud/minimap_player_locator.png').convert()
+minimap_player_locator_image = pygame.image.load('images/hud/minimap/minimap_player_locator.png').convert()
 minimap_player_locator_image.set_colorkey((255, 255, 255))
-minimap_task_locator_image = pygame.image.load('images/hud/minimap_task_locator.png').convert()
+minimap_task_locator_image = pygame.image.load('images/hud/minimap/minimap_task_locator.png').convert()
 minimap_task_locator_image.set_colorkey((255, 255, 255))
-door_open_image = pygame.image.load('images/hud/door_open_icon.png').convert()
+door_open_image = pygame.image.load('images/hud/minimap/door_open_icon.png').convert()
 door_open_image.set_colorkey((255, 255, 255))
-door_closed_full_image = pygame.image.load('images/hud/door_closed_full_icon.png').convert()
+door_closed_full_image = pygame.image.load('images/hud/minimap/door_closed_full_icon.png').convert()
 door_closed_full_image.set_colorkey((255, 255, 255))
-door_closed_half_image = pygame.image.load('images/hud/door_closed_half_icon.png').convert()
+door_closed_half_image = pygame.image.load('images/hud/minimap/door_closed_half_icon.png').convert()
 door_closed_half_image.set_colorkey((255, 255, 255))
-door_closed_danger_image = pygame.image.load('images/hud/door_closed_danger_icon.png').convert()
+door_closed_danger_image = pygame.image.load('images/hud/minimap/door_closed_danger_icon.png').convert()
 door_closed_danger_image.set_colorkey((255, 255, 255))
-door_disabled_image = pygame.image.load('images/hud/door_disabled_icon.png').convert()
+door_disabled_image = pygame.image.load('images/hud/minimap/door_disabled_icon.png').convert()
 door_disabled_image.set_colorkey((255, 255, 255))
 map_icon_image = pygame.image.load('images/hud/map_icon.png').convert()
 map_icon_image.set_colorkey((255, 255, 255))
+
+lights_on_image = pygame.image.load('images/hud/minimap/lights_on_icon.png').convert()
+lights_on_image.set_colorkey((255, 255, 255))
+lights_off_image = pygame.image.load('images/hud/minimap/lights_off_icon.png').convert()
+lights_off_image.set_colorkey((255, 255, 255))
+lights_disabled_image = pygame.image.load('images/hud/minimap/lights_disabled_icon.png').convert()
+lights_disabled_image.set_colorkey((255, 255, 255))
+ac_on_image = pygame.image.load('images/hud/minimap/ac_on_icon.png').convert()
+ac_on_image.set_colorkey((255, 255, 255))
+ac_off_image = pygame.image.load('images/hud/minimap/ac_off_icon.png').convert()
+ac_off_image.set_colorkey((255, 255, 255))
+ac_disabled_image = pygame.image.load('images/hud/minimap/ac_disabled_icon.png').convert()
+ac_disabled_image.set_colorkey((255, 255, 255))
+meeting_on_image = pygame.image.load('images/hud/minimap/meeting_on_icon.png').convert()
+meeting_on_image.set_colorkey((255, 255, 255))
+meeting_off_image = pygame.image.load('images/hud/minimap/meeting_off_icon.png').convert()
+meeting_off_image.set_colorkey((255, 255, 255))
+meeting_disabled_image = pygame.image.load('images/hud/minimap/meeting_disabled_icon.png').convert()
+meeting_disabled_image.set_colorkey((255, 255, 255))
+unspoiled_food_image = pygame.image.load('images/hud/minimap/unspoiled_food_icon.png').convert()
+unspoiled_food_image.set_colorkey((255, 255, 255))
+spoiled_food_image = pygame.image.load('images/hud/minimap/spoiled_food_icon.png').convert()
+spoiled_food_image.set_colorkey((255, 255, 255))
+disabled_food_image = pygame.image.load('images/hud/minimap/disabled_food_icon.png').convert()
+disabled_food_image.set_colorkey((255, 255, 255))
 ###
+
+ac_images = {
+    "on": ac_on_image,
+    "off": ac_off_image,
+    "disabled": ac_disabled_image
+}
+
+sabotage_images = {
+    Sabotage.LIGHTS: {
+        "on": lights_on_image,
+        "off": lights_off_image,
+        "disabled": lights_disabled_image
+    },
+    Sabotage.LEFT_AC: ac_images,
+    Sabotage.RIGHT_AC: ac_images,
+    Sabotage.ZOOM_MEETING: {
+        "on": meeting_on_image,
+        "off": meeting_off_image,
+        "disabled": meeting_disabled_image
+    },
+    Sabotage.SPOILED_FOOD: {
+        "on": unspoiled_food_image,
+        "off": spoiled_food_image,
+        "disabled": disabled_food_image
+    }
+}
 
 # Surface Setup ###
 shadow_surface = pygame.Surface((shadow_map_image.get_width(), shadow_map_image.get_height()))
@@ -305,6 +353,25 @@ def draw_doors_ui(all_doors: dict):
                 center_image_in_rect(door_disabled_image, room_info["minimap_button_rect"])
 
 
+def draw_sabotage_ui(all_sabotages: dict):
+    for sabotage_name in all_sabotages.keys():
+        sabotage_info = all_sabotages[sabotage_name]
+        cooldown_data = game_map.sabotage_cooldown_data[sabotage_name]
+        images = sabotage_images[sabotage_name]
+
+        print(active_sabotage)
+        print(sabotage_name)
+        if active_sabotage and sabotage_name != active_sabotage[0]:
+            center_image_in_rect(images["disabled"], sabotage_info["minimap_button_rect"])
+        elif cooldown_data["activated"]:
+            center_image_in_rect(images["off"], sabotage_info["minimap_button_rect"])
+        else:
+            if cooldown_data["timer"] == 0:
+                center_image_in_rect(images["on"], sabotage_info["minimap_button_rect"])
+            else:
+                center_image_in_rect(images["disabled"], sabotage_info["minimap_button_rect"])
+
+
 def draw_ui(progress: float):
     pygame.draw.rect(display, (0, 255, 0), (9, 9, math.ceil(392 * progress), 32))
     display.blit(task_bar_image, (5, 5))
@@ -339,6 +406,7 @@ def draw_ui(progress: float):
             display.blit(sabotage_minimap_image, (MINIMAP_X, MINIMAP_Y))
 
             draw_doors_ui(game_map.get_door_rect_info)
+            draw_sabotage_ui(game_map.get_sabotage_rect_info)
         else:
             display.blit(minimap_image, (MINIMAP_X, MINIMAP_Y))
 
@@ -415,6 +483,9 @@ refill_hand_sanitizer = RefillHandSanitizer(display)
 check_inbox = CheckInbox(display)
 do_flashcards = DoFlashcards(display)
 
+active_sabotage = None
+lights = Lights(display)
+
 show_minimap = False
 minimap_button_rect = pygame.Rect(1770, 50, 100, 100)
 is_ghost = False
@@ -427,6 +498,9 @@ previous_time = time.monotonic()
 while running_game:
     dt = time.monotonic() - previous_time
     previous_time = time.monotonic()
+
+    active_sabotage = [key for key in game_map.sabotage_cooldown_data
+                       if game_map.sabotage_cooldown_data[key]["activated"]]
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -481,9 +555,9 @@ while running_game:
             elif event.key == pygame.K_l:
                 do_draw_collision = not do_draw_collision
             elif event.key == pygame.K_1:
-                target_view_distance = 100
+                target_view_distance = MIN_VIEW_DISTANCE
             elif event.key == pygame.K_2:
-                target_view_distance = 400
+                target_view_distance = MAX_VIEW_DISTANCE
             elif event.key == pygame.K_3:
                 target_view_distance = 950
 
@@ -535,6 +609,12 @@ while running_game:
                         if game_map.get_door_rect_info[room]["minimap_button_rect"].collidepoint(mouse_position):
                             game_map.close_door(room)
 
+                    if not active_sabotage:
+                        for key in game_map.get_sabotage_rect_info.keys():
+                            if game_map.get_sabotage_rect_info[key]["minimap_button_rect"].collidepoint(mouse_position):
+                                game_map.start_sabotage(
+                                    key, (key in (Sabotage.LEFT_AC, Sabotage.RIGHT_AC, Sabotage.SPOILED_FOOD)))
+
     if player_1.in_vent != 0:
         transport_vents(player_1)
 
@@ -584,6 +664,7 @@ while running_game:
         smooth_shadow_transition(player_1, target_view_distance, 10)
 
     game_map.process_door_timers(dt)
+    game_map.process_sabotage_timers(dt)
 
     redraw_game_window(player_1.view_distance)
 

@@ -43,7 +43,7 @@ class Player(object):
 
         self.is_traitor = is_traitor
         self.in_vent = in_vent
-        self.view_distance = 400
+        self.view_distance = MAX_VIEW_DISTANCE
         self.in_task = "None"
         self.tasks = tasks
 

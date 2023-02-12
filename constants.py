@@ -1,3 +1,5 @@
+from enums.Sabotages import Sabotage
+
 # Variables ###
 SCREEN_X = 1920
 SCREEN_Y = 1080
@@ -18,4 +20,14 @@ TASK_LIST = (
 MINIMAP_X = 447
 MINIMAP_Y = 402
 DOOR_CLOSED_TIME = 20
+SABOTAGE_COOLDOWN_TIMES = {
+    Sabotage.LIGHTS: 40,
+    Sabotage.LEFT_AC: 40,
+    Sabotage.RIGHT_AC: 40,
+    Sabotage.ZOOM_MEETING: 40,
+    Sabotage.SPOILED_FOOD: 40
+}
+DOOMSDAY_CLOCK_TIME = 60
+MAX_VIEW_DISTANCE = 400
+MIN_VIEW_DISTANCE = 100
 ###
