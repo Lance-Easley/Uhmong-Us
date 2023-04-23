@@ -4,6 +4,7 @@ import time
 
 from entities.map import Map
 from entities.player import Player
+from enums.Events import Events
 # Sabotages
 from entities.sabotages.Lights import *
 # Tasks
@@ -131,6 +132,9 @@ shadow_surface.set_colorkey("#123456")
 
 shadow_limiter_surface = pygame.Surface((SCREEN_X, SCREEN_Y))
 shadow_limiter_surface.set_colorkey("#098765")
+
+doomsday_surface = pygame.Surface((SCREEN_X, SCREEN_Y))
+doomsday_surface.set_alpha(100)
 ###
 
 # Font Initialization ###
@@ -336,6 +340,19 @@ def center_image_in_rect(image: pygame.Surface, rect: pygame.Rect):
                          (rect.y + rect.height // 2) - image_rect.height // 2))
 
 
+def draw_doomsday_effects(delta_time: float):
+    global doomsday_effect_timer
+
+    doomsday_surface.fill((255, 0, 0))
+
+    if doomsday_effect_timer < 40:
+        display.blit(doomsday_surface, (0, 0, SCREEN_X, SCREEN_Y))
+    elif doomsday_effect_timer > 80:
+        doomsday_effect_timer = 0
+
+    doomsday_effect_timer += 40 * delta_time
+
+
 def draw_doors_ui(all_doors: dict):
     for door in all_doors.keys():
         room_info = all_doors[door]
@@ -424,6 +441,8 @@ def draw_ui(progress: float):
 def redraw_game_window(shadow_range: int):
     game_map.draw_map_image(display, shadow_surface, do_draw_collision)
     draw_shadow_limiter(shadow_range)
+    if do_draw_doomsday:
+        draw_doomsday_effects(dt)
     if do_draw_collision:
         game_map.draw_collision(display)
         game_map.draw_coordinates(display, font)
@@ -463,6 +482,32 @@ def redraw_game_window(shadow_range: int):
     pygame.display.update()
 
 
+def process_event_stack():
+    global game_event_stack
+    global target_view_distance
+    global do_draw_doomsday
+    global doomsday_effect_timer
+
+    if not game_event_stack:
+        return
+
+    for game_event in game_event_stack:
+        match game_event:
+            case Events.LIGHTS_OFF:
+                if not player_1.is_traitor:
+                    target_view_distance = MIN_VIEW_DISTANCE
+            case Events.LIGHTS_ON:
+                if not player_1.is_traitor:
+                    target_view_distance = MAX_VIEW_DISTANCE
+            case Events.AC_LEFT:
+                do_draw_doomsday = True
+            case Events.AC_ONLINE:
+                doomsday_effect_timer = 0
+                do_draw_doomsday = False
+
+    game_event_stack.clear()
+
+
 # mainloop
 random_tasks = tuple(
     {"task": t["task"], "index": (random.choice(t["indexes"])), "done": False} for t in random.sample(TASK_LIST, 8))
@@ -483,11 +528,15 @@ do_flashcards = DoFlashcards(display)
 
 active_sabotage = None
 lights = Lights(display)
+doomsday_effect_timer = -1
+
+game_event_stack = []
 
 show_minimap = False
 minimap_button_rect = pygame.Rect(1770, 50, 100, 100)
 is_ghost = False
 do_draw_collision = False
+do_draw_doomsday = False
 running_game = True
 left_vent_arrow = None
 right_vent_arrow = None
@@ -555,6 +604,10 @@ while running_game:
                 target_view_distance = MAX_VIEW_DISTANCE
             elif event.key == pygame.K_3:
                 target_view_distance = 950
+            elif event.key == pygame.K_k:
+                game_event_stack.append(Events.AC_LEFT)
+            elif event.key == pygame.K_j:
+                game_event_stack.append(Events.AC_ONLINE)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_position = pygame.mouse.get_pos()
@@ -610,6 +663,7 @@ while running_game:
                                 active_sabotage = key
                                 game_map.start_sabotage(
                                     key, (key in (Sabotage.LEFT_AC, Sabotage.RIGHT_AC, Sabotage.SPOILED_FOOD)))
+                                game_event_stack.append(Events.LIGHTS_OFF)
 
     if player_1.in_vent != 0:
         transport_vents(player_1)
@@ -664,6 +718,10 @@ while running_game:
 
     redraw_game_window(player_1.view_distance)
 
+    if keys[pygame.K_t]:
+        game_event_stack.append(Events.LIGHTS_OFF)
+
+    process_event_stack()
     clock.tick()
 
 pygame.quit()
