@@ -1074,95 +1074,70 @@ class Map(object):
     def draw_map_image(self, visible_surface: pygame.Surface, shadow_surface: pygame.Surface, draw_lines: bool):
         wall_segments = self.get_wall_segments
 
-        # Points for shape drawing
         points = []
 
         unique_points = set()
         for segment in wall_segments:
-            if (('x', segment["a"]["x"]), ('y', segment["a"]["y"])) not in unique_points:
-                unique_points.add((('x', segment["a"]["x"]), ('y', segment["a"]["y"])))
-            if (('x', segment["b"]["x"]), ('y', segment["b"]["y"])) not in unique_points:
-                unique_points.add((('x', segment["b"]["x"]), ('y', segment["b"]["y"])))
+            unique_points.add((('x', segment["a"]["x"]), ('y', segment["a"]["y"])))
+            unique_points.add((('x', segment["b"]["x"]), ('y', segment["b"]["y"])))
+
+        unique_angles = set()
+        for unique_point in unique_points:
+            points_dict = dict(unique_point)
+            angle = math.atan2(points_dict['y'] - 540, points_dict['x'] - 960)
+            unique_angles.update([angle - 0.00001, angle + 0.00001])
+
+        unique_angles = sorted(unique_angles)
+
+        dx_list = [math.cos(angle) for angle in unique_angles]
+        dy_list = [math.sin(angle) for angle in unique_angles]
 
         # Find intersection of RAY & SEGMENT
         def get_intersection(ray, segment_instance):
-            # RAY in parametric: Point + Delta*t1
-            r_px = ray['a']['x']
-            r_py = ray['a']['y']
-            r_dx = ray['b']['x'] - ray['a']['x']
-            r_dy = ray['b']['y'] - ray['a']['y']
+            r_px, r_py = ray['a']['x'], ray['a']['y']
+            r_dx, r_dy = ray['b']['x'] - r_px, ray['b']['y'] - r_py
 
-            # SEGMENT in parametric: Point + Delta*t2
-            s_px = segment_instance['a']['x']
-            s_py = segment_instance['a']['y']
-            s_dx = segment_instance['b']['x'] - segment_instance['a']['x']
-            s_dy = segment_instance['b']['y'] - segment_instance['a']['y']
+            s_px, s_py = segment_instance['a']['x'], segment_instance['a']['y']
+            s_dx, s_dy = segment_instance['b']['x'] - s_px, segment_instance['b']['y'] - s_py
+
+            denominator = s_dx * r_dy - s_dy * r_dx
 
             # Are they parallel? If so, no intersect
-            if r_dx * s_dy == r_dy * s_dx:
-                # Unit vectors are the same.
+            if denominator == 0:
                 return None
 
-            # SOLVE FOR t1 & t2
-            t2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx)
-            if r_dy == 0:
-                t1 = (s_px + s_dx * t2 - r_px) / r_dx
-            else:
-                t1 = (s_py + s_dy * t2 - r_py) / r_dy
+            t2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / denominator
+            t1 = (s_px + s_dx * t2 - r_px) / r_dx if r_dy == 0 else (s_py + s_dy * t2 - r_py) / r_dy
 
-            # Must be within parametric whatevers for RAY/SEGMENT
-            if t1 < 0:
-                return None
-            if t2 < 0 or t2 > 1:
-                return None
-
-            # Return the POINT OF INTERSECTION
-            return {
-                'x': r_px + r_dx * t1,
-                'y': r_py + r_dy * t1,
-                'param': t1
-            }
-
-        #######################################################
-
-        # DRAWING
-        def draw():
-            # Get all angles
-            unique_angles = set()
-            for unique_point in unique_points:
-                points_dict = dict(unique_point)
-                angle = math.atan2(points_dict['y'] - 540, points_dict['x'] - 960)
-                unique_angles.update([angle - 0.00001, angle + 0.00001])
-
-            unique_angles = sorted(unique_angles)
-
-            # RAYS IN ALL DIRECTIONS
-            for angle in unique_angles:
-
-                # Calculate dx & dy from angle
-                dx = math.cos(angle)
-                dy = math.sin(angle)
-
-                # Ray from center of screen to player
-                ray = {
-                    "a": {"x": 960, "y": 540},
-                    "b": {"x": 960 + dx, "y": 540 + dy}
+            if t1 >= 0 and 0 <= t2 <= 1:
+                intersection_x = r_px + r_dx * t1
+                intersection_y = r_py + r_dy * t1
+                return {
+                    'x': intersection_x,
+                    'y': intersection_y,
+                    'param': t1
                 }
 
-                # Find CLOSEST intersection
-                closest_intersect = None
-                for seg in wall_segments:
-                    intersect = get_intersection(ray, seg)
-                    if not intersect:
-                        continue
-                    elif not closest_intersect or intersect["param"] < closest_intersect["param"]:
-                        closest_intersect = intersect
+            return None
 
-                # Add to list of intersects
+        def get_closest_intersection(ray, segments):
+            closest_intersect = None
+            for seg in segments:
+                intersect = get_intersection(ray, seg)
+                if intersect and (not closest_intersect or intersect["param"] < closest_intersect["param"]):
+                    closest_intersect = intersect
+            return closest_intersect
+
+        def draw():
+            for i, angle in enumerate(unique_angles):
+                ray = {
+                    "a": {"x": 960, "y": 540},
+                    "b": {"x": 960 + dx_list[i], "y": 540 + dy_list[i]}
+                }
+                closest_intersect = get_closest_intersection(ray, wall_segments)
                 if closest_intersect:
                     points.append((closest_intersect['x'], closest_intersect['y']))
 
-            # DRAW ALL RAYS
             shadow_surface.blit(self.shadow_map_image, (self.x, self.y))
             pygame.draw.polygon(shadow_surface, "#123456", points)
 
